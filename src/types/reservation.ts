@@ -1,0 +1,132 @@
+/** 상품 종류 */
+export type ProductCategoryId = "bouquet" | "basket" | "orchid";
+
+/** 메시지 방식 — 꽃다발: 없음/메모지, 꽃바구니: 없음/리본글씨/블랙보드, 호접난: 블랙보드 */
+export type MessageType = "none" | "memo" | "ribbon" | "blackboard";
+
+/** 이 페이지 신청서의 결제 방법 — 계좌이체 / 카드 결제(전화로 카드번호 전달). 네이버 예약은 첫 화면에서 따로 안내 */
+export type PaymentMethod = "bank" | "card";
+
+/** 현금영수증 — 계좌이체일 때만 */
+export type CashReceiptType = "none" | "income" | "expense";
+
+/** 카드 결제하실 분 — 예약자와 동일 / 다름(연락처 직접 입력). 카드 결제일 때만 */
+export type CardPayerType = "same" | "other";
+
+/** 요청할 수 있는 증빙 서류 — 견적서 / 거래명세표 */
+export type BusinessDocumentType = "quote" | "statement";
+
+/** 화면에서 고르는 항목 (신청서 입력값과 별개로 상태로 관리) */
+export type Selection = {
+  /** 상품 id("bouquet-60000") → 수량. 0개인 항목은 두지 않음 */
+  quantities: Record<string, number>;
+  /** "YYYY-MM-DD" */
+  date: string | null;
+  /** "HH:00" */
+  time: string | null;
+};
+
+/** 아직 선택되지 않은 항목 */
+export type SelectionIssue = "items" | "date" | "time";
+
+/** 받는 분 (비워두면 예약자가 픽업) */
+export type Recipient = {
+  name: string;
+  phone: string;
+};
+
+/** 상품 1개에 들어갈 메시지 */
+export type UnitMessage = {
+  type: MessageType;
+  memo: string;
+  ribbonLeft: string;
+  ribbonRight: string;
+  /** 블랙보드 직접 입력 문구 */
+  blackboard: string;
+  /** 블랙보드 문구 선택지 id (reservationOptions의 blackboardPresetsByCategory) 또는 "custom"(직접 입력) */
+  blackboardPreset: string;
+};
+
+/**
+ * 상품 1개(수량 단위)별 입력값.
+ * same* 가 true면 자기 값 대신 앞 상품의 값을 쓴다.
+ */
+export type UnitDetail = {
+  sameRecipient: boolean;
+  recipient: Recipient;
+  /** 같은 종류의 앞 상품 메시지를 따름 */
+  sameMessage: boolean;
+  message: UnitMessage;
+};
+
+/** 예약 한 건에 담긴 상품 한 줄 (집계) */
+export type ReservationItem = {
+  productId: string;
+  category: ProductCategoryId;
+  price: number;
+  quantity: number;
+};
+
+/** 상품 1개가 누구에게 어떤 메시지로 가는지 ("같음"이 풀린 최종 값) */
+export type ReservationDelivery = {
+  productId: string;
+  category: ProductCategoryId;
+  price: number;
+  /** 같은 상품 안에서 몇 번째인지 (1부터) */
+  unitNo: number;
+  recipientName: string;
+  recipientPhone: string;
+} & Omit<UnitMessage, "type"> & { messageType: MessageType };
+
+/**
+ * 제출되는 예약 한 건 (여러 종류 상품을 한 번에).
+ * 나중에 Supabase에 저장할 때 이 타입을 기준으로 한다.
+ */
+export type ReservationRequest = {
+  items: ReservationItem[];
+  /** 상품 1개 단위 받는 분·메시지 */
+  deliveries: ReservationDelivery[];
+  totalQuantity: number;
+  totalPrice: number;
+  date: string;
+  time: string;
+  ordererName: string;
+  ordererPhone: string;
+  color: string;
+  colorOther: string;
+  paymentMethod: PaymentMethod;
+  /** 계좌이체가 아니면 "none" */
+  cashReceiptType: CashReceiptType;
+  /** 소득공제: 휴대폰 번호 / 지출증빙: 사업자등록번호 */
+  cashReceiptNumber: string;
+  /** 카드 결제가 아니면 "same" */
+  cardPayer: CardPayerType;
+  /** 예약자와 다를 때 적은 결제하실 분 성함·연락처 */
+  cardPayerContact: string;
+  /** 요청한 서류 (필요 없으면 빈 배열) */
+  documents: BusinessDocumentType[];
+  /** 서류 받을 이메일 */
+  documentEmail: string;
+  /** 서류에 적을 공급받는 자 상호·기관명 */
+  documentCompany: string;
+  /** 공급받는 자 사업자등록번호 (선택) */
+  documentBusinessNumber: string;
+  /** 제출 시각 (ISO) — 서류 작성일 */
+  submittedAt: string;
+};
+
+/** 신청서 input의 name 목록 (받는 분·메시지는 상태로 관리하므로 제외) */
+export type ReservationFormField =
+  | "ordererName"
+  | "ordererPhone"
+  | "color"
+  | "colorOther"
+  | "paymentMethod"
+  | "cashReceiptType"
+  | "cashReceiptNumber"
+  | "cardPayer"
+  | "cardPayerContact"
+  | "documents"
+  | "documentEmail"
+  | "documentCompany"
+  | "documentBusinessNumber";
