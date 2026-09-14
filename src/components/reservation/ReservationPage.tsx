@@ -41,12 +41,12 @@ export default function ReservationPage() {
     scrollToSection(SECTION.items);
   }
 
-  /** 특별한 날 배너 → 그 날짜를 미리 고르고 추천 상품 목록으로 이동 */
-  function bookEvent(event: SpecialEvent) {
+  /** 특별한 날 배너 → 그 날짜를 미리 고르고 고른 상품(기본: 추천 상품) 목록으로 이동 */
+  function bookEvent(event: SpecialEvent, category: ProductCategoryId = event.recommendedCategory) {
     const keepTime =
       selection.time !== null && now !== null && isSlotBookable(selection.time, event.date, now);
     setSchedule({ date: event.date, time: keepTime ? selection.time : null });
-    openCategory(event.recommendedCategory);
+    openCategory(category);
   }
 
   return (

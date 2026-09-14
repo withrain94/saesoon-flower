@@ -4,6 +4,7 @@ import { useT } from "@/hooks/useLocale";
 import { formatDateLabel } from "@/lib/date";
 import { getEventCopy, getOpenEvents } from "@/lib/events";
 import type { Now } from "@/lib/time";
+import type { ProductCategoryId } from "@/types/reservation";
 import EventDayNotice from "./EventDayNotice";
 
 /** 첫 화면 — 가장 가까운 특별한 날(예: 인재개발원 승진식)을 크게, 다음 일정은 작게 */
@@ -13,8 +14,8 @@ export default function SpecialEventBanner({
 }: {
   /** null = 서버 렌더링 중 (마감 여부를 모르므로 그리지 않음) */
   now: Now | null;
-  /** 이 날짜·추천 상품으로 예약 시작 */
-  onBook: (event: SpecialEvent) => void;
+  /** 이 날짜로 예약 시작 — category가 없으면 추천 상품 목록이 열림 */
+  onBook: (event: SpecialEvent, category?: ProductCategoryId) => void;
 }) {
   const t = useT();
   if (now === null) return null;
@@ -28,14 +29,24 @@ export default function SpecialEventBanner({
     >
       <EventDayNotice event={nearest} />
 
-      <button
-        type="button"
-        onClick={() => onBook(nearest)}
-        className="mt-3 flex min-h-12 w-full items-center justify-center gap-1 rounded-xl bg-brand px-3 py-2 text-[15px] font-bold text-white transition hover:bg-brand-dark active:scale-[0.99]"
-      >
-        {t.eventBanner.book(getEventCopy(nearest, t).shortTitle, t.categories[nearest.recommendedCategory].name)}
-        <ChevronIcon direction="right" className="h-4 w-4 shrink-0" />
-      </button>
+      {/* 그날 토퍼를 넣어주는 종류(꽃다발·꽃바구니)마다 버튼 — 추천 상품은 채운 버튼 */}
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        {nearest.topperCategories.map((category) => (
+          <button
+            key={category}
+            type="button"
+            onClick={() => onBook(nearest, category)}
+            className={`flex min-h-12 items-center justify-center gap-1 rounded-xl border border-brand px-2 py-2 text-center text-[15px] font-bold transition active:scale-[0.99] ${
+              category === nearest.recommendedCategory
+                ? "bg-brand text-white hover:bg-brand-dark"
+                : "bg-white text-brand-dark hover:bg-white/70"
+            }`}
+          >
+            {t.eventBanner.book(t.categories[category].name)}
+            <ChevronIcon direction="right" className="h-4 w-4 shrink-0" />
+          </button>
+        ))}
+      </div>
 
       {later.length > 0 && (
         <div className="mt-3 border-t border-panel-line pt-2.5">

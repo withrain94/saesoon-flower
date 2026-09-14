@@ -218,7 +218,7 @@ export const en: Messages = {
 
   eventBanner: {
     ariaLabel: "Special day reservations",
-    book: (shortTitle, categoryName) => `Reserve a ${categoryName.toLowerCase()} for the ${shortTitle}`,
+    book: (categoryName) => `Reserve ${categoryName.toLowerCase()}`,
     later: "Upcoming",
     bookShort: "Reserve",
     deadline: (deadline) => `Please reserve by ${deadline}.`,

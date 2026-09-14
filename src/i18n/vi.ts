@@ -210,7 +210,7 @@ export const vi: Messages = {
 
   eventBanner: {
     ariaLabel: "Đặt hoa cho ngày đặc biệt",
-    book: (shortTitle, categoryName) => `Đặt ${categoryName.toLowerCase()} cho ${shortTitle}`,
+    book: (categoryName) => `Đặt ${categoryName.toLowerCase()}`,
     later: "Lịch tiếp theo",
     bookShort: "Đặt",
     deadline: (deadline) => `Vui lòng đặt trước ${deadline}.`,

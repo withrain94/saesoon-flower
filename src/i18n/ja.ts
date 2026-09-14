@@ -212,7 +212,7 @@ export const ja: Messages = {
 
   eventBanner: {
     ariaLabel: "特別な日の予約案内",
-    book: (shortTitle, categoryName) => `${shortTitle}の${categoryName}を予約する`,
+    book: (categoryName) => `${categoryName}を予約`,
     later: "今後の予定",
     bookShort: "予約する",
     deadline: (deadline) => `${deadline}までにご予約ください。`,

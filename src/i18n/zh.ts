@@ -173,7 +173,7 @@ export const zh: Messages = {
 
   eventBanner: {
     ariaLabel: "特别日子预约指南",
-    book: (shortTitle, categoryName) => `预约${shortTitle}${categoryName}`,
+    book: (categoryName) => `预约${categoryName}`,
     later: "之后的日程",
     bookShort: "预约",
     deadline: (deadline) => `请在${deadline}之前预约。`,

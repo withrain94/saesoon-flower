@@ -232,7 +232,8 @@ export const ko = {
 
   eventBanner: {
     ariaLabel: "특별한 날 예약 안내",
-    book: (shortTitle: string, categoryName: string) => `${shortTitle} ${categoryName} 예약하기`,
+    /** 특별한 날 안내 속 상품 종류별 버튼 (예: "꽃다발 예약하기") */
+    book: (categoryName: string) => `${categoryName} 예약하기`,
     later: "다음 일정",
     bookShort: "예약하기",
     deadline: (deadline: string) => `${deadline} 전까지 예약해 주세요.`,
