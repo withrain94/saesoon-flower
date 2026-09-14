@@ -108,5 +108,6 @@ export function buildReservationRequest(
     documentCompany: wantsDocuments ? text(data, "documentCompany") : "",
     documentBusinessNumber: wantsDocuments ? text(data, "documentBusinessNumber") : "",
     submittedAt: submittedAt.toISOString(),
+    privacyAgreed: text(data, "privacyConsent") === "agree",
   };
 }

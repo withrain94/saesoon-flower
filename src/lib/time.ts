@@ -18,6 +18,30 @@ export function toNow(date: Date): Now {
   return { dateKey: toDateKey(date), minutes: date.getHours() * 60 + date.getMinutes() };
 }
 
+/** 매장 기준 시간대 — 서버(Vercel, UTC)에서 예약 가능 여부를 다시 검사할 때 사용 */
+export const SHOP_TIME_ZONE = "Asia/Seoul";
+
+/** 특정 시간대 기준의 현재 날짜·시각 (서버 시계가 UTC여도 한국 시간으로 계산) */
+export function toNowInTimeZone(date: Date, timeZone: string = SHOP_TIME_ZONE): Now {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+    })
+      .formatToParts(date)
+      .map((part) => [part.type, part.value]),
+  );
+  return {
+    dateKey: `${parts.year}-${parts.month}-${parts.day}`,
+    minutes: Number(parts.hour) * 60 + Number(parts.minute),
+  };
+}
+
 /** "15:00" → 15 */
 export function getSlotHour(slot: string) {
   return Number(slot.slice(0, 2));

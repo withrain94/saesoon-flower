@@ -113,6 +113,20 @@ export type ReservationRequest = {
   documentBusinessNumber: string;
   /** 제출 시각 (ISO) — 서류 작성일 */
   submittedAt: string;
+  /** [필수] 개인정보 수집·이용 동의 */
+  privacyAgreed: boolean;
+};
+
+/** 관리자 페이지 예약 진행 상태 */
+export type ReservationStatus = "received" | "confirmed" | "made" | "delivered" | "canceled";
+
+/** DB에 저장된 예약 한 건 */
+export type StoredReservation = {
+  id: string;
+  createdAt: string;
+  status: ReservationStatus;
+  adminMemo: string;
+  request: ReservationRequest;
 };
 
 /** 신청서 input의 name 목록 (받는 분·메시지는 상태로 관리하므로 제외) */
@@ -129,4 +143,5 @@ export type ReservationFormField =
   | "documents"
   | "documentEmail"
   | "documentCompany"
-  | "documentBusinessNumber";
+  | "documentBusinessNumber"
+  | "privacyConsent";
