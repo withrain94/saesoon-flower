@@ -12,6 +12,7 @@ import {
 } from "@/lib/notionReservation";
 import { formatReceiptNumber } from "@/lib/format";
 import type { StoredReservation } from "@/types/reservation";
+import { getNotionEnv } from "./env";
 
 /**
  * 노션 날짜별 예약 표 올리기.
@@ -24,19 +25,6 @@ const NOTION_VERSION = "2022-06-28";
 const TIMEOUT_MS = 10_000;
 /** 노션 글자 칸 하나의 최대 길이 */
 const MAX_TEXT = 2000;
-
-/** 노션 페이지 주소나 id에서 32자리 id만 뽑음 (예: https://www.notion.so/새순-예약-1a2b…) */
-export function parseNotionPageId(value: string | undefined) {
-  const match = value?.replace(/-/g, "").match(/[0-9a-f]{32}(?![0-9a-f])/i);
-  return match ? match[0].toLowerCase() : null;
-}
-
-export function getNotionEnv() {
-  const token = process.env.NOTION_TOKEN?.trim();
-  const parentPageId = parseNotionPageId(process.env.NOTION_PARENT_PAGE_ID);
-  if (!token || !parentPageId) return null;
-  return { token, parentPageId };
-}
 
 type NotionBlock = {
   id: string;

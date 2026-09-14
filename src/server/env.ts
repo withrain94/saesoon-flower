@@ -1,17 +1,16 @@
 import "server-only";
 
-import { normalizeSupabaseUrl } from "@/lib/supabaseUrl";
+import { getSupabasePublicConfig } from "@/lib/supabaseUrl";
 
 /**
  * 서버 환경변수 — .env.local(로컬) / Vercel 프로젝트 설정(배포)에 넣음. 값은 .env.example 참고.
  * 비밀 키(SUPABASE_SECRET_KEY)는 서버에서만 읽고 브라우저로 절대 보내지 않음.
  */
 export function getSupabaseEnv() {
-  const url = normalizeSupabaseUrl(process.env.NEXT_PUBLIC_SUPABASE_URL);
-  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim();
+  const publicConfig = getSupabasePublicConfig();
   const secretKey = process.env.SUPABASE_SECRET_KEY?.trim();
-  if (!url || !publishableKey || !secretKey) return null;
-  return { url, publishableKey, secretKey };
+  if (!publicConfig || !secretKey) return null;
+  return { ...publicConfig, secretKey };
 }
 
 /**
@@ -35,6 +34,23 @@ export function getTelegramEnv() {
     .filter(Boolean);
   if (!botToken || chatIds.length === 0) return null;
   return { botToken, chatIds };
+}
+
+/** 노션 페이지 주소나 id에서 32자리 id만 뽑음 (예: https://www.notion.so/새순-예약-1a2b…) */
+export function parseNotionPageId(value: string | undefined) {
+  const match = value?.replace(/-/g, "").match(/[0-9a-f]{32}(?![0-9a-f])/i);
+  return match ? match[0].toLowerCase() : null;
+}
+
+/**
+ * 노션 날짜별 예약 표 — NOTION_TOKEN(노션 연결 비밀 토큰) + NOTION_PARENT_PAGE_ID(날짜별 페이지를 만들 노션 페이지 주소 또는 id).
+ * 둘 중 하나라도 없으면 노션 올리기 끔
+ */
+export function getNotionEnv() {
+  const token = process.env.NOTION_TOKEN?.trim();
+  const parentPageId = parseNotionPageId(process.env.NOTION_PARENT_PAGE_ID);
+  if (!token || !parentPageId) return null;
+  return { token, parentPageId };
 }
 
 /** 관리자 페이지에 들어올 수 있는 이메일 (쉼표로 여러 개) */

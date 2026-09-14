@@ -1,15 +1,15 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { normalizeSupabaseUrl } from "@/lib/supabaseUrl";
+import { getSupabasePublicConfig } from "@/lib/supabaseUrl";
 
 /**
  * /admin 요청마다 관리자 로그인 세션을 갱신 (만료된 토큰을 새 토큰으로 바꿔 쿠키에 저장).
  * 권한 확인은 여기서 하지 않고 각 관리자 페이지·서버 함수의 requireAdmin()이 한다.
  */
 export async function proxy(request: NextRequest) {
-  const url = normalizeSupabaseUrl(process.env.NEXT_PUBLIC_SUPABASE_URL);
-  const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim();
-  if (!url || !publishableKey) return NextResponse.next({ request });
+  const config = getSupabasePublicConfig();
+  if (!config) return NextResponse.next({ request });
+  const { url, publishableKey } = config;
 
   let response = NextResponse.next({ request });
 

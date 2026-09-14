@@ -1,4 +1,4 @@
-import { blackboardPresetsByCategory } from "@/data/reservationOptions";
+import { findBlackboardPreset } from "@/data/reservationOptions";
 import { localeOptions } from "@/i18n";
 import { ko } from "@/i18n/ko";
 import { parseDateKey } from "@/lib/date";
@@ -64,9 +64,7 @@ export function describeDeliveryMessage(delivery: ReservationDelivery) {
     case "ribbon":
       return message.describeRibbon(delivery.ribbonLeft, delivery.ribbonRight);
     case "blackboard": {
-      const preset = blackboardPresetsByCategory[delivery.category]?.find(
-        (candidate) => candidate.id === delivery.blackboardPreset,
-      );
+      const preset = findBlackboardPreset(delivery.category, delivery.blackboardPreset);
       if (preset && !preset.text) return `블랙보드 · ${ko.blackboardPresets[preset.id]} (매장에서 작성)`;
       return message.describeBlackboard(delivery.blackboard);
     }
@@ -77,6 +75,24 @@ export function describeDeliveryMessage(delivery: ReservationDelivery) {
 export function describeDeliveryRecipient(delivery: ReservationDelivery) {
   const text = [delivery.recipientName, delivery.recipientPhone].filter(Boolean).join(" · ");
   return text || ko.recipient.describeEmpty;
+}
+
+/**
+ * 결제 방법 한 줄 — "계좌이체 · 현금영수증 소득공제 010-…" / "카드 결제 · 결제하실 분 …" / "PayPal 66,000원 · 이메일"
+ */
+export function describePayment(request: ReservationRequest) {
+  const { payment } = ko;
+  const label = payment.methods[request.paymentMethod].label;
+  switch (request.paymentMethod) {
+    case "bank":
+      return request.cashReceiptType === "none"
+        ? label
+        : `${label} · 현금영수증 ${payment.cashReceiptOptions[request.cashReceiptType]} ${request.cashReceiptNumber}`;
+    case "card":
+      return request.cardPayer === "other" ? `${label} · 결제하실 분 ${request.cardPayerContact}` : label;
+    case "paypal":
+      return `${label} ${ko.format.price(request.paypalAmount)} · ${request.paypalEmail}`;
+  }
 }
 
 /** 원하는 색감 — 색감을 고르지 않는 주문이면 null */

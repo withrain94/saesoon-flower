@@ -122,7 +122,7 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
           )}
           {request.paymentMethod === "card" && (
             <Row label="결제하실 분">
-              {request.cardPayer === "other" ? request.cardPayerContact : "예약자와 동일"}
+              {request.cardPayer === "other" ? request.cardPayerContact : ko.complete.cardPayerSame}
             </Row>
           )}
           {request.paymentMethod === "paypal" && (

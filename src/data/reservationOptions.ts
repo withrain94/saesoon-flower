@@ -52,6 +52,11 @@ export const blackboardPresetsByCategory: Partial<Record<ProductCategoryId, Blac
   ],
 };
 
+/** 저장된 선택지 id로 블랙보드 문구 선택지 찾기 (직접 입력·없는 id면 undefined) */
+export function findBlackboardPreset(category: ProductCategoryId, presetId: string) {
+  return blackboardPresetsByCategory[category]?.find((preset) => preset.id === presetId);
+}
+
 /**
  * 연락처 형식 — 국내(010-1234-5678, 01012345678) 또는 해외(+1 415 555 0100, +82 10-1234-5678).
  * input pattern 속성용

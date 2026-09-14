@@ -1,7 +1,7 @@
 import { getEventOn, type SpecialEvent } from "@/data/events";
-import { blackboardPresetsByCategory } from "@/data/reservationOptions";
+import { findBlackboardPreset } from "@/data/reservationOptions";
 import { ko } from "@/i18n/ko";
-import { describeColor, describeOrchidDelivery } from "@/lib/adminFormat";
+import { describeColor, describeOrchidDelivery, describePayment } from "@/lib/adminFormat";
 import { parseDateKey } from "@/lib/date";
 import { formatReceiptNumber } from "@/lib/format";
 import { getSlotHour } from "@/lib/time";
@@ -135,26 +135,9 @@ function formatMessage(delivery: ReservationDelivery) {
     case "ribbon":
       return `리본: ${delivery.ribbonLeft || "-"} / ${delivery.ribbonRight || "-"}`;
     case "blackboard": {
-      const preset = blackboardPresetsByCategory[delivery.category]?.find(
-        (candidate) => candidate.id === delivery.blackboardPreset,
-      );
+      const preset = findBlackboardPreset(delivery.category, delivery.blackboardPreset);
       return `블랙보드: ${preset && !preset.text ? ko.blackboardPresets[preset.id] : delivery.blackboard}`;
     }
-  }
-}
-
-function formatPayment(request: ReservationRequest) {
-  const { payment } = ko;
-  const label = payment.methods[request.paymentMethod].label;
-  switch (request.paymentMethod) {
-    case "bank":
-      return request.cashReceiptType === "none"
-        ? label
-        : `${label} · 현금영수증 ${payment.cashReceiptOptions[request.cashReceiptType]} ${request.cashReceiptNumber}`;
-    case "card":
-      return request.cardPayer === "other" ? `${label} · 결제하실 분 ${request.cardPayerContact}` : label;
-    case "paypal":
-      return `${label} ${ko.format.price(request.paypalAmount)} · ${request.paypalEmail}`;
   }
 }
 
@@ -162,7 +145,7 @@ function formatPayment(request: ReservationRequest) {
 export function buildNotionRows({ id, status, adminMemo, request }: StoredReservation): string[][] {
   const color = describeColor(request) ?? "";
   const schedule = formatSchedule(request);
-  const payment = formatPayment(request);
+  const payment = describePayment(request);
   const orchid = describeOrchidDelivery(request) ?? "";
   const receipt = formatReceiptNumber(id);
   const canceled = status === "canceled" ? CANCELED_MARK : "";
