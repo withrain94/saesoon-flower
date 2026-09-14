@@ -66,6 +66,8 @@
 
 ## 5. 진행 상황 (2026-09-15 기준)
 
+> 2026-09-15: 코드 점검(계층 방향·순환 import 없음, 중복 문구·안 쓰는 코드 정리, **해외 접속 시 예약 가능 시간을 한국 시각으로 계산하도록 수정**) 후 커밋 `05eb3ba`(push 안 함).
+
 ### 🚧 지금 진행 중: Supabase 저장 + 관리자 페이지 + 개인정보 동의 (사용자 요청)
 사용자가 "고객 신청서를 어떻게 받나"에 대해 **Supabase + 관리자 페이지**를 골랐고, **개인정보 수집·이용 동의**도 같이 하기로 함.
 
@@ -85,12 +87,13 @@
 - `src/server/`: `env.ts`, `supabase.ts`(DB 클라이언트·로그인 클라이언트), `auth.ts`(getAdminEmail/requireAdmin), `reservations.ts`(insert/list/get/update)
 
 남은 순서:
-1. `src/server/actions/reservation.ts` ("use server") — submitReservation: 검사 → 저장 → id 반환 / 오류 문구
-2. 신청서: 동의 체크박스(`name="privacyConsent" value="agree" required`, 내용 펼쳐보기, `/privacy` 링크) + `useReservation.submit` 비동기(저장 중 버튼 비활성·오류 표시) + 완료 화면에 접수번호
-3. `/privacy` 처리방침 페이지 (+ 푸터 링크)
+1. ✅ (2026-09-15) `server/actions/reservation.ts` submitReservation: 설정 없으면 안내 → 검사 → 저장 → id·서버 계산 내용 반환 / 고객 언어로 오류 문구
+2. ✅ (2026-09-15) 신청서 맨 아래 `PrivacyConsentField`(필수 체크·내용 보기·처리방침 링크, 5개 언어) + submit 비동기(저장 중 버튼 막기·하단 바에 오류) + 완료 화면 접수번호(`formatReceiptNumber`, 관리자와 같은 8자리)
+3. ✅ (2026-09-15) `/privacy` 처리방침 페이지(한국어, 토퍼·호접난 식당·PayPal 이메일·화면 언어 항목 + PayPal 위탁 추가) + `SiteFooter` 링크
 4. ✅ (2026-09-14 19:10, 커밋 안 됨) 관리자 페이지 코드 완성: `server/actions/admin.ts`(signIn·signOut·changeReservationStatus·saveAdminMemo, 모두 requireAdmin) / `src/proxy.ts` / `app/admin/login` / `app/admin`(진행 중·상태별·전체 필터 + 개수, 받는 날짜별 묶음, 오늘·내일 표시) / `app/admin/[id]`(예약자·상품·받는 분·메시지·토퍼·결제·PayPal·서류 인쇄 `AdminDocuments`·매장 메모·상태 버튼). 한국어 표시는 `lib/adminFormat.ts`가 `i18n/ko.ts` 문구 사용. **브라우저 확인 못 함** — 다국어 작업 중이라 dev 서버 전체가 컴파일 오류(500)였음. 다국어 작업이 끝나면 `/admin` → 로그인 화면 이동부터 확인
 5. ✅ `supabase/schema.sql`, `.env.example`(+ `.gitignore`에 `!.env.example`), README에 `server/`·`admin` 계층 추가
-6. 검사: tsc·lint·build, 환경변수 없을 때 제출 안내 문구, `/admin` → 로그인 화면 이동
+6. ✅ (2026-09-15) tsc·lint 통과 / 브라우저: 동의 안 하면 제출 막힘, 동의 후 제출 → 비밀 키 없어서 "온라인 신청을 받을 수 없어요" 안내(가짜 완료 없음) / `/admin` → 307 로그인 화면 / `/privacy` 200. **build는 dev 서버가 켜져 있어 안 돌림**. 실제 저장·관리자 로그인은 키 넣은 뒤 확인 필요
+   - 현재 `.env.local`: URL·공개 키는 있음, **SUPABASE_SECRET_KEY·ADMIN_EMAILS 비어 있음**
 7. 사용자 안내(직접 할 일): Supabase 가입 → 프로젝트 생성(지역 **Seoul**) → SQL Editor에 schema.sql 실행 → Authentication에서 관리자 계정 만들고 **회원가입 막기** → 키를 `.env.local`·Vercel 환경변수에 직접 입력 → 재배포
 8. 처리방침은 일반 양식이므로 사용자에게 내용 확인 권유(보관 기간 1년 등)
 

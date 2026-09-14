@@ -29,6 +29,8 @@ export default function ReservationPage() {
     visibleIssue,
     summary,
     reservation,
+    submitting,
+    submitError,
     submit,
   } = useReservation();
   const [categoryId, setCategoryId] = useState<ProductCategoryId>(productCategories[0].id);
@@ -78,7 +80,7 @@ export default function ReservationPage() {
         unitActions={unitActions}
         onSubmit={submit}
       />
-      {reservation === null && <SubmitBar summary={summary} />}
+      {reservation === null && <SubmitBar summary={summary} submitting={submitting} error={submitError} />}
     </>
   );
 }

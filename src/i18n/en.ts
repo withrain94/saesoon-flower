@@ -5,6 +5,7 @@ import {
   RIBBON_MAX_LENGTH,
   SAME_DAY_LEAD_HOURS,
 } from "@/data/reservationOptions";
+import { businessInfo } from "@/data/shop";
 import type { Messages } from "./ko";
 
 /** English — 모양은 ko.ts와 같아야 한다 */
@@ -498,6 +499,7 @@ export const en: Messages = {
 
   complete: {
     title: "Your request has been submitted! 🎉",
+    receiptNumber: (no) => `Request no. ${no}`,
     orderer: (name, phone) => `Reserved by ${name} · ${phone}`,
     paymentMethod: (label) => `Payment · ${label}`,
     cashReceipt: (label, number) => `Cash receipt · ${label} ${number}`,
@@ -512,6 +514,38 @@ export const en: Messages = {
   submitBar: {
     empty: "Please choose items, a date and a time",
     submit: "Reserve",
+  },
+
+  privacy: {
+    consentLabel: "[Required] I agree to the collection and use of my personal information",
+    showDetails: "Details",
+    hideDetails: "Hide",
+    items: [
+      {
+        title: "Information collected",
+        body: "Your name and phone number (required); recipient names and phone numbers, message text, promotion topper names and titles, orchid delivery restaurant and booking name, cash receipt number, card payer's contact, PayPal request email, and document email, company name and business number (where applicable)",
+      },
+      {
+        title: "Purpose",
+        body: "Receiving and confirming reservations, making and handing over or delivering products, confirming payment, and issuing cash receipts, quotes and statements",
+      },
+      {
+        title: "Retention",
+        body: "Kept for 1 year after the products are handed over, then destroyed (information that must be kept by law is kept for the required period)",
+      },
+    ],
+    refusal: "You may refuse, but then we can't take your reservation online. Please call us or use Naver Booking instead.",
+    policyLink: "Read the full privacy policy (Korean) ›",
+  },
+
+  submit: {
+    saving: "Saving your request…",
+    unavailable: `We can't take online requests right now. Please call ${businessInfo.phone} or use Naver Booking.`,
+    failed: `We couldn't save your request. Please try again in a moment or call ${businessInfo.phone}.`,
+  },
+
+  footer: {
+    privacy: "Privacy policy",
   },
 
   validation: {

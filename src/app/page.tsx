@@ -1,4 +1,5 @@
 import Hero from "@/components/layout/Hero";
+import SiteFooter from "@/components/layout/SiteFooter";
 import StoreHeader from "@/components/layout/StoreHeader";
 import ReservationPage from "@/components/reservation/ReservationPage";
 
@@ -12,6 +13,7 @@ export default function Home() {
           <ReservationPage />
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }

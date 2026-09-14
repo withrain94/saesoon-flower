@@ -3,11 +3,10 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import { useT } from "@/hooks/useLocale";
 import type { SelectionSummary } from "@/lib/selection";
 import type { ResolvedUnit } from "@/lib/units";
-import type { ReservationRequest } from "@/types/reservation";
 import OrdererForm from "./OrdererForm";
 import ReservationComplete from "./ReservationComplete";
 import { SECTION, sectionScrollMargin } from "./sections";
-import type { UnitActions } from "./useReservation";
+import type { SubmittedReservation, UnitActions } from "./useReservation";
 
 export default function ReserveSection({
   reservation,
@@ -17,7 +16,7 @@ export default function ReserveSection({
   onSubmit,
 }: {
   /** null = 아직 제출 전 */
-  reservation: ReservationRequest | null;
+  reservation: SubmittedReservation | null;
   summary: SelectionSummary;
   units: ResolvedUnit[];
   unitActions: UnitActions;
@@ -26,11 +25,11 @@ export default function ReserveSection({
   const t = useT();
 
   return (
-    <section id={SECTION.reserve} className={`${sectionScrollMargin} px-5 pb-32 pt-7`}>
+    <section id={SECTION.reserve} className={`${sectionScrollMargin} px-5 pb-8 pt-7`}>
       <SectionHeading icon={<CheckSquareIcon />}>{t.reserve.heading}</SectionHeading>
 
       {reservation ? (
-        <ReservationComplete reservation={reservation} summary={summary} units={units} />
+        <ReservationComplete submitted={reservation} summary={summary} units={units} />
       ) : (
         <OrdererForm summary={summary} units={units} unitActions={unitActions} onSubmit={onSubmit} />
       )}

@@ -11,6 +11,7 @@ import OrderSummary from "./OrderSummary";
 import DocumentRequestField from "./DocumentRequestField";
 import OrchidDeliveryField from "./OrchidDeliveryField";
 import PaymentMethodField from "./PaymentMethodField";
+import PrivacyConsentField from "./PrivacyConsentField";
 import RecipientMessageField from "./RecipientMessageField";
 import { RESERVATION_FORM_ID } from "./sections";
 import type { UnitActions } from "./useReservation";
@@ -81,6 +82,8 @@ export default function OrdererForm({
       <div className="h-px bg-line" />
 
       <DocumentRequestField />
+
+      <PrivacyConsentField />
     </form>
   );
 }

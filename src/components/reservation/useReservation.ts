@@ -9,7 +9,8 @@ import {
   summarizeSelection,
   withQuantity,
 } from "@/lib/selection";
-import { hasBookableSlot, toNow } from "@/lib/time";
+import { hasBookableSlot, toNowInTimeZone } from "@/lib/time";
+import { submitReservation } from "@/server/actions/reservation";
 import {
   defaultUnitDetail,
   getOrderUnits,
@@ -28,6 +29,12 @@ import type {
   UnitMessage,
 } from "@/types/reservation";
 import { issueSection, scrollToSection, SECTION } from "./sections";
+
+/** 저장이 끝난 예약 — 접수 id + 서버에서 다시 검사·계산한 내용 */
+export type SubmittedReservation = {
+  id: string;
+  request: ReservationRequest;
+};
 
 /** 상품 1개 칸에서 할 수 있는 동작 */
 export type UnitActions = {
@@ -49,8 +56,12 @@ export function useReservation() {
   /** 상품 1개 단위(OrderUnit.key)별 받는 분·메시지 */
   const [unitDetails, setUnitDetails] = useState<Record<string, UnitDetail>>({});
   const [showErrors, setShowErrors] = useState(false);
-  /** 제출 완료된 예약 한 건 (null = 아직 제출 전) */
-  const [reservation, setReservation] = useState<ReservationRequest | null>(null);
+  /** 저장 완료된 예약 한 건 (null = 아직 제출 전) */
+  const [reservation, setReservation] = useState<SubmittedReservation | null>(null);
+  /** 저장 중이면 true — 버튼을 막아 두 번 저장되지 않게 */
+  const [submitting, setSubmitting] = useState(false);
+  /** 저장 실패 안내 (고객 언어) */
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const units = resolveUnits(getOrderUnits(selection), unitDetails, selection.date);
 
@@ -113,11 +124,14 @@ export function useReservation() {
       }),
   };
 
-  /** 신청서 기본 검증(필수 입력·형식) 통과 후 호출 */
-  function submit(formData: FormData) {
+  /** 신청서 기본 검증(필수 입력·형식) 통과 후 호출 → 서버에서 다시 검사하고 저장 */
+  async function submit(formData: FormData) {
+    if (submitting) return;
+    setSubmitError(null);
+
     // 제출 순간의 시각으로 다시 확인 (페이지를 오래 열어둔 경우 대비)
     const submittedAt = new Date();
-    const submitNow = toNow(submittedAt);
+    const submitNow = toNowInTimeZone(submittedAt);
     const issue = getSelectionIssue(selection, submitNow);
 
     if (issue) {
@@ -131,10 +145,22 @@ export function useReservation() {
     }
 
     const request = buildReservationRequest(selection, units, formData, submittedAt, locale);
-    // TODO(Supabase): 여기서 request 한 건을 저장 (items + 상품별 deliveries 포함)
     // TODO(이메일): request.documents가 있으면 서버에서 서류(lib/documents)를 PDF로 만들어 documentEmail로 발송
-    setReservation(request);
-    scrollToSection(SECTION.reserve);
+    setSubmitting(true);
+    try {
+      const result = await submitReservation(request);
+      if (!result.ok) {
+        setSubmitError(result.message);
+        return;
+      }
+      setReservation({ id: result.id, request: result.request });
+      scrollToSection(SECTION.reserve);
+    } catch {
+      // 인터넷 끊김 등 서버에 닿지 못한 경우
+      setSubmitError(t.submit.failed);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const issue = getSelectionIssue(selection, now);
@@ -150,6 +176,8 @@ export function useReservation() {
     visibleIssue: showErrors ? issue : null,
     summary: summarizeSelection(selection, t),
     reservation,
+    submitting,
+    submitError,
     submit,
   };
 }

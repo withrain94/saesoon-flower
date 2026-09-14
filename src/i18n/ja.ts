@@ -5,6 +5,7 @@ import {
   RIBBON_MAX_LENGTH,
   SAME_DAY_LEAD_HOURS,
 } from "@/data/reservationOptions";
+import { businessInfo } from "@/data/shop";
 import type { Messages } from "./ko";
 
 /** 日本語 — 모양은 ko.ts와 같아야 한다 */
@@ -490,6 +491,7 @@ export const ja: Messages = {
 
   complete: {
     title: "お申し込みが完了しました！🎉",
+    receiptNumber: (no) => `受付番号 ${no}`,
     orderer: (name, phone) => `予約者 ${name}・${phone}`,
     paymentMethod: (label) => `お支払い方法・${label}`,
     cashReceipt: (label, number) => `現金領収証・${label} ${number}`,
@@ -504,6 +506,38 @@ export const ja: Messages = {
   submitBar: {
     empty: "商品と日時をお選びください",
     submit: "予約する",
+  },
+
+  privacy: {
+    consentLabel: "[必須] 個人情報の収集・利用に同意します",
+    showDetails: "内容を見る",
+    hideDetails: "閉じる",
+    items: [
+      {
+        title: "収集する項目",
+        body: "予約者のお名前・電話番号（必須）、受取人のお名前・電話番号、メッセージの文言、昇進トッパーのお名前・役職、胡蝶蘭の配送先のお店・予約名、現金領収証の番号、カード決済される方の連絡先、PayPal支払いリクエスト用メールアドレス、書類送付先メールアドレス・会社名・事業者登録番号（該当する場合）",
+      },
+      {
+        title: "利用目的",
+        body: "予約の受付・確認のご連絡、商品の制作と受け取り・配送、決済の確認、現金領収証・見積書・取引明細書の発行",
+      },
+      {
+        title: "保有期間",
+        body: "商品のお渡し後1年間保管し、その後破棄します（法令により保存が必要な情報はその期間保管します）",
+      },
+    ],
+    refusal: "同意を拒否することもできますが、その場合オンライン予約はできません。お電話またはNAVER予約をご利用ください。",
+    policyLink: "個人情報処理方針をすべて見る（韓国語）›",
+  },
+
+  submit: {
+    saving: "お申し込みを保存しています…",
+    unavailable: `現在オンラインでのお申し込みを受け付けできません。お電話（${businessInfo.phone}）またはNAVER予約をご利用ください。`,
+    failed: `お申し込みを保存できませんでした。しばらくしてから再度お試しいただくか、お電話（${businessInfo.phone}）でご連絡ください。`,
+  },
+
+  footer: {
+    privacy: "個人情報処理方針",
   },
 
   validation: {

@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import { toNow, type Now } from "@/lib/time";
+import { toNowInTimeZone, type Now } from "@/lib/time";
 
 const TICK_MS = 30_000;
 
@@ -10,12 +10,13 @@ function subscribe(onChange: () => void) {
 }
 
 function getSnapshot() {
-  const now = toNow(new Date());
+  // 해외에서 접속해도 예약 가능 시간은 매장(한국) 시각 기준
+  const now = toNowInTimeZone(new Date());
   return `${now.dateKey}|${now.minutes}`;
 }
 
 /**
- * 브라우저의 현재 날짜·시각.
+ * 매장(한국) 기준 현재 날짜·시각.
  * 서버 렌더링 중에는 null → 날짜 의존 UI가 hydration 오류 없이 클라이언트에서만 그려진다.
  */
 export function useNow(): Now | null {

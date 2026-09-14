@@ -1,4 +1,5 @@
 import { useT } from "@/hooks/useLocale";
+import { formatReceiptNumber } from "@/lib/format";
 import type { SelectionSummary } from "@/lib/selection";
 import {
   describeMessage,
@@ -7,21 +8,22 @@ import {
   getUnitLabel,
   type ResolvedUnit,
 } from "@/lib/units";
-import type { ReservationRequest } from "@/types/reservation";
 import BankAccountCard from "./BankAccountCard";
 import DocumentsPanel from "./DocumentsPanel";
 import OrderSummary from "./OrderSummary";
+import type { SubmittedReservation } from "./useReservation";
 
 export default function ReservationComplete({
-  reservation,
+  submitted,
   summary,
   units,
 }: {
-  reservation: ReservationRequest;
+  submitted: SubmittedReservation;
   summary: SelectionSummary;
   units: ResolvedUnit[];
 }) {
   const t = useT();
+  const reservation = submitted.request;
   const payment = t.payment.methods[reservation.paymentMethod];
   const { orchidDelivery } = reservation;
 
@@ -31,6 +33,9 @@ export default function ReservationComplete({
         ✓
       </span>
       <p className="mt-4 text-lg font-bold text-ink">{t.complete.title}</p>
+      <p className="mt-1 text-[14px] font-bold text-brand-dark">
+        {t.complete.receiptNumber(formatReceiptNumber(submitted.id))}
+      </p>
       <p className="mt-1.5 text-[15px] text-body">{payment.complete}</p>
       <p className="mt-3 text-sm text-sub">{t.complete.orderer(reservation.ordererName, reservation.ordererPhone)}</p>
 

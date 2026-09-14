@@ -1,3 +1,8 @@
+/** 예약 id(uuid) → 접수번호 "A1B2C3D4" (고객 완료 화면·관리자 화면 공용) */
+export function formatReceiptNumber(id: string) {
+  return id.slice(0, 8).toUpperCase();
+}
+
 const KOREAN_DIGITS = ["", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"];
 const KOREAN_SMALL_UNITS = ["", "십", "백", "천"];
 const KOREAN_BIG_UNITS = ["", "만", "억", "조"];

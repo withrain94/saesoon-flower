@@ -11,6 +11,7 @@ import {
   formatAdminTime,
   localeNames,
 } from "@/lib/adminFormat";
+import { formatReceiptNumber } from "@/lib/format";
 import type { StoredReservation } from "@/types/reservation";
 import AdminDocuments from "./AdminDocuments";
 import AdminMemoForm from "./AdminMemoForm";
@@ -38,7 +39,7 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
           <StatusBadge status={status} />
         </div>
         <p className="mt-2 text-[12px] text-sub">
-          접수번호 {id.slice(0, 8).toUpperCase()} · 접수 {formatAdminDateTime(createdAt)}
+          접수번호 {formatReceiptNumber(id)} · 접수 {formatAdminDateTime(createdAt)}
         </p>
         <div className="mt-3 border-t border-line pt-3">
           <StatusChanger id={id} status={status} />

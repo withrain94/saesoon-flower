@@ -5,6 +5,7 @@ import {
   RIBBON_MAX_LENGTH,
   SAME_DAY_LEAD_HOURS,
 } from "@/data/reservationOptions";
+import { businessInfo } from "@/data/shop";
 import type { Messages } from "./ko";
 
 /** 中文(简体) — 모양은 ko.ts와 같아야 한다 */
@@ -450,6 +451,7 @@ export const zh: Messages = {
 
   complete: {
     title: "申请已提交！🎉",
+    receiptNumber: (no) => `受理编号 ${no}`,
     orderer: (name, phone) => `预约人 ${name} · ${phone}`,
     paymentMethod: (label) => `付款方式 · ${label}`,
     cashReceipt: (label, number) => `现金收据 · ${label} ${number}`,
@@ -464,6 +466,38 @@ export const zh: Messages = {
   submitBar: {
     empty: "请选择商品和日期·时间",
     submit: "预约",
+  },
+
+  privacy: {
+    consentLabel: "[必选] 我同意收集和使用个人信息",
+    showDetails: "查看内容",
+    hideDetails: "收起",
+    items: [
+      {
+        title: "收集项目",
+        body: "预约人姓名·电话（必填），收花人姓名·电话、留言内容、晋升插牌姓名·职级、蝴蝶兰配送餐厅·餐厅预约人姓名、现金收据号码、刷卡付款人联系方式、PayPal 付款请求邮箱、接收文件的邮箱·公司名称·营业执照号（如适用）",
+      },
+      {
+        title: "使用目的",
+        body: "受理和确认预约的联系、商品制作及自取·配送、确认付款、开具现金收据·报价单·交易明细单",
+      },
+      {
+        title: "保存期限",
+        body: "商品交付后保存1年，之后销毁（依法需要保存的信息按规定期限保存）",
+      },
+    ],
+    refusal: "您可以拒绝同意，但拒绝后将无法在线预约。请致电或使用 Naver 预约。",
+    policyLink: "查看完整个人信息处理方针（韩文）›",
+  },
+
+  submit: {
+    saving: "正在保存申请…",
+    unavailable: `目前无法受理在线申请。请致电（${businessInfo.phone}）或使用 Naver 预约。`,
+    failed: `申请保存失败。请稍后再试，或致电（${businessInfo.phone}）联系我们。`,
+  },
+
+  footer: {
+    privacy: "个人信息处理方针",
   },
 
   validation: {

@@ -1,4 +1,5 @@
 import type { ProductId } from "@/data/products";
+import { businessInfo } from "@/data/shop";
 import {
   BLACKBOARD_MAX_LENGTH,
   ORDER_CLOSE_HOUR,
@@ -516,6 +517,7 @@ export const ko = {
 
   complete: {
     title: "작성이 완료되었습니다! 🎉",
+    receiptNumber: (no: string) => `접수번호 ${no}`,
     orderer: (name: string, phone: string) => `예약자 ${name} · ${phone}`,
     paymentMethod: (label: string) => `결제 방법 · ${label}`,
     cashReceipt: (label: string, number: string) => `현금영수증 · ${label} ${number}`,
@@ -530,6 +532,38 @@ export const ko = {
   submitBar: {
     empty: "상품과 날짜·시간을 선택해 주세요",
     submit: "예약하기",
+  },
+
+  privacy: {
+    consentLabel: "[필수] 개인정보 수집·이용에 동의합니다",
+    showDetails: "내용 보기",
+    hideDetails: "접기",
+    items: [
+      {
+        title: "수집 항목",
+        body: "예약자 성함·연락처(필수), 받는 분 성함·연락처, 메시지 문구, 승진 토퍼 이름·직급, 호접난 배송 식당·식당 예약 이름, 현금영수증 번호, 카드 결제하실 분 연락처, PayPal 결제 요청 이메일, 서류 받을 이메일·상호·사업자등록번호 (해당하는 경우)",
+      },
+      {
+        title: "이용 목적",
+        body: "예약 접수·확인 연락, 상품 제작 및 픽업·배송, 결제 확인, 현금영수증·견적서·거래명세표 발급",
+      },
+      {
+        title: "보유 기간",
+        body: "상품 전달 후 1년간 보관 후 파기 (관계 법령에 따라 보존이 필요한 정보는 해당 기간 동안 보관)",
+      },
+    ],
+    refusal: "동의를 거부할 수 있으나, 거부하시면 온라인 예약이 어렵습니다. 전화나 네이버 예약을 이용해 주세요.",
+    policyLink: "개인정보 처리방침 전체 보기 ›",
+  },
+
+  submit: {
+    saving: "신청을 저장하고 있어요…",
+    unavailable: `지금은 온라인 신청을 받을 수 없어요. 전화(${businessInfo.phone})나 네이버 예약을 이용해 주세요.`,
+    failed: `신청을 저장하지 못했어요. 잠시 후 다시 시도하거나 전화(${businessInfo.phone})로 연락해 주세요.`,
+  },
+
+  footer: {
+    privacy: "개인정보 처리방침",
   },
 
   /** 서버에서 다시 검사할 때의 안내 */

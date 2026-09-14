@@ -4,7 +4,17 @@ import type { SelectionSummary } from "@/lib/selection";
 import { RESERVATION_FORM_ID } from "./sections";
 
 /** 화면 하단 고정 예약 버튼 — form 속성으로 OrdererForm을 제출 */
-export default function SubmitBar({ summary }: { summary: SelectionSummary }) {
+export default function SubmitBar({
+  summary,
+  submitting,
+  error,
+}: {
+  summary: SelectionSummary;
+  /** 저장 중 — 버튼을 막고 안내 */
+  submitting: boolean;
+  /** 저장 실패 안내 */
+  error: string | null;
+}) {
   const t = useT();
   const { countByCategory, totalQuantity, totalPrice, scheduleLabel } = summary;
 
@@ -27,12 +37,19 @@ export default function SubmitBar({ summary }: { summary: SelectionSummary }) {
             <span className="shrink-0 font-bold text-brand-dark">{t.format.price(totalPrice)}</span>
           )}
         </div>
+        {error && (
+          <p role="alert" className="mb-2 rounded-lg bg-brand-tint px-3 py-2 text-[13px] font-semibold text-danger">
+            {error}
+          </p>
+        )}
         <button
           type="submit"
           form={RESERVATION_FORM_ID}
-          className="h-[52px] w-full rounded-xl bg-brand text-[17px] font-bold text-white transition hover:bg-brand-dark active:scale-[0.99]"
+          disabled={submitting}
+          aria-busy={submitting}
+          className="h-[52px] w-full rounded-xl bg-brand text-[17px] font-bold text-white transition hover:bg-brand-dark active:scale-[0.99] disabled:cursor-wait disabled:opacity-70"
         >
-          {t.submitBar.submit}
+          {submitting ? t.submit.saving : t.submitBar.submit}
         </button>
       </div>
     </div>

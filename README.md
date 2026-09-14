@@ -14,25 +14,25 @@ npm run lint
 
 ```
 src/
-├─ app/                      페이지 진입점 (page.tsx, layout.tsx, globals.css)
+├─ app/                      페이지 진입점 (page.tsx, layout.tsx, globals.css) · privacy/ 개인정보 처리방침
 │  └─ admin/                 관리자 페이지 — login / 목록(page.tsx, ?status= 필터) / [id] 상세
 ├─ proxy.ts                  /admin 요청마다 로그인 세션 갱신 (Next 16: middleware → proxy)
 ├─ components/
 │  ├─ admin/                 관리자 화면 — AdminHeader, LoginForm, StatusFilterTabs, ReservationListItem, ReservationDetail, StatusChanger, AdminMemoForm, AdminDocuments
-│  ├─ layout/                StoreHeader, Hero — 매장 공통 화면
+│  ├─ layout/                StoreHeader(+ LanguageSwitcher 🌐), Hero, SiteFooter — 매장 공통 화면
 │  ├─ reservation/           예약 기능
 │  │  ├─ ReservationPage.tsx   섹션 조립만 담당
-│  │  ├─ useReservation.ts     상태·제출 로직 (Supabase 연결 지점: submit)
+│  │  ├─ useReservation.ts     상태·제출 로직 (submit → server/actions/reservation 으로 저장)
 │  │  ├─ sections.ts           섹션 id, form id, 스크롤 함수
 │  │  ├─ CategoryEntry / NaverBookingBanner   첫 화면 상품 종류 입구 카드 + 네이버 예약 바로가기 (신청서 쓰기 전에 나눔)
 │  │  ├─ ProductSection / ProductOption / ProductPhotos / CategoryNotice   종류 탭 + 수량 + "꼭 확인해 주세요"
 │  │  ├─ SpecialEventBanner / EventDayNotice   특별한 날(인재개발원 승진식 등) 첫 화면 안내 + 날짜 섹션 안내
 │  │  ├─ DateTimeSection / Calendar / TimeSlotGroup
 │  │  ├─ RecipientMessageField / UnitDetailCard / MessageEditor   상품 1개마다 받는 분·메시지 ("앞과 같음")
-│  │  └─ ReserveSection / OrdererForm / PaymentMethodField / BankAccountCard / DocumentRequestField / DocumentsPanel / BusinessDocumentView / ColorField / OrderSummary / ReservationComplete / SubmitBar
+│  │  └─ ReserveSection / OrdererForm / PaymentMethodField / BankAccountCard / DocumentRequestField / DocumentsPanel / BusinessDocumentView / ColorField / OrchidDeliveryField / PrivacyConsentField / OrderSummary / ReservationComplete / SubmitBar
 │  └─ ui/                    Field, Checkbox, QuantityStepper, SectionHeading, ErrorText, icons … 재사용 부품
 ├─ server/                   서버 전용 (브라우저로 안 감) — env, supabase(DB·로그인 클라이언트), auth(requireAdmin), reservations(저장·목록·수정)
-│  └─ actions/               "use server" 함수 — admin(로그인·로그아웃·상태·메모)
+│  └─ actions/               "use server" 함수 — reservation(고객 신청 검사·저장), admin(로그인·로그아웃·상태·메모)
 ├─ hooks/                    useNow, useActiveSection, useElementWidth
 ├─ lib/                      순수 함수 (date, time, events, format, selection, units, payment, reservationRequest, reservationValidation, documents)
 ├─ i18n/                     화면 문구 — ko(기준)·en·ja·zh·vi. 모양이 ko와 다르면 타입 오류 / index.ts: 언어 목록·messages
@@ -61,7 +61,7 @@ public/flowers/              상품 사진 ({종류}-{금액}-{번호}.jpg — b
    새 메시지 방식이 필요하면 `MessageType`·`UnitMessage` → `lib/units.ts`(빈 값·설명) → `lib/reservationRequest.ts` → `MessageEditor`.
 6. 신청서 input의 `name`은 `ReservationFormField`와 같아야 하고, 입력값은 `lib/reservationRequest.ts`에서만 읽는다.
    받는 분·메시지는 상품 1개 단위 상태(`UnitDetail`)로 관리하고, "앞과 같음" 해석은 `lib/units.ts`의 `resolveUnits` 하나로만 한다.
-7. DB 저장·이메일 발송은 `useReservation.ts`의 `submit` 안 TODO 한 곳에서만 연결한다.
+7. 고객 신청 저장은 `useReservation.ts`의 `submit` → `server/actions/reservation.ts`(`validateReservationRequest`로 다시 검사 → `insertReservation`) 한 길로만 한다. 이메일 발송도 나중에 이 서버 함수에 붙인다.
 8. 견적서·거래명세표 내용은 `lib/documents.ts`의 `buildBusinessDocument` 하나로만 만든다 (화면·인쇄·나중에 이메일 PDF 공용). 공급자 정보는 `data/shop.ts`의 `businessInfo`.
 9. 특별한 날(인재개발원 승진식 등)은 `data/events.ts`의 `specialEvents`에 한 줄 추가한다. (예: `institutePromotion(10, "2026-11-20")`)
    달력 표시·그날 고를 수 있는 시간(`slots`)·첫 화면 배너·예약 마감 안내가 자동으로 따라온다. 예약 가능 여부는 `lib/time.ts`의 `isSlotBookable` 하나로만 판단한다.

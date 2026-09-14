@@ -5,6 +5,7 @@ import {
   RIBBON_MAX_LENGTH,
   SAME_DAY_LEAD_HOURS,
 } from "@/data/reservationOptions";
+import { businessInfo } from "@/data/shop";
 import type { Messages } from "./ko";
 
 /** Tiếng Việt — 모양은 ko.ts와 같아야 한다 (시각은 24시간제) */
@@ -489,6 +490,7 @@ export const vi: Messages = {
 
   complete: {
     title: "Đã gửi đơn thành công! 🎉",
+    receiptNumber: (no) => `Mã đơn ${no}`,
     orderer: (name, phone) => `Người đặt ${name} · ${phone}`,
     paymentMethod: (label) => `Thanh toán · ${label}`,
     cashReceipt: (label, number) => `Hóa đơn tiền mặt · ${label} ${number}`,
@@ -503,6 +505,38 @@ export const vi: Messages = {
   submitBar: {
     empty: "Vui lòng chọn sản phẩm và ngày giờ",
     submit: "Đặt hoa",
+  },
+
+  privacy: {
+    consentLabel: "[Bắt buộc] Tôi đồng ý cho thu thập và sử dụng thông tin cá nhân",
+    showDetails: "Xem nội dung",
+    hideDetails: "Thu gọn",
+    items: [
+      {
+        title: "Thông tin thu thập",
+        body: "Tên và số điện thoại người đặt (bắt buộc); tên và số điện thoại người nhận, nội dung lời nhắn, tên và chức vụ trên thẻ cắm thăng chức, nhà hàng giao lan và tên đặt bàn, số hóa đơn tiền mặt, liên hệ người thanh toán thẻ, email nhận yêu cầu PayPal, email nhận chứng từ, tên công ty và mã số kinh doanh (nếu có)",
+      },
+      {
+        title: "Mục đích sử dụng",
+        body: "Tiếp nhận và liên hệ xác nhận đơn, làm hoa và giao nhận, xác nhận thanh toán, xuất hóa đơn tiền mặt, báo giá và phiếu giao dịch",
+      },
+      {
+        title: "Thời gian lưu",
+        body: "Lưu 1 năm sau khi giao hoa rồi hủy (thông tin cần lưu theo luật sẽ được lưu trong thời gian quy định)",
+      },
+    ],
+    refusal: "Quý khách có thể từ chối, nhưng khi đó không thể đặt hoa trực tuyến. Vui lòng gọi điện hoặc dùng Naver Booking.",
+    policyLink: "Xem toàn bộ chính sách bảo mật (tiếng Hàn) ›",
+  },
+
+  submit: {
+    saving: "Đang lưu đơn…",
+    unavailable: `Hiện chưa thể nhận đơn trực tuyến. Vui lòng gọi ${businessInfo.phone} hoặc dùng Naver Booking.`,
+    failed: `Không lưu được đơn. Vui lòng thử lại sau hoặc gọi ${businessInfo.phone}.`,
+  },
+
+  footer: {
+    privacy: "Chính sách bảo mật",
   },
 
   validation: {
