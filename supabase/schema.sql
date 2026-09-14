@@ -31,3 +31,14 @@ grant select, insert, update on table public.reservations to service_role;
 
 -- 사이트 연결 쪽(Data API)이 새 표를 바로 알아보도록 새로고침
 notify pgrst, 'reload schema';
+
+-- ── 2026-09-15 추가: 손님 예약 조회·취소 요청 ──────────────────────────────
+-- 이미 표를 만든 경우 아래만 SQL Editor에서 한 번 더 실행해도 됨 (여러 번 실행해도 안전)
+-- 접수번호 = id 앞 8자리 대문자 (예: 5D7BBC7E) — 손님 조회용
+alter table public.reservations
+  add column if not exists receipt_number text generated always as (upper(left(id::text, 8))) stored;
+create index if not exists reservations_receipt_idx on public.reservations (receipt_number);
+-- 손님 취소 요청 (요청 시각·환불 계좌) — 없으면 null
+alter table public.reservations add column if not exists cancel_request jsonb;
+
+notify pgrst, 'reload schema';

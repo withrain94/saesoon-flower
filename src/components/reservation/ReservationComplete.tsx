@@ -1,4 +1,7 @@
+import Link from "next/link";
+import { lookupPath } from "@/data/shop";
 import { useT } from "@/hooks/useLocale";
+import { useLookupT } from "@/hooks/useLookupT";
 import { formatReceiptNumber } from "@/lib/format";
 import type { SelectionSummary } from "@/lib/selection";
 import {
@@ -23,6 +26,7 @@ export default function ReservationComplete({
   units: ResolvedUnit[];
 }) {
   const t = useT();
+  const l = useLookupT();
   const reservation = submitted.request;
   const payment = t.payment.methods[reservation.paymentMethod];
   const { orchidDelivery } = reservation;
@@ -38,6 +42,13 @@ export default function ReservationComplete({
       </p>
       <p className="mt-1.5 text-[15px] text-body">{payment.complete}</p>
       <p className="mt-3 text-sm text-sub">{t.complete.orderer(reservation.ordererName, reservation.ordererPhone)}</p>
+      <Link
+        href={`${lookupPath}?no=${formatReceiptNumber(submitted.id)}`}
+        className="mt-3 inline-flex rounded-full border border-brand px-4 py-2 text-[13px] font-bold text-brand-dark transition hover:bg-brand-tint"
+      >
+        {l.completeLookup} ›
+      </Link>
+      <p className="mt-1 text-[12px] text-sub">{l.completeLookupNote}</p>
 
       {/* 결제 방법별 다음 할 일 */}
       <div className="mt-5 space-y-2 rounded-2xl bg-panel p-3 text-left">

@@ -157,12 +157,38 @@ export type ReservationRequest = {
 /** 관리자 페이지 예약 진행 상태 */
 export type ReservationStatus = "received" | "confirmed" | "made" | "delivered" | "canceled";
 
+/**
+ * 손님이 예약 조회 화면에서 취소한 기록.
+ * - paid=false: "아직 입금(결제) 안 했어요" → 바로 취소됨 (매장은 실제로 입금이 없는지만 확인)
+ * - paid=true: "이미 입금(결제)했어요" 또는 입금 확인된 예약 → 취소 요청, 매장이 환불 후 관리자에서 "취소"로 마무리
+ * 환불 계좌는 paid=true + 계좌이체일 때만 (카드·PayPal은 결제 취소로 환불하므로 빈 값)
+ */
+export type CancelRequest = {
+  requestedAt: string;
+  /** 손님이 입금(결제)했다고 답했는지 */
+  paid: boolean;
+  refundBank: string;
+  refundAccount: string;
+  refundHolder: string;
+};
+
 /** DB에 저장된 예약 한 건 */
 export type StoredReservation = {
   id: string;
   createdAt: string;
   status: ReservationStatus;
   adminMemo: string;
+  request: ReservationRequest;
+  /** 손님 취소 요청 — 없으면 null */
+  cancelRequest: CancelRequest | null;
+};
+
+/** 손님 예약 조회 화면에 보내는 내용 (매장 메모 등 매장 전용 정보는 뺌) */
+export type CustomerReservationView = {
+  receiptNumber: string;
+  status: ReservationStatus;
+  /** 취소 요청을 보냈으면 요청 시각 */
+  cancelRequestedAt: string | null;
   request: ReservationRequest;
 };
 

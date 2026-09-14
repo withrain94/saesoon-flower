@@ -7,6 +7,8 @@ import StatusBadge from "./StatusBadge";
 /** 목록의 예약 한 건 — 누르면 상세 */
 export default function ReservationListItem({ reservation }: { reservation: StoredReservation }) {
   const { request } = reservation;
+  // 입금(결제)했다고 답한 취소 요청이 아직 처리 전일 때만
+  const cancelRequested = reservation.cancelRequest?.paid === true && reservation.status !== "canceled";
   const tags = [
     request.documents.length > 0 && "서류 요청",
     request.orchidDelivery?.method === "restaurant" && "식당 배송",
@@ -26,7 +28,12 @@ export default function ReservationListItem({ reservation }: { reservation: Stor
           {formatAdminTime(request.time)}
           <span className="ml-2 text-[15px] font-bold text-body">{request.ordererName}</span>
         </p>
-        <StatusBadge status={reservation.status} />
+        <span className="flex shrink-0 items-center gap-1">
+          {cancelRequested && (
+            <span className="rounded-full bg-danger px-2.5 py-0.5 text-[12px] font-bold text-white">취소 요청</span>
+          )}
+          <StatusBadge status={reservation.status} />
+        </span>
       </div>
       <p className="mt-1 text-[14px] text-body">{summarizeItems(request)}</p>
       <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-sub">

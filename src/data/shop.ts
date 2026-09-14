@@ -52,6 +52,9 @@ export const naverOnlyBookings = [
 /** 개인정보 처리방침 페이지 주소 (신청서 동의 칸·페이지 아래쪽 링크) */
 export const privacyPath = "/privacy";
 
+/** 손님 예약 조회·취소 화면 (접수번호를 미리 채우려면 ?no=접수번호) */
+export const lookupPath = "/check";
+
 /** 새순 소개 사이트 — 예약 탭에 없는 사진·설명을 더 보고 싶은 분께 연결 */
 export const siteUrl = "https://saesoon-jeonju.withrain94.chatgpt.site";
 

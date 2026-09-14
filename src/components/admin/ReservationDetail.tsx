@@ -15,6 +15,7 @@ import { formatReceiptNumber } from "@/lib/format";
 import { notionPageTitle } from "@/lib/notionReservation";
 import type { StoredReservation } from "@/types/reservation";
 import AdminDocuments from "./AdminDocuments";
+import CancelRequestCard from "./CancelRequestCard";
 import AdminMemoForm from "./AdminMemoForm";
 import NotionSyncButton from "./NotionSyncButton";
 import StatusBadge from "./StatusBadge";
@@ -47,6 +48,8 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
           <StatusChanger id={id} status={status} />
         </div>
       </section>
+
+      <CancelRequestCard reservation={reservation} />
 
       <Card title="예약자">
         <Rows>
