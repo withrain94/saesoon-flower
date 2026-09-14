@@ -46,6 +46,7 @@ export const privacyPolicySections: { title: string; paragraphs: string[] }[] = 
       "· Supabase Inc.: 예약 정보 저장(데이터베이스). 보관 위치는 서비스 설정 지역을 따릅니다.",
       "· Vercel Inc.: 웹사이트 운영(호스팅).",
       "· PayPal: PayPal 결제를 고른 경우 결제 요청 발송(이메일, 결제 금액).",
+      "· Telegram: 매장 직원에게 새 예약 알림 전달(예약자 성함·연락처, 예약 일시·상품·금액).",
       "위 서비스는 해외 사업자가 제공하며, 예약 정보가 해당 사업자의 서버를 거쳐 처리·보관될 수 있습니다.",
     ],
   },

@@ -1,10 +1,12 @@
 "use server";
 
+import { after } from "next/server";
 import { DEFAULT_LOCALE, isLocale, messages } from "@/i18n";
 import { validateReservationRequest } from "@/lib/reservationValidation";
 import { toNowInTimeZone } from "@/lib/time";
 import type { ReservationRequest } from "@/types/reservation";
-import { getSupabaseEnv } from "../env";
+import { getSiteOrigin, getSupabaseEnv } from "../env";
+import { notifyNewReservation } from "../notify";
 import { insertReservation } from "../reservations";
 
 /** 신청 결과 — 성공이면 접수 id와 서버에서 다시 계산한 예약 내용, 실패면 고객 언어로 된 안내 문구 */
@@ -29,6 +31,8 @@ export async function submitReservation(input: unknown): Promise<SubmitReservati
 
   try {
     const id = await insertReservation(result.request);
+    // 매장 알림은 손님 완료 화면을 기다리게 하지 않도록 응답 뒤에 보냄 (실패해도 예약은 그대로)
+    after(() => notifyNewReservation(id, result.request, getSiteOrigin()));
     return { ok: true, id, request: result.request };
   } catch (error) {
     // 고객 정보는 남기지 않고 오류 종류만 서버 로그에
@@ -36,3 +40,4 @@ export async function submitReservation(input: unknown): Promise<SubmitReservati
     return { ok: false, message: t.submit.failed };
   }
 }
+
