@@ -53,7 +53,7 @@
 | 당일 예약 | 받는 시간 2시간 전까지 | `SAME_DAY_LEAD_HOURS` |
 | 예약 마감 | 오후 5시가 되면 **다음날 오전 9시까지(9시 포함)** 시간대는 고를 수 없음 → 다음날 10시부터 | `ORDER_CLOSE_HOUR` / `ORDER_OPEN_HOUR`, `lib/time.ts` |
 | 호접난 | 2개 1세트 120,000원, 색감 선택 칸 없음(흰색), 메시지는 **블랙보드만**: 알아서 써주세요(기본) / 키워주셔서 감사합니다… / 호접난의 꽃말처럼… / 직접 입력(40자). 화면은 **사진 먼저 크게 → 꼭 확인해 주세요 요약 3줄 + 전체 안내 펼치기**. 받는 방법: 매장 픽업 / 상견례 식당 배송(호남각·궁·고궁담·기타 + 식당 예약 이름) | `products.ts`(`featured`), 언어 파일 `categories.orchid.notice`, `blackboardPresetsByCategory`, `OrchidDeliveryField` |
-| 인재개발원 승진식 | 제8기 2026-10-08, 제9기 2026-10-26. 그날은 **오전 8시·9시만** 선택, 꽃바구니 추천(전국에서 모여 멀리서 오신 분 많음), **무료 승진 토퍼**: 그날 꽃다발·꽃바구니마다 이름·직급 칸(선택), 달력 "승진식" 표시 + 첫 화면 배너. 새 기수는 한 줄 추가 | `data/events.ts`(`topperCategories`), 문구는 언어 파일 `events` |
+| 인재개발원 승진식 | 제8기 2026-10-08, 제9기 2026-10-30(금, 2026-09-15 10/26에서 변경). 그날은 **오전 8시·9시만** 선택, 꽃바구니 추천(전국에서 모여 멀리서 오신 분 많음), **무료 승진 토퍼**: 그날 꽃다발·꽃바구니마다 이름·직급 칸(선택), 달력 "승진식" 표시 + 첫 화면 배너. 새 기수는 한 줄 추가 | `data/events.ts`(`topperCategories`), 문구는 언어 파일 `events` |
 | 소개 사이트 연결 | 헤더 버튼 + 상품 탭별 "사진·설명 더 보기" + 사진 목록 끝 칸. 꽃다발 `#product-01`, 꽃바구니 `#product-02`, 호접난 `#meeting` | `siteUrl`, `siteLinksByCategory` |
 | 결제 방법 | 신청서에서는 **계좌이체 / 카드 결제 / PayPal** 3개. PayPal = 상품 금액 + 수수료 10% 자동 계산 + 결제 요청 받을 이메일(외국어 화면은 결제 칸 위에 크게 안내). 카드 결제 = 매장 연락 후 전화로 카드번호 전달(신청서에 적지 말라고 안내) + "카드 결제하실 분 연락처: 1.예약자와 동일 / 2.다름(자유 입력)" | `paymentMethodOptions`, `PAYPAL_FEE_RATE`, `PaymentMethodField` |
 | 현금영수증 | 계좌이체일 때만: 신청 안 함 / 소득공제(휴대폰) / 지출증빙(사업자번호) | `cashReceiptOptions` |
@@ -94,6 +94,7 @@
 5. ✅ `supabase/schema.sql`, `.env.example`(+ `.gitignore`에 `!.env.example`), README에 `server/`·`admin` 계층 추가
 6. ✅ (2026-09-15) tsc·lint 통과 / 브라우저: 동의 안 하면 제출 막힘, 동의 후 제출 → 비밀 키 없어서 "온라인 신청을 받을 수 없어요" 안내(가짜 완료 없음) / `/admin` → 307 로그인 화면 / `/privacy` 200. **build는 dev 서버가 켜져 있어 안 돌림**. 실제 저장·관리자 로그인은 키 넣은 뒤 확인 필요
    - 현재 `.env.local`: URL·공개 키는 있음, **SUPABASE_SECRET_KEY·ADMIN_EMAILS 비어 있음**
+   - ✅ (2026-09-15) 사용자가 SQL Editor에서 schema.sql 실행 성공. 공개 키로 읽기 → 401 "permission denied for table reservations" (표 있음 + 외부 차단 확인). ✅ 관리자 계정 만듦(사용자) + 회원가입 막힘 확인(auth settings disable_signup=true, 이메일 로그인 켜짐). ✅ 사용자가 .env.local에 비밀 키·ADMIN_EMAILS 입력(형식 OK, 관리자 이메일 = Supabase 계정·확인됨) → dev 서버 재시작 → 브라우저 테스트 예약 저장 성공(접수번호 5D7BBC7E, 10/15 14:00 꽃바구니 10만원) → DB 확인 후 **취소 상태 + 메모 "Claude 저장 확인용 테스트 예약"** 으로 바꿔 둠. `/admin` → 로그인 화면 표시 확인. 관리자 로그인은 사용자가 직접 확인해야 함. 남은 사용자 할 일: (관리자 로그인 확인) → Vercel 환경변수 4개 → "배포해줘".
 7. 사용자 안내(직접 할 일): Supabase 가입 → 프로젝트 생성(지역 **Seoul**) → SQL Editor에 schema.sql 실행 → Authentication에서 관리자 계정 만들고 **회원가입 막기** → 키를 `.env.local`·Vercel 환경변수에 직접 입력 → 재배포
 8. 처리방침은 일반 양식이므로 사용자에게 내용 확인 권유(보관 기간 1년 등)
 

@@ -26,3 +26,8 @@ create index if not exists reservations_status_idx on public.reservations (statu
 -- RLS 켜고 정책은 만들지 않음 → 공개 키로는 아무것도 못 읽음 (비밀 키는 RLS를 통과)
 alter table public.reservations enable row level security;
 revoke all on table public.reservations from anon, authenticated;
+-- 서버(비밀 키)는 읽기·쓰기 가능 — 새 표를 자동 공개하지 않는 프로젝트 설정이어도 동작하도록 명시
+grant select, insert, update on table public.reservations to service_role;
+
+-- 사이트 연결 쪽(Data API)이 새 표를 바로 알아보도록 새로고침
+notify pgrst, 'reload schema';

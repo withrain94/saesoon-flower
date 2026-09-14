@@ -36,7 +36,7 @@ function institutePromotion(term: number, date: string): SpecialEvent {
 /** 날짜순. 새 승진식이 잡히면 한 줄 추가 */
 export const specialEvents: SpecialEvent[] = [
   institutePromotion(8, "2026-10-08"),
-  institutePromotion(9, "2026-10-26"),
+  institutePromotion(9, "2026-10-30"),
 ];
 
 export function getEventOn(dateKey: string): SpecialEvent | undefined {
