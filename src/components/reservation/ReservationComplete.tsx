@@ -1,6 +1,12 @@
-import { cashReceiptOptions, paymentMethodOptions } from "@/data/reservationOptions";
+import { useT } from "@/hooks/useLocale";
 import type { SelectionSummary } from "@/lib/selection";
-import { describeMessage, describeRecipient, getUnitLabel, type ResolvedUnit } from "@/lib/units";
+import {
+  describeMessage,
+  describeRecipient,
+  describeTopper,
+  getUnitLabel,
+  type ResolvedUnit,
+} from "@/lib/units";
 import type { ReservationRequest } from "@/types/reservation";
 import BankAccountCard from "./BankAccountCard";
 import DocumentsPanel from "./DocumentsPanel";
@@ -15,37 +21,45 @@ export default function ReservationComplete({
   summary: SelectionSummary;
   units: ResolvedUnit[];
 }) {
-  const payment = paymentMethodOptions.find((option) => option.value === reservation.paymentMethod);
-  const cashReceipt = cashReceiptOptions.find((option) => option.value === reservation.cashReceiptType);
+  const t = useT();
+  const payment = t.payment.methods[reservation.paymentMethod];
+  const { orchidDelivery } = reservation;
 
   return (
     <div role="status" className="mt-5 rounded-2xl border border-brand px-5 py-8 text-center">
       <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-brand text-2xl text-white">
         ✓
       </span>
-      <p className="mt-4 text-lg font-bold text-ink">작성이 완료되었습니다! 🎉</p>
-      <p className="mt-1.5 text-[15px] text-body">{payment?.completeMessage}</p>
-      <p className="mt-3 text-sm text-sub">
-        예약자 {reservation.ordererName} · {reservation.ordererPhone}
-      </p>
+      <p className="mt-4 text-lg font-bold text-ink">{t.complete.title}</p>
+      <p className="mt-1.5 text-[15px] text-body">{payment.complete}</p>
+      <p className="mt-3 text-sm text-sub">{t.complete.orderer(reservation.ordererName, reservation.ordererPhone)}</p>
 
       {/* 결제 방법별 다음 할 일 */}
       <div className="mt-5 space-y-2 rounded-2xl bg-panel p-3 text-left">
-        <p className="px-1 text-[13px] font-bold text-brand-dark">결제 방법 · {payment?.label}</p>
+        <p className="px-1 text-[13px] font-bold text-brand-dark">{t.complete.paymentMethod(payment.label)}</p>
         {reservation.paymentMethod === "bank" && (
           <>
             <BankAccountCard />
             {reservation.cashReceiptType !== "none" && (
               <p className="px-1 text-[13px] text-body">
-                현금영수증 · {cashReceipt?.label} {reservation.cashReceiptNumber}
+                {t.complete.cashReceipt(
+                  t.payment.cashReceiptOptions[reservation.cashReceiptType],
+                  reservation.cashReceiptNumber,
+                )}
               </p>
             )}
           </>
         )}
         {reservation.paymentMethod === "card" && (
           <p className="px-1 text-[13px] text-body">
-            결제하실 분 ·{" "}
-            {reservation.cardPayer === "other" ? reservation.cardPayerContact : "예약자와 동일"}
+            {t.complete.cardPayer(
+              reservation.cardPayer === "other" ? reservation.cardPayerContact : t.complete.cardPayerSame,
+            )}
+          </p>
+        )}
+        {reservation.paymentMethod === "paypal" && (
+          <p className="px-1 text-[13px] text-body">
+            {t.complete.paypal(t.format.price(reservation.paypalAmount), reservation.paypalEmail)}
           </p>
         )}
       </div>
@@ -56,14 +70,28 @@ export default function ReservationComplete({
         <OrderSummary summary={summary} />
       </div>
 
+      {orchidDelivery && (
+        <p className="mt-3 rounded-xl border border-line px-4 py-3 text-left text-[13px] text-body">
+          {t.complete.orchidDelivery(
+            orchidDelivery.method === "restaurant"
+              ? t.orchidDelivery.describeRestaurant(
+                  t.restaurants[orchidDelivery.restaurant as keyof typeof t.restaurants] ?? orchidDelivery.restaurant,
+                  orchidDelivery.reservationName,
+                )
+              : t.orchidDelivery.describePickup,
+          )}
+        </p>
+      )}
+
       <ul className="mt-3 space-y-2 text-left text-[13px]">
-        {units.map(({ unit, recipient, message }, index) => (
+        {units.map(({ unit, recipient, topper, topperAvailable, message }, index) => (
           <li key={unit.key} className="rounded-xl border border-line px-4 py-3">
             <p className="font-bold text-ink">
-              {index + 1}. {getUnitLabel(unit)}
+              {index + 1}. {getUnitLabel(unit, t)}
             </p>
-            <p className="mt-1 text-body">받는 분 · {describeRecipient(recipient)}</p>
-            <p className="text-body">메시지 · {describeMessage(message)}</p>
+            <p className="mt-1 text-body">{t.complete.recipient(describeRecipient(recipient, t))}</p>
+            {topperAvailable && <p className="text-body">{describeTopper(topper, t)}</p>}
+            <p className="text-body">{t.complete.message(describeMessage(message, t))}</p>
           </li>
         ))}
       </ul>

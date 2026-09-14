@@ -1,14 +1,13 @@
 import type { ProductCategoryId } from "@/types/reservation";
 
+/** 매장 이름·한 줄 소개는 언어 파일(i18n)의 shop 에 있음 */
 export const shop = {
-  name: "새순 전주혁신도시점",
-  tagline: "예약, 주문제작, 무인픽업도 가능한 24시 무인꽃집.",
   heroImage: "/flowers/bouquet-80000-06.jpg",
 };
 
 /**
  * 견적서·거래명세표의 "공급자" 정보.
- * 값을 비우면 서류에 "(확인 필요)"로 표시됨. TODO(자료 필요): 직인 이미지
+ * 값을 비우면 서류에 "(확인 필요)"로 표시됨.
  */
 export const businessInfo = {
   tradeName: "새순",
@@ -20,6 +19,8 @@ export const businessInfo = {
   /** 종목 */
   businessItem: "화초 및 식물 소매업",
   phone: "010-5954-3963",
+  /** 대표자 이름 옆에 찍는 직인 (투명 배경 PNG, public 기준 경로). 바꿀 땐 새 번호 파일명으로 */
+  sealImage: "/documents/seal-01.png" as string | null,
   /**
    * 서류에 적는 품목의 부가세 — "exempt": 면세 품목(합계만) / "taxable": 과세 품목(공급가액·세액 나눠 표시)
    * null: 아직 모름 → 서류에 "부가세 구분 (확인 필요)"로 표시
@@ -30,19 +31,20 @@ export const businessInfo = {
   quoteValidDays: 14,
 };
 
+/** 은행 이름은 언어별 표기가 달라 언어 파일(i18n)의 bankCard.bank 에 있음 */
 export const bankAccount = {
-  bank: "농협",
   number: "302-0690-4409-61",
   holder: "김래인",
 };
 
-/** 이 페이지에서 신청받지 않고 네이버 예약으로만 받는 상품 — 첫 화면에서 바로 연결 */
+/**
+ * 이 페이지에서 신청받지 않고 네이버 예약으로만 받는 상품 — 첫 화면에서 바로 연결.
+ * 버튼 문구는 언어 파일(i18n)의 naverOnly[id] (id를 추가하면 타입 오류가 빠진 언어를 알려줌)
+ */
 export const naverOnlyBookings = [
   {
-    id: "plant",
+    id: "plant" as const,
     emoji: "🪴",
-    title: "개업·승진·축하 화분 예약하기",
-    description: "네이버 예약으로만 받아요",
     url: "https://m.booking.naver.com/booking/6/bizes/1201254/items/7897484?area=pll&entry=pll&fbclid=PAb21jcAUUAXBjbGNrAhOIKGV4dG4DYWVtAjEwAAGmqiuZCxfN75n2HqwN8G5Jf8MVuLz2dHiXYUIUUzGuVLZpPlQjja3MvbXl_aem_wQIDFQI5CMD5rQV_zMIV3w&lang=ko&startDate=2026-09-14&theme=place",
   },
 ];

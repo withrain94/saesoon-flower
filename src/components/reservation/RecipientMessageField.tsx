@@ -1,4 +1,4 @@
-import { MESSAGE_GUIDE } from "@/data/reservationOptions";
+import { useT } from "@/hooks/useLocale";
 import type { ResolvedUnit } from "@/lib/units";
 import UnitDetailCard from "./UnitDetailCard";
 import type { UnitActions } from "./useReservation";
@@ -11,18 +11,19 @@ export default function RecipientMessageField({
   units: ResolvedUnit[];
   actions: UnitActions;
 }) {
+  const t = useT();
   const multiple = units.length > 1;
 
   return (
     <div>
       <p className="text-[15px] font-bold text-ink">
-        받는 분·메시지 <span className="text-[13px] font-normal text-sub">선택</span>
+        {t.recipient.title} <span className="text-[13px] font-normal text-sub">{t.common.optional}</span>
       </p>
-      <p className="mt-0.5 text-[13px] text-sub">{MESSAGE_GUIDE}</p>
+      <p className="mt-0.5 text-[13px] text-sub">{t.recipient.guide}</p>
 
       {units.length === 0 ? (
         <p className="mt-2 rounded-lg bg-soft px-4 py-3 text-sm text-sub">
-          상품을 담으면 받는 분과 메시지를 적을 수 있어요.
+          {t.recipient.empty}
         </p>
       ) : (
         <>
@@ -64,15 +65,21 @@ function BulkToggle({
   units: ResolvedUnit[];
   onChange: (same: boolean) => void;
 }) {
+  const t = useT();
   const state = getBulkState(units);
   const options: { same: boolean; label: string; description: string; active: boolean }[] = [
-    { same: true, label: "모두 같음", description: "받는 분·메시지 한 번만 입력", active: state === "same" },
-    { same: false, label: "모두 따로", description: "상품마다 각각 입력", active: state === "separate" },
+    { same: true, label: t.recipient.allSame, description: t.recipient.allSameDescription, active: state === "same" },
+    {
+      same: false,
+      label: t.recipient.allSeparate,
+      description: t.recipient.allSeparateDescription,
+      active: state === "separate",
+    },
   ];
 
   return (
     <div className="mt-3">
-      <div role="group" aria-label="받는 분·메시지 한 번에 바꾸기" className="grid grid-cols-2 gap-2">
+      <div role="group" aria-label={t.recipient.bulkAria} className="grid grid-cols-2 gap-2">
         {options.map((option) => (
           <button
             key={option.label}
@@ -94,7 +101,7 @@ function BulkToggle({
       </div>
       {state === "mixed" && (
         <p className="mt-1.5 text-[12px] text-sub">
-          일부만 따로 입력 중이에요. 버튼을 누르면 모든 상품에 한 번에 적용돼요.
+          {t.recipient.mixed}
         </p>
       )}
     </div>

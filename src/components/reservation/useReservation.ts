@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocale, useT } from "@/hooks/useLocale";
 import { useNow } from "@/hooks/useNow";
 import { buildReservationRequest } from "@/lib/reservationRequest";
 import {
@@ -14,6 +15,7 @@ import {
   getOrderUnits,
   isEmptyMessage,
   isEmptyRecipient,
+  isEmptyTopper,
   resolveUnits,
   type ResolvedUnit,
 } from "@/lib/units";
@@ -21,6 +23,7 @@ import type {
   Recipient,
   ReservationRequest,
   Selection,
+  Topper,
   UnitDetail,
   UnitMessage,
 } from "@/types/reservation";
@@ -30,6 +33,7 @@ import { issueSection, scrollToSection, SECTION } from "./sections";
 export type UnitActions = {
   setSameRecipient: (unit: ResolvedUnit, same: boolean) => void;
   setRecipient: (unit: ResolvedUnit, patch: Partial<Recipient>) => void;
+  setTopper: (unit: ResolvedUnit, patch: Partial<Topper>) => void;
   setSameMessage: (unit: ResolvedUnit, same: boolean) => void;
   setMessage: (unit: ResolvedUnit, patch: Partial<UnitMessage>) => void;
   /** 모든 상품의 받는 분·메시지를 한 번에 "앞과 같음"(true) 또는 "따로 입력"(false)으로 */
@@ -39,6 +43,8 @@ export type UnitActions = {
 /** 예약 페이지의 모든 상태와 동작을 한 곳에서 관리 */
 export function useReservation() {
   const now = useNow();
+  const locale = useLocale();
+  const t = useT();
   const [selection, setSelection] = useState<Selection>(emptySelection);
   /** 상품 1개 단위(OrderUnit.key)별 받는 분·메시지 */
   const [unitDetails, setUnitDetails] = useState<Record<string, UnitDetail>>({});
@@ -46,7 +52,7 @@ export function useReservation() {
   /** 제출 완료된 예약 한 건 (null = 아직 제출 전) */
   const [reservation, setReservation] = useState<ReservationRequest | null>(null);
 
-  const units = resolveUnits(getOrderUnits(selection), unitDetails);
+  const units = resolveUnits(getOrderUnits(selection), unitDetails, selection.date);
 
   function setQuantity(productId: string, quantity: number) {
     setSelection((current) => ({
@@ -60,9 +66,10 @@ export function useReservation() {
   }
 
   /** "같음"을 풀 때 쓸 값: 직접 적어둔 값이 있으면 그대로, 없으면 지금 보이던(앞 상품) 값 */
-  function separateValues(target: ResolvedUnit, detail: UnitDetail): Partial<UnitDetail> {
+  function separateValues(target: ResolvedUnit, detail: UnitDetail): Pick<UnitDetail, "recipient" | "topper" | "message"> {
     return {
       recipient: isEmptyRecipient(detail.recipient) ? target.recipient : detail.recipient,
+      topper: isEmptyTopper(detail.topper) ? target.topper : detail.topper,
       message: isEmptyMessage(detail.message, target.unit.product) ? target.message : detail.message,
     };
   }
@@ -77,13 +84,14 @@ export function useReservation() {
 
   const unitActions: UnitActions = {
     setSameRecipient: (target, same) =>
-      updateUnit(target, (detail) =>
-        same
-          ? { sameRecipient: true }
-          : { sameRecipient: false, recipient: separateValues(target, detail).recipient },
-      ),
+      updateUnit(target, (detail) => {
+        if (same) return { sameRecipient: true };
+        const { recipient, topper } = separateValues(target, detail);
+        return { sameRecipient: false, recipient, topper };
+      }),
     setRecipient: (target, patch) =>
       updateUnit(target, (detail) => ({ recipient: { ...detail.recipient, ...patch } })),
+    setTopper: (target, patch) => updateUnit(target, (detail) => ({ topper: { ...detail.topper, ...patch } })),
     setSameMessage: (target, same) =>
       updateUnit(target, (detail) =>
         same
@@ -122,7 +130,7 @@ export function useReservation() {
       return;
     }
 
-    const request = buildReservationRequest(selection, units, formData, submittedAt);
+    const request = buildReservationRequest(selection, units, formData, submittedAt, locale);
     // TODO(Supabase): 여기서 request 한 건을 저장 (items + 상품별 deliveries 포함)
     // TODO(이메일): request.documents가 있으면 서버에서 서류(lib/documents)를 PDF로 만들어 documentEmail로 발송
     setReservation(request);
@@ -140,7 +148,7 @@ export function useReservation() {
     unitActions,
     /** 제출을 시도한 뒤에만 보여줄 미선택 항목 */
     visibleIssue: showErrors ? issue : null,
-    summary: summarizeSelection(selection),
+    summary: summarizeSelection(selection, t),
     reservation,
     submit,
   };

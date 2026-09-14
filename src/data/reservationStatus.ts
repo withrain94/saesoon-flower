@@ -16,3 +16,24 @@ export function getStatusOption(status: ReservationStatus) {
 export function isReservationStatus(value: string): value is ReservationStatus {
   return reservationStatusOptions.some((option) => option.value === value);
 }
+
+/** 관리자 목록 위 필터 — 첫 번째가 기본값. 끝난 예약(전달 완료·취소·전체)은 최근 날짜부터 */
+export const adminStatusFilters: {
+  id: "active" | ReservationStatus | "all";
+  label: string;
+  statuses: ReservationStatus[] | null;
+  newestFirst: boolean;
+}[] = [
+  { id: "active", label: "진행 중", statuses: ["received", "confirmed", "made"], newestFirst: false },
+  ...reservationStatusOptions.map((option) => ({
+    id: option.value,
+    label: option.label,
+    statuses: [option.value],
+    newestFirst: option.tone === "done" || option.tone === "canceled",
+  })),
+  { id: "all", label: "전체", statuses: null, newestFirst: true },
+];
+
+export function getStatusFilter(id: string | undefined) {
+  return adminStatusFilters.find((filter) => filter.id === id) ?? adminStatusFilters[0];
+}

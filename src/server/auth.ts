@@ -4,7 +4,13 @@ import { redirect } from "next/navigation";
 import { getAdminEmails, getSupabaseEnv } from "./env";
 import { createAuthClient } from "./supabase";
 
+export const ADMIN_HOME_PATH = "/admin";
 export const ADMIN_LOGIN_PATH = "/admin/login";
+
+/** 예약 id 형식 (DB uuid) — 주소창에 이상한 값이 오면 DB에 묻기 전에 거름 */
+export function isReservationId(value: string) {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+}
 
 /**
  * 로그인한 관리자 이메일 — 로그인 안 했거나 허용 목록(ADMIN_EMAILS)에 없으면 null.

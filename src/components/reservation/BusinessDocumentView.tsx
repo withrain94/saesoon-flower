@@ -1,3 +1,4 @@
+import Image from "next/image";
 import {
   DOCUMENT_WIDTH,
   MISSING_INFO,
@@ -97,7 +98,26 @@ function PartyTable({ title, rows }: { title: string; rows: DocumentParty }) {
                 row.value.includes(MISSING_INFO) ? "text-danger" : ""
               }`}
             >
-              {row.value}
+              {row.seal ? (
+                <>
+                  {row.value}
+                  <span className="relative ml-4 inline-block text-doc-sub">
+                    (인)
+                    {/* "(인)" 위에 겹쳐 찍음 — 인쇄 때도 바로 보이도록 지연 로딩 없이 원본 PNG 그대로 */}
+                    <Image
+                      src={row.seal}
+                      alt="직인"
+                      width={52}
+                      height={52}
+                      unoptimized
+                      loading="eager"
+                      className="pointer-events-none absolute top-1/2 left-1/2 max-w-none -translate-x-1/2 -translate-y-1/2 mix-blend-multiply"
+                    />
+                  </span>
+                </>
+              ) : (
+                row.value
+              )}
             </td>
           </tr>
         ))}

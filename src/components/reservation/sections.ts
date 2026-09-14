@@ -9,10 +9,11 @@ export const SECTION = {
 
 export type SectionId = (typeof SECTION)[keyof typeof SECTION];
 
-export const sectionTabs: { id: SectionId; label: string }[] = [
-  { id: SECTION.items, label: "꽃 고르기" },
-  { id: SECTION.dateTime, label: "날짜·시간" },
-  { id: SECTION.reserve, label: "신청하기" },
+/** 상단 탭 — key는 언어 파일 sectionTabs의 이름 */
+export const sectionTabs: { id: SectionId; key: keyof typeof SECTION }[] = [
+  { id: SECTION.items, key: "items" },
+  { id: SECTION.dateTime, key: "dateTime" },
+  { id: SECTION.reserve, key: "reserve" },
 ];
 
 export const sectionIds = sectionTabs.map((tab) => tab.id);

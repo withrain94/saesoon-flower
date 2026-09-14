@@ -1,10 +1,12 @@
 "use client";
 
 import { useActiveSection } from "@/hooks/useActiveSection";
+import { useT } from "@/hooks/useLocale";
 import { sectionIds, sectionTabs } from "./sections";
 
 export default function SectionTabs() {
   const [active, setActive] = useActiveSection(sectionIds);
+  const t = useT();
 
   return (
     <nav className="sticky top-14 z-20 bg-white px-5 py-3">
@@ -18,7 +20,7 @@ export default function SectionTabs() {
                 active === tab.id ? "bg-strong text-white shadow-sm" : "text-body"
               }`}
             >
-              {tab.label}
+              {t.sectionTabs[tab.key]}
             </a>
           </li>
         ))}

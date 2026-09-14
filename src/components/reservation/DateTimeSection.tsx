@@ -4,15 +4,10 @@ import ErrorText from "@/components/ui/ErrorText";
 import { CalendarIcon } from "@/components/ui/icons";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { getEventOn } from "@/data/events";
-import {
-  afternoonSlots,
-  morningSlots,
-  ORDER_CLOSE_HOUR,
-  ORDER_OPEN_HOUR,
-  SAME_DAY_LEAD_HOURS,
-} from "@/data/reservationOptions";
+import { afternoonSlots, morningSlots } from "@/data/reservationOptions";
+import { useT } from "@/hooks/useLocale";
 import { formatDateLabel } from "@/lib/date";
-import { getOpenEvents } from "@/lib/events";
+import { getEventCopy, getOpenEvents } from "@/lib/events";
 import { formatTimeLabel, hasBookableSlot, isSlotBookable, type Now } from "@/lib/time";
 import type { Selection } from "@/types/reservation";
 import Calendar from "./Calendar";
@@ -34,6 +29,7 @@ export default function DateTimeSection({
   onChange: (patch: Pick<Selection, "date" | "time">) => void;
   issue: "date" | "time" | null;
 }) {
+  const t = useT();
   const isSlotDisabled = (slot: string) =>
     date === null || now === null || !isSlotBookable(slot, date, now);
   const selectedEvent = date ? getEventOn(date) : undefined;
@@ -48,21 +44,21 @@ export default function DateTimeSection({
   return (
     <section id={SECTION.dateTime} className={`${sectionScrollMargin} px-5 pb-8 pt-7`}>
       <SectionHeading icon={<CalendarIcon />}>
-        {date ? formatDateLabel(date) : "날짜"}
+        {date ? formatDateLabel(date, t) : t.dateTime.headingDate}
         <span className="text-sub">·</span>
-        <span>{time ? formatTimeLabel(time) : "시간을 선택해 주세요"}</span>
+        <span>{time ? formatTimeLabel(time, t) : t.dateTime.headingTime}</span>
       </SectionHeading>
       <p className="mt-1.5 text-sm text-sub">
-        당일 예약은 받으실 시간 {SAME_DAY_LEAD_HOURS}시간 전까지 가능해요.
+        {t.dateTime.sameDayRule}
         <br />
-        오후 {ORDER_CLOSE_HOUR - 12}시가 되면 다음날 오전 {ORDER_OPEN_HOUR}시까지는 예약할 수 없어요.
+        {t.dateTime.closeRule}
       </p>
-      {issue === "date" && <ErrorText>받으실 날짜를 선택해 주세요.</ErrorText>}
-      {issue === "time" && <ErrorText>받으실 시간을 선택해 주세요.</ErrorText>}
+      {issue === "date" && <ErrorText>{t.dateTime.errorDate}</ErrorText>}
+      {issue === "time" && <ErrorText>{t.dateTime.errorTime}</ErrorText>}
 
       {openEvents.length > 0 && (
         <div className="mt-4">
-          <p className="text-[13px] font-semibold text-body">특별한 날 바로 선택</p>
+          <p className="text-[13px] font-semibold text-body">{t.dateTime.eventQuick}</p>
           <div className="mt-1.5 flex flex-wrap gap-2">
             {openEvents.map((event) => {
               const active = event.date === date;
@@ -78,7 +74,7 @@ export default function DateTimeSection({
                       : "border-brand bg-brand-tint text-brand-dark hover:bg-white"
                   }`}
                 >
-                  🎓 {event.shortTitle} · {formatDateLabel(event.date)}
+                  🎓 {getEventCopy(event, t).shortTitle} · {formatDateLabel(event.date, t)}
                 </button>
               );
             })}
@@ -93,7 +89,10 @@ export default function DateTimeSection({
           todayKey={now.dateKey}
           selected={date}
           isDateDisabled={(dateKey) => !hasBookableSlot(dateKey, now)}
-          getDayLabel={(dateKey) => getEventOn(dateKey)?.calendarLabel}
+          getDayLabel={(dateKey) => {
+            const event = getEventOn(dateKey);
+            return event && getEventCopy(event, t).calendarLabel;
+          }}
           onSelect={handleDateSelect}
         />
       ) : (
@@ -102,7 +101,7 @@ export default function DateTimeSection({
 
       <div className="mt-2 border-t border-line pt-5">
         {date === null && (
-          <p className="mb-3 text-sm text-sub">날짜를 먼저 선택하면 시간을 고를 수 있어요.</p>
+          <p className="mb-3 text-sm text-sub">{t.dateTime.pickDateFirst}</p>
         )}
         {selectedEvent ? (
           <>
@@ -110,7 +109,7 @@ export default function DateTimeSection({
               <EventDayNotice event={selectedEvent} compact />
             </div>
             <TimeSlotGroup
-              title={`${selectedEvent.shortTitle} 시간`}
+              title={t.dateTime.eventSlots(getEventCopy(selectedEvent, t).shortTitle)}
               slots={selectedEvent.slots}
               selected={time}
               isDisabled={isSlotDisabled}
@@ -120,14 +119,14 @@ export default function DateTimeSection({
         ) : (
           <>
             <TimeSlotGroup
-              title="오전"
+              title={t.format.morning}
               slots={morningSlots}
               selected={time}
               isDisabled={isSlotDisabled}
               onSelect={(slot) => onChange({ date, time: slot })}
             />
             <TimeSlotGroup
-              title="오후"
+              title={t.format.afternoon}
               slots={afternoonSlots}
               selected={time}
               isDisabled={isSlotDisabled}

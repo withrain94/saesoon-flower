@@ -1,4 +1,5 @@
-import { formatSlotShort, formatTimeLabel } from "@/lib/time";
+import { useT } from "@/hooks/useLocale";
+import { formatTimeLabel, getSlotHour } from "@/lib/time";
 
 export default function TimeSlotGroup({
   title,
@@ -13,6 +14,8 @@ export default function TimeSlotGroup({
   isDisabled: (slot: string) => boolean;
   onSelect: (slot: string) => void;
 }) {
+  const t = useT();
+
   return (
     <div className="mb-5">
       <p className="mb-2.5 text-sm text-body">{title}</p>
@@ -25,7 +28,7 @@ export default function TimeSlotGroup({
               type="button"
               disabled={isDisabled(slot)}
               aria-pressed={isSelected}
-              aria-label={formatTimeLabel(slot)}
+              aria-label={formatTimeLabel(slot, t)}
               onClick={() => onSelect(slot)}
               className={`h-11 rounded-lg border text-[15px] transition ${
                 isSelected
@@ -33,7 +36,7 @@ export default function TimeSlotGroup({
                   : "border-field bg-white text-ink hover:border-brand disabled:border-line disabled:bg-soft disabled:text-disabled disabled:hover:border-line"
               }`}
             >
-              {formatSlotShort(slot)}
+              {t.format.slotShort(getSlotHour(slot))}
             </button>
           );
         })}

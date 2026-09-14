@@ -1,6 +1,25 @@
-import { specialEvents, type SpecialEvent } from "@/data/events";
+import { getEventOn, specialEvents, type SpecialEvent } from "@/data/events";
+import { ko, type Messages } from "@/i18n/ko";
 import { addDaysToKey, formatDateLong, parseDateKey, toDateKey } from "@/lib/date";
 import { getSlotHour, hasBookableSlot, isSlotBookable, toNow, type Now } from "@/lib/time";
+import type { ProductCategoryId } from "@/types/reservation";
+
+/** 특별한 날의 화면 문구 (제목·짧은 이름·달력 표시·안내) */
+export function getEventCopy(event: SpecialEvent, t: Messages = ko) {
+  const copy = t.events[event.kind];
+  return {
+    title: copy.title(event.term),
+    shortTitle: copy.shortTitle(event.term),
+    calendarLabel: copy.calendarLabel,
+    highlights: copy.highlights,
+  };
+}
+
+/** 그 날짜에 이 종류 상품을 담으면 무료 토퍼(이름·직급) 입력칸이 생기는지 */
+export function hasFreeTopper(dateKey: string | null, category: ProductCategoryId) {
+  if (!dateKey) return false;
+  return getEventOn(dateKey)?.topperCategories.includes(category) ?? false;
+}
 
 /** 아직 예약할 수 있는 특별한 날 (날짜순) */
 export function getOpenEvents(now: Now): SpecialEvent[] {
@@ -26,11 +45,7 @@ export function getEventDeadline(event: SpecialEvent): Date | null {
   return null;
 }
 
-/** Date → "10월 7일(수) 오후 5시" (분이 있으면 "오후 5시 30분") */
-export function formatDeadline(date: Date) {
-  const hour = date.getHours();
-  const period = hour < 12 ? "오전" : "오후";
-  const displayHour = hour % 12 === 0 ? 12 : hour % 12;
-  const minutes = date.getMinutes();
-  return `${formatDateLong(toDateKey(date))} ${period} ${displayHour}시${minutes ? ` ${minutes}분` : ""}`;
+/** Date → "10월 7일(수) 오후 5시" (언어별) */
+export function formatDeadline(date: Date, t: Messages = ko) {
+  return t.format.deadline(formatDateLong(toDateKey(date), t), date.getHours(), date.getMinutes());
 }

@@ -6,9 +6,9 @@ import {
   BLACKBOARD_MAX_LENGTH,
   blackboardPresetsByCategory,
   messageOptionsByCategory,
-  RIBBON_MAX_LENGTH,
   type BlackboardPreset,
 } from "@/data/reservationOptions";
+import { useT } from "@/hooks/useLocale";
 import type { MessageType, UnitMessage } from "@/types/reservation";
 
 /** 상품 종류에 맞는 메시지 방식 + 문구 입력 (값은 부모 상태) */
@@ -23,6 +23,7 @@ export default function MessageEditor({
   value: UnitMessage;
   onChange: (patch: Partial<UnitMessage>) => void;
 }) {
+  const t = useT();
   const options = messageOptionsByCategory[product.category];
   const blackboardPresets = blackboardPresetsByCategory[product.category];
 
@@ -34,12 +35,12 @@ export default function MessageEditor({
             id={`${idPrefix}-message-type`}
             value={value.type}
             onChange={(event) => onChange({ type: event.target.value as MessageType })}
-            aria-label="메시지 방식"
+            aria-label={t.message.typeAria}
             className={`${inputClassName} appearance-none pr-10`}
           >
             {options.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
+              <option key={option} value={option}>
+                {t.message.types[option]}
               </option>
             ))}
           </select>
@@ -51,7 +52,7 @@ export default function MessageEditor({
       ) : (
         // 방식이 하나뿐이면 고르지 않고 안내만
         <p className="rounded-lg bg-soft px-4 py-2.5 text-[14px] font-semibold text-body">
-          {options[0].label}
+          {t.message.types[options[0]]}
         </p>
       )}
 
@@ -60,8 +61,8 @@ export default function MessageEditor({
           rows={3}
           value={value.memo}
           onChange={(event) => onChange({ memo: event.target.value })}
-          aria-label="메모지 문구"
-          placeholder="메모지에 인쇄할 문구를 적어주세요"
+          aria-label={t.message.memoAria}
+          placeholder={t.message.memoPlaceholder}
           className={`${inputClassName} mt-2 h-auto resize-none py-3 leading-relaxed`}
         />
       )}
@@ -72,16 +73,16 @@ export default function MessageEditor({
             type="text"
             value={value.ribbonLeft}
             onChange={(event) => onChange({ ribbonLeft: event.target.value })}
-            aria-label="리본 한쪽 문구"
-            placeholder={`한쪽 문구 (${RIBBON_MAX_LENGTH}자 내외)`}
+            aria-label={t.message.ribbonLeftAria}
+            placeholder={t.message.ribbonLeftPlaceholder}
             className={inputClassName}
           />
           <input
             type="text"
             value={value.ribbonRight}
             onChange={(event) => onChange({ ribbonRight: event.target.value })}
-            aria-label="리본 다른 쪽 문구"
-            placeholder={`다른 쪽 문구 (${RIBBON_MAX_LENGTH}자 내외)`}
+            aria-label={t.message.ribbonRightAria}
+            placeholder={t.message.ribbonRightPlaceholder}
             className={inputClassName}
           />
         </div>
@@ -120,10 +121,14 @@ function BlackboardPresetPicker({
   selected: string;
   onSelect: (presetId: string) => void;
 }) {
-  const choices = [...presets, { id: BLACKBOARD_CUSTOM, label: "직접 입력", text: "" }];
+  const t = useT();
+  const choices: { id: string; label: string; text: string }[] = [
+    ...presets.map((preset) => ({ id: preset.id, label: t.blackboardPresets[preset.id], text: preset.text })),
+    { id: BLACKBOARD_CUSTOM, label: t.message.custom, text: "" },
+  ];
 
   return (
-    <div role="radiogroup" aria-label="블랙보드 문구" className="mt-2 grid gap-2">
+    <div role="radiogroup" aria-label={t.message.presetsAria} className="mt-2 grid gap-2">
       {choices.map((choice) => {
         const checked = choice.id === selected;
         return (
@@ -141,7 +146,15 @@ function BlackboardPresetPicker({
               onChange={() => onSelect(choice.id)}
               className="mt-0.5 h-4 w-4 shrink-0 accent-brand"
             />
-            <span className={checked ? "font-semibold" : ""}>{choice.label}</span>
+            <span>
+              <span className={checked ? "font-semibold" : ""}>{choice.label}</span>
+              {/* 외국어 화면: 실제로 블랙보드에 적히는 한국어 문구도 함께 */}
+              {t.message.writtenInKorean && choice.text && (
+                <span lang="ko" className="mt-1 block text-[12.5px] text-sub">
+                  {t.message.writtenInKorean} {choice.text}
+                </span>
+              )}
+            </span>
           </label>
         );
       })}
@@ -159,6 +172,8 @@ function BlackboardTextarea({
   rows: number;
   onChange: (value: string) => void;
 }) {
+  const t = useT();
+
   return (
     <div className="mt-2">
       <textarea
@@ -166,8 +181,8 @@ function BlackboardTextarea({
         maxLength={BLACKBOARD_MAX_LENGTH}
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        aria-label="블랙보드 문구 직접 입력"
-        placeholder={`블랙보드에 적을 문구를 자유롭게 적어주세요 (띄어쓰기 포함 ${BLACKBOARD_MAX_LENGTH}자 이내)`}
+        aria-label={t.message.customAria}
+        placeholder={t.message.customPlaceholder}
         className={`${inputClassName} h-auto resize-none py-3 leading-relaxed`}
       />
       <p className="mt-1 text-right text-xs text-sub">

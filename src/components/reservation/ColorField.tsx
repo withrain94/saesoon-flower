@@ -3,25 +3,27 @@
 import { useState } from "react";
 import Field, { inputClassName } from "@/components/ui/Field";
 import { ChevronIcon } from "@/components/ui/icons";
-import { COLOR_OTHER, colorOptions } from "@/data/reservationOptions";
+import { COLOR_OTHER, colorOptionIds, type ColorOptionId } from "@/data/reservationOptions";
+import { useT } from "@/hooks/useLocale";
 
-/** input name: "color", "colorOther" */
+/** input name: "color"(선택지 id), "colorOther" */
 export default function ColorField() {
-  const [color, setColor] = useState(colorOptions[0]);
+  const t = useT();
+  const [color, setColor] = useState<ColorOptionId>(colorOptionIds[0]);
 
   return (
-    <Field label="원하는 색감" htmlFor="color">
+    <Field label={t.color.label} htmlFor="color">
       <div className="relative">
         <select
           id="color"
           name="color"
           value={color}
-          onChange={(event) => setColor(event.target.value)}
+          onChange={(event) => setColor(event.target.value as ColorOptionId)}
           className={`${inputClassName} appearance-none pr-10`}
         >
-          {colorOptions.map((option) => (
-            <option key={option} value={option}>
-              {option}
+          {colorOptionIds.map((id) => (
+            <option key={id} value={id}>
+              {t.color.options[id]}
             </option>
           ))}
         </select>
@@ -35,8 +37,8 @@ export default function ColorField() {
         <input
           name="colorOther"
           type="text"
-          aria-label="원하는 색감 직접 입력"
-          placeholder="원하는 색감을 적어주세요"
+          aria-label={t.color.otherAria}
+          placeholder={t.color.otherPlaceholder}
           className={`${inputClassName} mt-2`}
         />
       )}

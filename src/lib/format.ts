@@ -1,8 +1,3 @@
-/** 60000 → "60,000원" */
-export function formatPrice(price: number) {
-  return `${price.toLocaleString("ko-KR")}원`;
-}
-
 const KOREAN_DIGITS = ["", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"];
 const KOREAN_SMALL_UNITS = ["", "십", "백", "천"];
 const KOREAN_BIG_UNITS = ["", "만", "억", "조"];

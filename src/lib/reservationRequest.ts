@@ -1,16 +1,23 @@
 import {
-  cardPayerOptions,
+  cardPayerTypes,
   cashReceiptOptions,
   COLOR_OTHER,
+  colorOptionIds,
   documentOptions,
+  orchidDeliveryMethods,
+  orchidRestaurants,
   paymentMethodOptions,
+  RESTAURANT_OTHER,
 } from "@/data/reservationOptions";
-import { getOrderItems } from "@/lib/selection";
+import { getPaypalAmount } from "@/lib/payment";
+import { getOrderItems, needsColorChoice } from "@/lib/selection";
 import { getBlackboardText, type ResolvedUnit } from "@/lib/units";
+import type { Locale } from "@/types/i18n";
 import type {
   BusinessDocumentType,
   CardPayerType,
   CashReceiptType,
+  OrchidDelivery,
   PaymentMethod,
   ReservationDelivery,
   ReservationFormField,
@@ -33,7 +40,7 @@ function toCashReceiptType(value: string): CashReceiptType {
 }
 
 function toCardPayerType(value: string): CardPayerType {
-  return cardPayerOptions.find((item) => item.value === value)?.value ?? "same";
+  return cardPayerTypes.find((item) => item === value) ?? "same";
 }
 
 /** 체크된 서류만, documentOptions 순서대로 */
@@ -42,8 +49,21 @@ function toDocuments(data: FormData): BusinessDocumentType[] {
   return documentOptions.map((option) => option.value).filter((value) => checked.includes(value));
 }
 
+/** 호접난 받는 방법 — 식당은 목록에서 고르거나(한국어 이름) 직접 입력 */
+function toOrchidDelivery(data: FormData): OrchidDelivery {
+  const method = orchidDeliveryMethods.find((item) => item === text(data, "orchidDelivery")) ?? "pickup";
+  if (method !== "restaurant") return { method, restaurant: "", reservationName: "" };
+
+  const picked = text(data, "orchidRestaurant");
+  const restaurant =
+    picked === RESTAURANT_OTHER
+      ? text(data, "orchidRestaurantOther")
+      : (orchidRestaurants.find((name) => name === picked) ?? "");
+  return { method, restaurant, reservationName: text(data, "orchidReservationName") };
+}
+
 /** 선택한 메시지 방식에 해당하는 문구만 남김 */
-function toDelivery({ unit, recipient, message }: ResolvedUnit): ReservationDelivery {
+function toDelivery({ unit, recipient, topper, topperAvailable, message }: ResolvedUnit): ReservationDelivery {
   return {
     productId: unit.product.id,
     category: unit.product.category,
@@ -51,6 +71,8 @@ function toDelivery({ unit, recipient, message }: ResolvedUnit): ReservationDeli
     unitNo: unit.unitNo,
     recipientName: recipient.name.trim(),
     recipientPhone: recipient.phone.trim(),
+    topperName: topperAvailable ? topper.name.trim() : "",
+    topperRank: topperAvailable ? topper.rank.trim() : "",
     messageType: message.type,
     memo: message.type === "memo" ? message.memo.trim() : "",
     ribbonLeft: message.type === "ribbon" ? message.ribbonLeft.trim() : "",
@@ -70,9 +92,14 @@ export function buildReservationRequest(
   units: ResolvedUnit[],
   data: FormData,
   submittedAt: Date,
+  locale: Locale,
 ): ReservationRequest {
   const items = getOrderItems(selection);
-  const color = text(data, "color");
+  const totalPrice = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const color = needsColorChoice(items)
+    ? (colorOptionIds.find((id) => id === text(data, "color")) ?? colorOptionIds[0])
+    : "";
+  const hasOrchid = items.some((item) => item.product.category === "orchid");
   const paymentMethod = toPaymentMethod(text(data, "paymentMethod"));
   // 현금영수증은 계좌이체일 때만
   const cashReceiptType =
@@ -91,14 +118,17 @@ export function buildReservationRequest(
     })),
     deliveries: units.map(toDelivery),
     totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
-    totalPrice: items.reduce((sum, item) => sum + item.product.price * item.quantity, 0),
+    totalPrice,
     date: selection.date ?? "",
     time: selection.time ?? "",
     ordererName: text(data, "ordererName"),
     ordererPhone: text(data, "ordererPhone"),
     color,
     colorOther: color === COLOR_OTHER ? text(data, "colorOther") : "",
+    orchidDelivery: hasOrchid ? toOrchidDelivery(data) : null,
     paymentMethod,
+    paypalEmail: paymentMethod === "paypal" ? text(data, "paypalEmail") : "",
+    paypalAmount: paymentMethod === "paypal" ? getPaypalAmount(totalPrice) : 0,
     cashReceiptType,
     cashReceiptNumber: cashReceiptType === "none" ? "" : text(data, "cashReceiptNumber"),
     cardPayer,
@@ -109,5 +139,6 @@ export function buildReservationRequest(
     documentBusinessNumber: wantsDocuments ? text(data, "documentBusinessNumber") : "",
     submittedAt: submittedAt.toISOString(),
     privacyAgreed: text(data, "privacyConsent") === "agree",
+    locale,
   };
 }

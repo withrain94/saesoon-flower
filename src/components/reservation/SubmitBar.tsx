@@ -1,19 +1,20 @@
 import { productCategories } from "@/data/products";
-import { formatPrice } from "@/lib/format";
+import { useT } from "@/hooks/useLocale";
 import type { SelectionSummary } from "@/lib/selection";
 import { RESERVATION_FORM_ID } from "./sections";
 
 /** 화면 하단 고정 예약 버튼 — form 속성으로 OrdererForm을 제출 */
 export default function SubmitBar({ summary }: { summary: SelectionSummary }) {
+  const t = useT();
   const { countByCategory, totalQuantity, totalPrice, scheduleLabel } = summary;
 
   const counts = productCategories
     .filter((category) => countByCategory[category.id] > 0)
-    .map((category) => `${category.name} ${countByCategory[category.id]}`);
+    .map((category) => `${t.categories[category.id].name} ${countByCategory[category.id]}`);
   const description =
     totalQuantity > 0
       ? [...counts, scheduleLabel].filter(Boolean).join(" · ")
-      : "상품과 날짜·시간을 선택해 주세요";
+      : t.submitBar.empty;
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-30">
@@ -23,7 +24,7 @@ export default function SubmitBar({ summary }: { summary: SelectionSummary }) {
             {description}
           </span>
           {totalQuantity > 0 && (
-            <span className="shrink-0 font-bold text-brand-dark">{formatPrice(totalPrice)}</span>
+            <span className="shrink-0 font-bold text-brand-dark">{t.format.price(totalPrice)}</span>
           )}
         </div>
         <button
@@ -31,7 +32,7 @@ export default function SubmitBar({ summary }: { summary: SelectionSummary }) {
           form={RESERVATION_FORM_ID}
           className="h-[52px] w-full rounded-xl bg-brand text-[17px] font-bold text-white transition hover:bg-brand-dark active:scale-[0.99]"
         >
-          예약하기
+          {t.submitBar.submit}
         </button>
       </div>
     </div>

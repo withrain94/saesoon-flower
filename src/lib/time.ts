@@ -5,6 +5,7 @@ import {
   ORDER_OPEN_HOUR,
   SAME_DAY_LEAD_HOURS,
 } from "@/data/reservationOptions";
+import { ko, type Messages } from "@/i18n/ko";
 import { addDaysToKey, toDateKey } from "@/lib/date";
 
 /** 현재 시각 정보 (브라우저 기준) */
@@ -47,16 +48,9 @@ export function getSlotHour(slot: string) {
   return Number(slot.slice(0, 2));
 }
 
-/** "15:00" → "3:00" */
-export function formatSlotShort(slot: string) {
-  const hour = getSlotHour(slot);
-  return `${hour > 12 ? hour - 12 : hour}:00`;
-}
-
-/** "15:00" → "오후 3:00" */
-export function formatTimeLabel(slot: string) {
-  const period = getSlotHour(slot) < 12 ? "오전" : "오후";
-  return `${period} ${formatSlotShort(slot)}`;
+/** "15:00" → "오후 3:00" (언어별) */
+export function formatTimeLabel(slot: string, t: Messages = ko) {
+  return t.format.time(getSlotHour(slot));
 }
 
 /** 날짜 + 자정부터 지난 분 */

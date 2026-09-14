@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { categoryNames } from "@/data/products";
+import { getCategoryNames } from "@/lib/selection";
 import "./globals.css";
+
+const categoryNames = getCategoryNames();
 
 export const metadata: Metadata = {
   title: `${categoryNames} 예약하기 | 새순꽃집`,

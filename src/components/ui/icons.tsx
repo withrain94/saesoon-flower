@@ -31,15 +31,6 @@ export function CheckSquareIcon({ className }: IconProps) {
   );
 }
 
-export function CardIcon({ className }: IconProps) {
-  return (
-    <svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true" className={className}>
-      <rect x="1.5" y="4" width="17" height="12" rx="2.5" fill="currentColor" />
-      <rect x="1.5" y="7" width="17" height="2.2" fill="#fff" />
-    </svg>
-  );
-}
-
 export function ChevronIcon({
   direction,
   className,

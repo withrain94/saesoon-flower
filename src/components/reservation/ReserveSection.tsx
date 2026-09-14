@@ -1,5 +1,6 @@
 import { CheckSquareIcon } from "@/components/ui/icons";
 import SectionHeading from "@/components/ui/SectionHeading";
+import { useT } from "@/hooks/useLocale";
 import type { SelectionSummary } from "@/lib/selection";
 import type { ResolvedUnit } from "@/lib/units";
 import type { ReservationRequest } from "@/types/reservation";
@@ -22,9 +23,11 @@ export default function ReserveSection({
   unitActions: UnitActions;
   onSubmit: (formData: FormData) => void;
 }) {
+  const t = useT();
+
   return (
     <section id={SECTION.reserve} className={`${sectionScrollMargin} px-5 pb-32 pt-7`}>
-      <SectionHeading icon={<CheckSquareIcon />}>예약 정보를 입력해 주세요</SectionHeading>
+      <SectionHeading icon={<CheckSquareIcon />}>{t.reserve.heading}</SectionHeading>
 
       {reservation ? (
         <ReservationComplete reservation={reservation} summary={summary} units={units} />

@@ -13,7 +13,8 @@ export const DOCUMENT_WIDTH = 640;
 /** 비어 있는 공급자 정보 표시 */
 export const MISSING_INFO = "(확인 필요)";
 
-export type DocumentParty = { label: string; value: string }[];
+/** seal: 값 옆에 찍을 직인 이미지 경로 (공급자 대표자 칸) */
+export type DocumentParty = { label: string; value: string; seal?: string }[];
 
 export type DocumentRow = {
   name: string;
@@ -96,7 +97,11 @@ export function buildBusinessDocument(
     issuedDate,
     supplier: [
       { label: "상호", value: orEmpty(businessInfo.tradeName) },
-      { label: "대표자", value: orEmpty(businessInfo.representative) },
+      {
+        label: "대표자",
+        value: orEmpty(businessInfo.representative),
+        seal: businessInfo.sealImage ?? undefined,
+      },
       { label: "사업자등록번호", value: orEmpty(businessInfo.businessNumber) },
       { label: "주소", value: orEmpty(businessInfo.address) },
       { label: "업태 / 종목", value: `${orEmpty(businessInfo.businessType)} / ${orEmpty(businessInfo.businessItem)}` },

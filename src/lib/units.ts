@@ -5,8 +5,10 @@ import {
   messageOptionsByCategory,
   type BlackboardPreset,
 } from "@/data/reservationOptions";
+import { ko, type Messages } from "@/i18n/ko";
+import { hasFreeTopper } from "@/lib/events";
 import { getItemName, getOrderItems } from "@/lib/selection";
-import type { Recipient, Selection, UnitDetail, UnitMessage } from "@/types/reservation";
+import type { Recipient, Selection, Topper, UnitDetail, UnitMessage } from "@/types/reservation";
 
 /** 담은 상품을 수량만큼 펼친 1개 단위 */
 export type OrderUnit = {
@@ -26,6 +28,8 @@ export type ResolvedUnit = {
   own: UnitDetail;
   /** 최종 받는 분 */
   recipient: Recipient;
+  /** 최종 토퍼 (토퍼가 없는 날·상품이면 빈 값) */
+  topper: Topper;
   /** 최종 메시지 */
   message: UnitMessage;
   /** 앞 상품이 있어 "받는 분 같음"을 고를 수 있는지 */
@@ -34,13 +38,18 @@ export type ResolvedUnit = {
   canCopyMessage: boolean;
   recipientCopied: boolean;
   messageCopied: boolean;
+  /** 받는 날이 특별한 날이라 무료 토퍼 입력칸이 있는 상품인지 */
+  topperAvailable: boolean;
+  /** 토퍼를 앞 상품(토퍼가 있는 상품)에서 따라왔는지 — 받는 분 "같음"을 따름 */
+  topperCopied: boolean;
 };
 
 export const emptyRecipient: Recipient = { name: "", phone: "" };
+export const emptyTopper: Topper = { name: "", rank: "" };
 
 export function emptyMessage(product: Product): UnitMessage {
   return {
-    type: messageOptionsByCategory[product.category][0].value,
+    type: messageOptionsByCategory[product.category][0],
     memo: "",
     ribbonLeft: "",
     ribbonRight: "",
@@ -51,6 +60,10 @@ export function emptyMessage(product: Product): UnitMessage {
 
 export function isEmptyRecipient(recipient: Recipient) {
   return !recipient.name.trim() && !recipient.phone.trim();
+}
+
+export function isEmptyTopper(topper: Topper) {
+  return !topper.name.trim() && !topper.rank.trim();
 }
 
 /** 메시지를 아직 한 번도 고르거나 적지 않은 상태(= 상품 종류의 기본값 그대로)인지 */
@@ -77,6 +90,7 @@ export function defaultUnitDetail(product: Product): UnitDetail {
   return {
     sameRecipient: true,
     recipient: emptyRecipient,
+    topper: emptyTopper,
     sameMessage: true,
     message: emptyMessage(product),
   };
@@ -93,43 +107,55 @@ export function getOrderUnits(selection: Selection): OrderUnit[] {
   );
 }
 
-/** "꽃다발 6만원 (1/2)" */
-export function getUnitLabel(unit: OrderUnit) {
-  const name = getItemName(unit.product);
-  return unit.quantity > 1 ? `${name} (${unit.unitNo}/${unit.quantity})` : name;
+/** "꽃다발 6만원 (1/2)" (언어별) */
+export function getUnitLabel(unit: OrderUnit, t: Messages = ko) {
+  const name = getItemName(unit.product, t);
+  return unit.quantity > 1 ? t.format.unitName(name, unit.unitNo, unit.quantity) : name;
 }
 
 /**
  * 앞에서부터 순서대로 "같음"을 풀어 최종 값을 만든다.
  * - 받는 분: 바로 앞 상품의 최종 받는 분
+ * - 토퍼: 받는 분 "같음"이면 토퍼가 있는 가장 가까운 앞 상품의 토퍼
  * - 메시지: 같은 종류 중 가장 가까운 앞 상품의 최종 메시지
+ * dateKey: 받는 날짜 — 특별한 날이면 토퍼 입력칸이 생김
  */
-export function resolveUnits(units: OrderUnit[], details: Record<string, UnitDetail>): ResolvedUnit[] {
+export function resolveUnits(
+  units: OrderUnit[],
+  details: Record<string, UnitDetail>,
+  dateKey: string | null,
+): ResolvedUnit[] {
   const resolved: ResolvedUnit[] = [];
 
   for (const unit of units) {
     const own = details[unit.key] ?? defaultUnitDetail(unit.product);
     const previous = resolved.at(-1);
-    let previousSameCategory: ResolvedUnit | undefined;
-    for (let i = resolved.length - 1; i >= 0; i--) {
-      if (resolved[i].unit.product.category === unit.product.category) {
-        previousSameCategory = resolved[i];
-        break;
-      }
-    }
+    const previousSameCategory = resolved.findLast(
+      (candidate) => candidate.unit.product.category === unit.product.category,
+    );
+    const previousWithTopper = resolved.findLast((candidate) => candidate.topperAvailable);
+    const topperAvailable = hasFreeTopper(dateKey, unit.product.category);
 
     const recipientCopied = previous !== undefined && own.sameRecipient;
     const messageCopied = previousSameCategory !== undefined && own.sameMessage;
+    const topperCopied = topperAvailable && previousWithTopper !== undefined && own.sameRecipient;
 
     resolved.push({
       unit,
       own,
       recipient: recipientCopied && previous ? previous.recipient : own.recipient,
+      topper: !topperAvailable
+        ? emptyTopper
+        : topperCopied && previousWithTopper
+          ? previousWithTopper.topper
+          : own.topper,
       message: messageCopied && previousSameCategory ? previousSameCategory.message : own.message,
       canCopyRecipient: previous !== undefined,
       canCopyMessage: previousSameCategory !== undefined,
       recipientCopied,
       messageCopied,
+      topperAvailable,
+      topperCopied,
     });
   }
 
@@ -137,23 +163,28 @@ export function resolveUnits(units: OrderUnit[], details: Record<string, UnitDet
 }
 
 /** "홍길동 · 010-1234-5678" / 비었으면 안내 문구 */
-export function describeRecipient(recipient: Recipient) {
+export function describeRecipient(recipient: Recipient, t: Messages = ko) {
   const text = [recipient.name, recipient.phone].filter(Boolean).join(" · ");
-  return text || "입력 안 함 (예약자가 픽업)";
+  return text || t.recipient.describeEmpty;
 }
 
-/** "메모지 · 생일 축하해" */
-export function describeMessage(message: UnitMessage) {
+/** "토퍼 · 홍길동 사무관" */
+export function describeTopper(topper: Topper, t: Messages = ko) {
+  return t.topper.describe(topper.name.trim(), topper.rank.trim());
+}
+
+/** "메모지 · 생일 축하해" (언어별) */
+export function describeMessage(message: UnitMessage, t: Messages = ko) {
   switch (message.type) {
     case "none":
-      return "없음";
+      return t.message.describeNone;
     case "memo":
-      return `메모지 · ${message.memo || "(문구 미입력)"}`;
+      return t.message.describeMemo(message.memo);
     case "ribbon":
-      return `리본 · ${message.ribbonLeft || "-"} / ${message.ribbonRight || "-"}`;
+      return t.message.describeRibbon(message.ribbonLeft, message.ribbonRight);
     case "blackboard": {
       const preset = getBlackboardPreset(message);
-      return `블랙보드 · ${preset ? preset.label : getBlackboardText(message) || "(문구 미입력)"}`;
+      return t.message.describeBlackboard(preset ? t.blackboardPresets[preset.id] : getBlackboardText(message));
     }
   }
 }

@@ -1,4 +1,4 @@
-export const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"] as const;
+import { ko, type Messages } from "@/i18n/ko";
 
 /** Date → "YYYY-MM-DD" (브라우저 로컬 시간 기준) */
 export function toDateKey(date: Date) {
@@ -20,16 +20,16 @@ export function addDaysToKey(key: string, days: number) {
   return toDateKey(date);
 }
 
-/** "2026-09-16" → "9. 16(수)" */
-export function formatDateLabel(key: string) {
+/** "2026-09-16" → "9. 16(수)" (언어별) */
+export function formatDateLabel(key: string, t: Messages = ko) {
   const date = parseDateKey(key);
-  return `${date.getMonth() + 1}. ${date.getDate()}(${WEEKDAYS[date.getDay()]})`;
+  return t.format.dateShort(date.getMonth() + 1, date.getDate(), date.getDay());
 }
 
-/** "2026-10-08" → "10월 8일(목)" */
-export function formatDateLong(key: string) {
+/** "2026-10-08" → "10월 8일(목)" (언어별) */
+export function formatDateLong(key: string, t: Messages = ko) {
   const date = parseDateKey(key);
-  return `${date.getMonth() + 1}월 ${date.getDate()}일(${WEEKDAYS[date.getDay()]})`;
+  return t.format.dateLong(date.getMonth() + 1, date.getDate(), date.getDay());
 }
 
 /** 두 날짜의 달 차이 — "2026-09-14" → "2026-10-08" = 1 */

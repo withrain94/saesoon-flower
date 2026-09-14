@@ -1,14 +1,18 @@
 import Checkbox from "@/components/ui/Checkbox";
 import { inputClassName } from "@/components/ui/Field";
-import { getCategory } from "@/data/products";
 import { PHONE_PATTERN } from "@/data/reservationOptions";
-import { describeMessage, describeRecipient, getUnitLabel, type ResolvedUnit } from "@/lib/units";
+import { useT } from "@/hooks/useLocale";
+import {
+  describeMessage,
+  describeRecipient,
+  describeTopper,
+  getUnitLabel,
+  type ResolvedUnit,
+} from "@/lib/units";
 import MessageEditor from "./MessageEditor";
 import type { UnitActions } from "./useReservation";
 
-const PHONE_TITLE = "연락처를 다시 확인해 주세요. (예: 010-1234-5678)";
-
-/** 상품 1개의 받는 분·메시지 카드 */
+/** 상품 1개의 받는 분(+ 특별한 날 토퍼)·메시지 카드 */
 export default function UnitDetailCard({
   target,
   order,
@@ -22,34 +26,46 @@ export default function UnitDetailCard({
   showOrder: boolean;
   actions: UnitActions;
 }) {
-  const { unit, own, recipient, message, canCopyRecipient, canCopyMessage, recipientCopied, messageCopied } =
-    target;
+  const t = useT();
+  const {
+    unit,
+    own,
+    recipient,
+    topper,
+    message,
+    canCopyRecipient,
+    canCopyMessage,
+    recipientCopied,
+    messageCopied,
+    topperAvailable,
+    topperCopied,
+  } = target;
   const idPrefix = `unit-${unit.key.replace("#", "-")}`;
-  const categoryName = getCategory(unit.product.category).name;
+  const categoryName = t.categories[unit.product.category].name;
 
   return (
     <div className="rounded-xl border border-line bg-white p-4">
       {showOrder && (
         <p className="mb-3 flex items-center gap-2 text-[15px] font-bold text-ink">
-          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brand text-[12px] text-white">
+          <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand text-[12px] text-white">
             {order}
           </span>
-          {getUnitLabel(unit)}
+          {getUnitLabel(unit, t)}
         </p>
       )}
 
       {/* 받는 분 */}
       <div>
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-[14px] font-bold text-ink">받는 분</p>
+          <p className="text-[14px] font-bold text-ink">{t.recipient.recipientTitle}</p>
           {canCopyRecipient && (
             <Checkbox checked={recipientCopied} onChange={(same) => actions.setSameRecipient(target, same)}>
-              앞 상품과 같음
+              {t.recipient.sameRecipient}
             </Checkbox>
           )}
         </div>
         {recipientCopied ? (
-          <CopiedValue>{describeRecipient(recipient)}</CopiedValue>
+          <CopiedValue>{describeRecipient(recipient, t)}</CopiedValue>
         ) : (
           <div className="mt-2 grid gap-2">
             <input
@@ -57,8 +73,8 @@ export default function UnitDetailCard({
               type="text"
               value={own.recipient.name}
               onChange={(event) => actions.setRecipient(target, { name: event.target.value })}
-              aria-label="받는 분 성함"
-              placeholder="받는 분 성함 (픽업자가 다르거나 배송일 때)"
+              aria-label={t.recipient.nameAria}
+              placeholder={t.recipient.namePlaceholder}
               className={inputClassName}
             />
             <input
@@ -66,29 +82,62 @@ export default function UnitDetailCard({
               type="tel"
               inputMode="tel"
               pattern={PHONE_PATTERN}
-              title={PHONE_TITLE}
+              title={t.reserve.phoneTitle}
               value={own.recipient.phone}
               onChange={(event) => actions.setRecipient(target, { phone: event.target.value })}
-              aria-label="받는 분 연락처"
-              placeholder="받는 분 연락처 010-0000-0000"
+              aria-label={t.recipient.phoneAria}
+              placeholder={t.recipient.phonePlaceholder}
               className={inputClassName}
             />
           </div>
         )}
+
+        {/* 특별한 날 무료 토퍼 — 받는 분이 "같음"이면 토퍼도 앞 상품을 따름 */}
+        {topperAvailable &&
+          (topperCopied ? (
+            <CopiedValue>{describeTopper(topper, t)}</CopiedValue>
+          ) : (
+            <div className="mt-3 rounded-lg bg-brand-tint px-3 py-3">
+              <p className="text-[14px] font-bold text-brand-dark">{t.topper.title}</p>
+              <p className="mt-0.5 text-[12.5px] text-sub">{t.topper.description}</p>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                <input
+                  id={`${idPrefix}-topper-name`}
+                  type="text"
+                  maxLength={30}
+                  value={own.topper.name}
+                  onChange={(event) => actions.setTopper(target, { name: event.target.value })}
+                  aria-label={t.topper.nameAria}
+                  placeholder={t.topper.namePlaceholder}
+                  className={inputClassName}
+                />
+                <input
+                  id={`${idPrefix}-topper-rank`}
+                  type="text"
+                  maxLength={30}
+                  value={own.topper.rank}
+                  onChange={(event) => actions.setTopper(target, { rank: event.target.value })}
+                  aria-label={t.topper.rankAria}
+                  placeholder={t.topper.rankPlaceholder}
+                  className={inputClassName}
+                />
+              </div>
+            </div>
+          ))}
       </div>
 
       {/* 메시지 */}
       <div className="mt-4 border-t border-line pt-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-[14px] font-bold text-ink">메시지</p>
+          <p className="text-[14px] font-bold text-ink">{t.recipient.messageTitle}</p>
           {canCopyMessage && (
             <Checkbox checked={messageCopied} onChange={(same) => actions.setSameMessage(target, same)}>
-              앞 {categoryName} 메시지와 같음
+              {t.recipient.sameMessage(categoryName)}
             </Checkbox>
           )}
         </div>
         {messageCopied ? (
-          <CopiedValue>{describeMessage(message)}</CopiedValue>
+          <CopiedValue>{describeMessage(message, t)}</CopiedValue>
         ) : (
           <div className="mt-2">
             <MessageEditor

@@ -1,11 +1,28 @@
+import type { Locale } from "./i18n";
+
 /** 상품 종류 */
 export type ProductCategoryId = "bouquet" | "basket" | "orchid";
 
 /** 메시지 방식 — 꽃다발: 없음/메모지, 꽃바구니: 없음/리본글씨/블랙보드, 호접난: 블랙보드 */
 export type MessageType = "none" | "memo" | "ribbon" | "blackboard";
 
-/** 이 페이지 신청서의 결제 방법 — 계좌이체 / 카드 결제(전화로 카드번호 전달). 네이버 예약은 첫 화면에서 따로 안내 */
-export type PaymentMethod = "bank" | "card";
+/**
+ * 이 페이지 신청서의 결제 방법 — 계좌이체 / 카드 결제(전화로 카드번호 전달) / PayPal(해외 결제, 수수료 추가).
+ * 네이버 예약은 첫 화면에서 따로 안내
+ */
+export type PaymentMethod = "bank" | "card" | "paypal";
+
+/** 호접난 받는 방법 — 매장 픽업 / 상견례 식당으로 배송 */
+export type OrchidDeliveryMethod = "pickup" | "restaurant";
+
+/** 호접난 받는 방법 (호접난을 담았을 때만) */
+export type OrchidDelivery = {
+  method: OrchidDeliveryMethod;
+  /** 식당 이름 (한국어) — 배송이 아니면 "" */
+  restaurant: string;
+  /** 식당에 예약된 이름 — 배송이 아니면 "" */
+  reservationName: string;
+};
 
 /** 현금영수증 — 계좌이체일 때만 */
 export type CashReceiptType = "none" | "income" | "expense";
@@ -47,13 +64,21 @@ export type UnitMessage = {
   blackboardPreset: string;
 };
 
+/** 특별한 날(승진식) 무료 토퍼에 넣을 이름·직급 */
+export type Topper = {
+  name: string;
+  rank: string;
+};
+
 /**
  * 상품 1개(수량 단위)별 입력값.
  * same* 가 true면 자기 값 대신 앞 상품의 값을 쓴다.
  */
 export type UnitDetail = {
+  /** 받는 분이 같으면 토퍼(이름·직급)도 앞 상품을 따름 */
   sameRecipient: boolean;
   recipient: Recipient;
+  topper: Topper;
   /** 같은 종류의 앞 상품 메시지를 따름 */
   sameMessage: boolean;
   message: UnitMessage;
@@ -76,6 +101,9 @@ export type ReservationDelivery = {
   unitNo: number;
   recipientName: string;
   recipientPhone: string;
+  /** 승진식 무료 토퍼 — 토퍼가 없는 날·상품이면 "" */
+  topperName: string;
+  topperRank: string;
 } & Omit<UnitMessage, "type"> & { messageType: MessageType };
 
 /**
@@ -92,9 +120,16 @@ export type ReservationRequest = {
   time: string;
   ordererName: string;
   ordererPhone: string;
+  /** 원하는 색감 선택지 id (reservationOptions의 colorOptionIds). 색감을 고르지 않는 주문이면 "" */
   color: string;
   colorOther: string;
+  /** 호접난 받는 방법 — 호접난이 없으면 null */
+  orchidDelivery: OrchidDelivery | null;
   paymentMethod: PaymentMethod;
+  /** PayPal 결제 요청을 받을 이메일 — PayPal이 아니면 "" */
+  paypalEmail: string;
+  /** PayPal 결제 금액 (상품 금액 + 수수료) — PayPal이 아니면 0 */
+  paypalAmount: number;
   /** 계좌이체가 아니면 "none" */
   cashReceiptType: CashReceiptType;
   /** 소득공제: 휴대폰 번호 / 지출증빙: 사업자등록번호 */
@@ -115,6 +150,8 @@ export type ReservationRequest = {
   submittedAt: string;
   /** [필수] 개인정보 수집·이용 동의 */
   privacyAgreed: boolean;
+  /** 고객이 신청서를 본 화면 언어 (주문 내용은 한국어·옵션 코드로 저장) */
+  locale: Locale;
 };
 
 /** 관리자 페이지 예약 진행 상태 */
@@ -135,7 +172,12 @@ export type ReservationFormField =
   | "ordererPhone"
   | "color"
   | "colorOther"
+  | "orchidDelivery"
+  | "orchidRestaurant"
+  | "orchidRestaurantOther"
+  | "orchidReservationName"
   | "paymentMethod"
+  | "paypalEmail"
   | "cashReceiptType"
   | "cashReceiptNumber"
   | "cardPayer"

@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { ChevronIcon } from "@/components/ui/icons";
 import { MAX_MONTHS_AHEAD } from "@/data/reservationOptions";
-import { getMonthGrid, monthsBetween, toDateKey, WEEKDAYS } from "@/lib/date";
+import { useT } from "@/hooks/useLocale";
+import { getMonthGrid, monthsBetween, toDateKey } from "@/lib/date";
 
 export default function Calendar({
   todayKey,
@@ -21,6 +22,7 @@ export default function Calendar({
   getDayLabel?: (dateKey: string) => string | undefined;
   onSelect: (dateKey: string) => void;
 }) {
+  const t = useT();
   const [monthOffset, setMonthOffset] = useState(() =>
     selected ? Math.min(MAX_MONTHS_AHEAD, Math.max(0, monthsBetween(todayKey, selected))) : 0,
   );
@@ -31,7 +33,7 @@ export default function Calendar({
       <div className="flex items-center justify-center gap-6">
         <MonthButton
           direction="left"
-          label="이전 달"
+          label={t.dateTime.prevMonth}
           disabled={monthOffset <= 0}
           onClick={() => setMonthOffset(monthOffset - 1)}
         />
@@ -40,15 +42,15 @@ export default function Calendar({
         </p>
         <MonthButton
           direction="right"
-          label="다음 달"
+          label={t.dateTime.nextMonth}
           disabled={monthOffset >= MAX_MONTHS_AHEAD}
           onClick={() => setMonthOffset(monthOffset + 1)}
         />
       </div>
 
       <div className="mt-5 grid grid-cols-7 text-center text-sm text-body">
-        {WEEKDAYS.map((weekday) => (
-          <span key={weekday} className="py-2">
+        {t.format.weekdays.map((weekday, index) => (
+          <span key={index} className="py-2">
             {weekday}
           </span>
         ))}
@@ -91,6 +93,7 @@ function DayButton({
   label?: string;
   onSelect: (dateKey: string) => void;
 }) {
+  const t = useT();
   const key = toDateKey(day);
   const isSelected = key === selected;
   const isToday = key === todayKey;
@@ -107,7 +110,7 @@ function DayButton({
           ? "text-danger hover:bg-soft"
           : "text-ink hover:bg-soft";
 
-  const caption = label ?? (isToday ? "오늘" : undefined);
+  const caption = label ?? (isToday ? t.dateTime.today : undefined);
 
   return (
     <button
@@ -115,7 +118,7 @@ function DayButton({
       disabled={disabled}
       onClick={() => onSelect(key)}
       aria-pressed={isSelected}
-      aria-label={`${day.getMonth() + 1}월 ${day.getDate()}일${label ? ` ${label}` : ""}${isToday ? " 오늘" : ""}`}
+      aria-label={t.dateTime.dayAria(day.getMonth() + 1, day.getDate(), label, isToday)}
       className="flex justify-center py-0.5 disabled:cursor-default"
     >
       <span
@@ -124,7 +127,7 @@ function DayButton({
         {day.getDate()}
         {caption && (
           <span
-            className={`text-[10px] leading-none ${
+            className={`max-w-full truncate px-0.5 text-[10px] leading-none ${
               isSelected ? "text-white" : isSpecial && !disabled ? "font-bold text-brand-dark" : "text-sub"
             }`}
           >

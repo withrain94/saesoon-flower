@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import { useElementWidth } from "@/hooks/useElementWidth";
+import { useT } from "@/hooks/useLocale";
 import { buildBusinessDocument, DOCUMENT_WIDTH } from "@/lib/documents";
 import type { BusinessDocumentType, ReservationRequest } from "@/types/reservation";
 import BusinessDocumentView from "./BusinessDocumentView";
 
 /** 완료 화면 — 요청한 서류 미리보기 + 인쇄/PDF 저장 */
 export default function DocumentsPanel({ reservation }: { reservation: ReservationRequest }) {
+  const t = useT();
   const docs = reservation.documents.map((type) => buildBusinessDocument(type, reservation));
   const [activeType, setActiveType] = useState<BusinessDocumentType>(reservation.documents[0]);
   // 화면 미리보기는 폭에 맞춰 축소 (인쇄는 globals.css에서 원래 크기)
@@ -17,21 +19,21 @@ export default function DocumentsPanel({ reservation }: { reservation: Reservati
   return (
     <div className="mt-3 rounded-2xl bg-panel p-3 text-left">
       <div className="flex flex-wrap items-center justify-between gap-2 px-1">
-        <p className="text-[13px] font-bold text-brand-dark">요청하신 서류</p>
+        <p className="text-[13px] font-bold text-brand-dark">{t.documents.panelTitle}</p>
         <button
           type="button"
           onClick={() => window.print()}
           className="rounded-lg bg-brand px-3 py-1.5 text-[13px] font-bold text-white transition hover:bg-brand-dark"
         >
-          인쇄 / PDF 저장
+          {t.documents.print}
         </button>
       </div>
       <p className="mt-0.5 px-1 text-[12px] text-sub">
-        매장에서 확인 후 {reservation.documentEmail}로 보내드려요. 지금 바로 필요하면 인쇄 창에서 &lsquo;PDF로 저장&rsquo;을 골라주세요.
+        {t.documents.emailNote(reservation.documentEmail)} {t.documents.koreanOnly}
       </p>
 
       {docs.length > 1 && (
-        <div role="tablist" aria-label="서류 종류" className="mt-2 grid grid-cols-2 gap-1.5">
+        <div role="tablist" aria-label={t.documents.tabsAria} className="mt-2 grid grid-cols-2 gap-1.5">
           {docs.map((doc) => (
             <button
               key={doc.type}
@@ -45,7 +47,7 @@ export default function DocumentsPanel({ reservation }: { reservation: Reservati
                   : "border-field bg-white/60 text-body"
               }`}
             >
-              {doc.title}
+              {t.documents.options[doc.type]}
             </button>
           ))}
         </div>
