@@ -523,11 +523,11 @@ export const en: Messages = {
     items: [
       {
         title: "Information collected",
-        body: "Your name and phone number (required); recipient names and phone numbers, message text, promotion topper names and titles, orchid delivery restaurant and booking name, cash receipt number, card payer's contact, PayPal request email, and document email, company name and business number (where applicable)",
+        body: "Your name and phone number (required); recipient names and phone numbers, message text, promotion topper names and titles, orchid delivery restaurant and booking name, cash receipt number, card payer's contact, PayPal request email, document email, company name and business number, and your refund bank name, account number and holder if you cancel after paying (where applicable)",
       },
       {
         title: "Purpose",
-        body: "Receiving and confirming reservations, making and handing over or delivering products, confirming payment, and issuing cash receipts, quotes and statements",
+        body: "Receiving and confirming reservations, making and handing over or delivering products, confirming payment, issuing cash receipts, quotes and statements, and refunds for canceled reservations",
       },
       {
         title: "Retention",

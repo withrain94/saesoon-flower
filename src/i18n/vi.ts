@@ -514,11 +514,11 @@ export const vi: Messages = {
     items: [
       {
         title: "Thông tin thu thập",
-        body: "Tên và số điện thoại người đặt (bắt buộc); tên và số điện thoại người nhận, nội dung lời nhắn, tên và chức vụ trên thẻ cắm thăng chức, nhà hàng giao lan và tên đặt bàn, số hóa đơn tiền mặt, liên hệ người thanh toán thẻ, email nhận yêu cầu PayPal, email nhận chứng từ, tên công ty và mã số kinh doanh (nếu có)",
+        body: "Tên và số điện thoại người đặt (bắt buộc); tên và số điện thoại người nhận, nội dung lời nhắn, tên và chức vụ trên thẻ cắm thăng chức, nhà hàng giao lan và tên đặt bàn, số hóa đơn tiền mặt, liên hệ người thanh toán thẻ, email nhận yêu cầu PayPal, email nhận chứng từ, tên công ty và mã số kinh doanh, tên ngân hàng, số tài khoản và chủ tài khoản nhận hoàn tiền khi hủy sau khi đã thanh toán (nếu có)",
       },
       {
         title: "Mục đích sử dụng",
-        body: "Tiếp nhận và liên hệ xác nhận đơn, làm hoa và giao nhận, xác nhận thanh toán, xuất hóa đơn tiền mặt, báo giá và phiếu giao dịch",
+        body: "Tiếp nhận và liên hệ xác nhận đơn, làm hoa và giao nhận, xác nhận thanh toán, xuất hóa đơn tiền mặt, báo giá và phiếu giao dịch, hoàn tiền khi hủy đơn",
       },
       {
         title: "Thời gian lưu",
