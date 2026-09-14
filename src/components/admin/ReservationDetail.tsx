@@ -12,9 +12,11 @@ import {
   localeNames,
 } from "@/lib/adminFormat";
 import { formatReceiptNumber } from "@/lib/format";
+import { notionPageTitle } from "@/lib/notionReservation";
 import type { StoredReservation } from "@/types/reservation";
 import AdminDocuments from "./AdminDocuments";
 import AdminMemoForm from "./AdminMemoForm";
+import NotionSyncButton from "./NotionSyncButton";
 import StatusBadge from "./StatusBadge";
 import StatusChanger from "./StatusChanger";
 
@@ -145,6 +147,10 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
 
       <Card title="매장 메모">
         <AdminMemoForm id={id} memo={adminMemo} />
+      </Card>
+
+      <Card title="노션 날짜별 표">
+        <NotionSyncButton id={id} pageTitle={notionPageTitle(request.date)} />
       </Card>
 
       <p className="px-1 pb-6 text-[12px] text-sub print:hidden">

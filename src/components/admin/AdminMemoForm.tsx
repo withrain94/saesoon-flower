@@ -35,6 +35,9 @@ export default function AdminMemoForm({ id, memo }: { id: string; memo: string }
           {pending ? "저장 중…" : "메모 저장"}
         </button>
       </div>
+      {!pending && state.notice && (
+        <p className="mt-1 text-right text-[12px] text-brand-dark">{state.notice}</p>
+      )}
       {state.error && <ErrorText>{state.error}</ErrorText>}
     </form>
   );

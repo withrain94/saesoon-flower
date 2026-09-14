@@ -10,6 +10,7 @@ import type { ReservationStatus } from "@/types/reservation";
 export default function StatusChanger({ id, status }: { id: string; status: ReservationStatus }) {
   const [pendingStatus, setPendingStatus] = useState<ReservationStatus | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const shown = isPending && pendingStatus ? pendingStatus : status;
 
@@ -17,9 +18,11 @@ export default function StatusChanger({ id, status }: { id: string; status: Rese
     if (next === status || isPending) return;
     setPendingStatus(next);
     setError(null);
+    setNotice(null);
     startTransition(async () => {
       const result = await changeReservationStatus(id, next);
       if (result.error) setError(result.error);
+      setNotice(result.notice ?? null);
     });
   };
 
@@ -50,8 +53,9 @@ export default function StatusChanger({ id, status }: { id: string; status: Rese
         })}
       </div>
       <p aria-live="polite" className="mt-1.5 text-[12px] text-sub">
-        {isPending ? "저장 중…" : "버튼을 누르면 바로 저장돼요."}
+        {isPending ? "저장 중…" : "버튼을 누르면 바로 저장돼요. 입금·결제 확인부터는 노션 표에도 올라가요."}
       </p>
+      {notice && <p className="mt-1 text-[13px] font-semibold text-brand-dark">{notice}</p>}
       {error && <ErrorText>{error}</ErrorText>}
     </div>
   );

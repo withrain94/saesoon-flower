@@ -47,6 +47,7 @@ export const privacyPolicySections: { title: string; paragraphs: string[] }[] = 
       "· Vercel Inc.: 웹사이트 운영(호스팅).",
       "· PayPal: PayPal 결제를 고른 경우 결제 요청 발송(이메일, 결제 금액).",
       "· Telegram: 매장 직원에게 새 예약 알림 전달(예약자 성함·연락처, 예약 일시·상품·금액).",
+      "· Notion Labs, Inc.: 입금·결제가 확인된 예약의 날짜별 제작 목록 보관(예약자·받는 분 성함·연락처, 메시지, 예약 일시·상품·금액·결제 방법).",
       "위 서비스는 해외 사업자가 제공하며, 예약 정보가 해당 사업자의 서버를 거쳐 처리·보관될 수 있습니다.",
     ],
   },
