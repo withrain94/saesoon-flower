@@ -138,6 +138,8 @@ function cellTexts(block: NotionBlock) {
   return block.table_row?.cells.map((cell) => cell.map((text) => text.plain_text).join("")) ?? [];
 }
 
+const CONTACT_LINE = /^(\(없음\)|[\d+\-\s,]+)$/;
+
 const textContent = (text: string) => [{ type: "text", text: { content: text.slice(0, MAX_TEXT) } }];
 
 /**
@@ -155,7 +157,8 @@ async function refreshContactLists(token: string, pageId: string) {
   let inList = false;
   for (const block of blocks) {
     if (block.type === "heading_3") inList = titles.some((title) => blockText(block).startsWith(title));
-    else if (block.type !== "paragraph") inList = false;
+    // 모음 줄은 번호·쉼표뿐("(없음)" 포함) — 다른 글이 나오면 거기서 모음이 끝난 것
+    else if (block.type !== "paragraph" || !CONTACT_LINE.test(blockText(block))) inList = false;
     if (inList) oldBlocks.push(block);
   }
   for (const block of oldBlocks) await notionFetch(token, `/blocks/${block.id}`, "DELETE");
