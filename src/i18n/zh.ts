@@ -432,20 +432,19 @@ export const zh: Messages = {
 
   documents: {
     toggle: "需要报价单·交易明细单",
-    description: "公司·机构活动等需要凭证时请勾选，提交后立即将 PDF 发送到您填写的邮箱。",
+    description: "公司·机构活动等需要凭证时请勾选，提交后可在完成页面直接下载 PDF 文件。",
     groupAria: "需要的文件",
     options: { quote: "报价单", statement: "交易明细单" },
-    emailAria: "接收文件的邮箱",
-    emailPlaceholder: "接收文件的邮箱（例：name@company.com）",
     companyAria: "公司·机构名称",
     companyPlaceholder: "公司·机构名称（收货方）",
     businessNumberAria: "营业执照号",
     businessNumberPlaceholder: "营业执照号（选填）000-00-00000",
     businessNumberTitle: "请确认10位营业执照号。（例：123-45-67890）",
     panelTitle: "申请的文件",
-    print: "打印 / 保存 PDF",
-    emailNote: (email) =>
-      `我们会将 PDF 文件发送到 ${email}。几分钟后仍未收到，请查看垃圾邮件或联系店家。如需立即使用，请在打印窗口选择“另存为 PDF”。`,
+    download: (title) => `⬇ 下载${title} PDF`,
+    downloading: "正在生成文件…",
+    downloadNote: "点击后 PDF 文件会立即保存。手机请在“下载”文件夹（iPhone 为“文件”App）中查找。请在关闭本页面前保存。",
+    downloadFailed: `文件下载失败。请再试一次；如果是在 KakaoTalk 等 App 内打开，请改用 Safari 或 Chrome。仍无法下载请联系店家（${businessInfo.phone}）。`,
     tabsAria: "文件种类",
     koreanOnly: "文件以韩文开具。",
   },
@@ -492,7 +491,7 @@ export const zh: Messages = {
     items: [
       {
         title: "收集项目",
-        body: "预约人姓名·电话（必填），收花人姓名·电话、留言内容、晋升插牌姓名·职级、蝴蝶兰配送餐厅·餐厅预约人姓名、现金收据号码、刷卡付款人联系方式、PayPal 付款请求邮箱、接收文件的邮箱·公司名称·营业执照号、付款后取消预约时的退款银行名称·账号·户名（如适用）",
+        body: "预约人姓名·电话（必填），收花人姓名·电话、留言内容、晋升插牌姓名·职级、蝴蝶兰配送餐厅·餐厅预约人姓名、现金收据号码、刷卡付款人联系方式、PayPal 付款请求邮箱、文件上填写的公司名称·营业执照号、付款后取消预约时的退款银行名称·账号·户名（如适用）",
       },
       {
         title: "使用目的",
@@ -536,7 +535,6 @@ export const zh: Messages = {
     cashReceiptBusiness: "请确认现金收据的营业执照号。",
     cardPayer: "请填写刷卡付款人的联系方式。",
     paypalEmail: "请确认接收 PayPal 付款请求的邮箱。",
-    documentEmail: "请确认接收文件的邮箱。",
     documentCompany: "请输入文件上的公司·机构名称。",
     documentBusinessNumber: "请确认文件用的营业执照号。",
   },

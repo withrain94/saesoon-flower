@@ -9,7 +9,8 @@ import type { BusinessDocumentType } from "@/types/reservation";
 
 /**
  * 견적서·거래명세표 요청.
- * input name: documents(체크된 서류마다 하나), documentEmail, documentCompany, documentBusinessNumber
+ * input name: documents(체크된 서류마다 하나), documentCompany, documentBusinessNumber
+ * 서류는 신청 완료 화면에서 PDF로 바로 받음 (이메일 발송 없음)
  */
 export default function DocumentRequestField() {
   const t = useT();
@@ -63,15 +64,6 @@ export default function DocumentRequestField() {
             })}
           </div>
 
-          <input
-            name="documentEmail"
-            type="email"
-            required
-            autoComplete="email"
-            aria-label={t.documents.emailAria}
-            placeholder={t.documents.emailPlaceholder}
-            className={inputClassName}
-          />
           <input
             name="documentCompany"
             type="text"

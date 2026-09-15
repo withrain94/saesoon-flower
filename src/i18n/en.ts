@@ -479,20 +479,19 @@ export const en: Messages = {
 
   documents: {
     toggle: "I need a quote / transaction statement",
-    description: "Check this if your company or organization needs supporting documents. We'll email you the PDF files right away.",
+    description: "Check this if your company or organization needs supporting documents. After submitting, you can download the PDF files right away on the completion screen.",
     groupAria: "Documents needed",
     options: { quote: "Quote", statement: "Transaction statement" },
-    emailAria: "Email for the documents",
-    emailPlaceholder: "Email for the documents (e.g. name@company.com)",
     companyAria: "Company or organization name",
     companyPlaceholder: "Company / organization name (recipient)",
     businessNumberAria: "Business registration number",
     businessNumberPlaceholder: "Business registration no. (optional) 000-00-00000",
     businessNumberTitle: "Please check the 10-digit business registration number. (e.g. 123-45-67890)",
     panelTitle: "Requested documents",
-    print: "Print / Save PDF",
-    emailNote: (email) =>
-      `We'll email the PDF files to ${email}. If nothing arrives within a few minutes, check your spam folder or contact the shop. If you need them now, choose “Save as PDF” in the print window.`,
+    download: (title) => `⬇ Download ${title} (PDF)`,
+    downloading: "Preparing file…",
+    downloadNote: "Tap to save the PDF file. On a phone, look in your Downloads folder (Files app on iPhone). Please save it before closing this page.",
+    downloadFailed: `The file could not be downloaded. Please try again; if you opened this inside an app such as KakaoTalk, try Safari or Chrome. If it still fails, please contact the shop (${businessInfo.phone}).`,
     tabsAria: "Document type",
     koreanOnly: "Documents are issued in Korean.",
   },
@@ -539,7 +538,7 @@ export const en: Messages = {
     items: [
       {
         title: "Information collected",
-        body: "Your name and phone number (required); recipient names and phone numbers, message text, promotion topper names and titles, orchid delivery restaurant and booking name, cash receipt number, card payer's contact, PayPal request email, document email, company name and business number, and your refund bank name, account number and holder if you cancel after paying (where applicable)",
+        body: "Your name and phone number (required); recipient names and phone numbers, message text, promotion topper names and titles, orchid delivery restaurant and booking name, cash receipt number, card payer's contact, PayPal request email, company name and business number for documents, and your refund bank name, account number and holder if you cancel after paying (where applicable)",
       },
       {
         title: "Purpose",
@@ -583,7 +582,6 @@ export const en: Messages = {
     cashReceiptBusiness: "Please check the business registration number for the cash receipt.",
     cardPayer: "Please enter the card payer's contact.",
     paypalEmail: "Please check the email for the PayPal payment request.",
-    documentEmail: "Please check the email for the documents.",
     documentCompany: "Please enter the company or organization name for the documents.",
     documentBusinessNumber: "Please check the business registration number for the documents.",
   },

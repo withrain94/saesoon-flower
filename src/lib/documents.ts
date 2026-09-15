@@ -120,7 +120,6 @@ export function buildBusinessDocument(
       { label: "사업자등록번호", value: reservation.documentBusinessNumber || "-" },
       { label: "담당자", value: reservation.ordererName },
       { label: "연락처", value: reservation.ordererPhone },
-      { label: "이메일", value: reservation.documentEmail },
     ],
     rows,
     total,
@@ -128,4 +127,9 @@ export function buildBusinessDocument(
     tax,
     notes,
   };
+}
+
+/** PDF 파일 이름 — "새순_견적서_SS-20260914-1530.pdf" */
+export function documentFileName(document: BusinessDocument) {
+  return `${businessInfo.tradeName}_${document.title}_${document.number}.pdf`;
 }

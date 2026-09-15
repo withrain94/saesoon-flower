@@ -136,7 +136,7 @@ export default function LookupReservationDetails({ reservation }: { reservation:
         )}
       </Card>
 
-      {request.documents.length > 0 && !canceled && <DocumentsPanel reservation={request} />}
+      {request.documents.length > 0 && !canceled && <DocumentsPanel id={reservation.id} reservation={request} />}
     </div>
   );
 }

@@ -147,10 +147,8 @@ export function validateReservationRequest(input: unknown, now: Now, submittedAt
   // 견적서·거래명세표
   const requested = Array.isArray(raw.documents) ? raw.documents : [];
   const documents = documentOptions.map((option) => option.value).filter((value) => requested.includes(value));
-  const documentEmail = documents.length ? str(raw.documentEmail, 100) : "";
   const documentCompany = documents.length ? str(raw.documentCompany, 100) : "";
   const documentBusinessNumber = documents.length ? str(raw.documentBusinessNumber, 20) : "";
-  if (documents.length && !EMAIL.test(documentEmail)) return fail(validation.documentEmail);
   if (documents.length && !documentCompany) return fail(validation.documentCompany);
   if (documentBusinessNumber && !BUSINESS_NUMBER.test(documentBusinessNumber)) {
     return fail(validation.documentBusinessNumber);
@@ -178,7 +176,6 @@ export function validateReservationRequest(input: unknown, now: Now, submittedAt
       cardPayer,
       cardPayerContact,
       documents,
-      documentEmail,
       documentCompany,
       documentBusinessNumber,
       submittedAt: submittedAt.toISOString(),

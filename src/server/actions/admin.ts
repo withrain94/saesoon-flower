@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 import { isReservationStatus } from "@/data/reservationStatus";
 import { NOTION_SYNC_STATUSES } from "@/lib/notionReservation";
 import { ADMIN_HOME_PATH, ADMIN_LOGIN_PATH, isReservationId, requireAdmin } from "../auth";
-import { sendDocumentEmail } from "../documentEmail";
 import { getAdminEmails, getSupabaseEnv } from "../env";
 import { syncReservationToNotion, type NotionSyncResult } from "../notion";
 import { getReservation, updateReservation } from "../reservations";
@@ -87,25 +86,6 @@ export async function resyncReservationNotion(id: string): Promise<AdminFormStat
   if (!isReservationId(id)) return { error: "잘못된 요청이에요." };
   const notice = await syncNotion(id, "manual");
   return { error: null, savedAt: Date.now(), notice };
-}
-
-/** 견적서·거래명세표 이메일 다시 보내기 (상세 화면 버튼) */
-export async function resendDocumentEmail(id: string): Promise<AdminFormState> {
-  await requireAdmin();
-  if (!isReservationId(id)) return { error: "잘못된 요청이에요." };
-  const reservation = await getReservation(id).catch(() => null);
-  if (!reservation) return { error: "예약을 불러오지 못했어요." };
-  const result = await sendDocumentEmail(id, reservation.request);
-  switch (result) {
-    case "sent":
-      return { error: null, savedAt: Date.now(), notice: `${reservation.request.documentEmail}로 보냈어요.` };
-    case "noDocuments":
-      return { error: "이 예약에는 서류 요청이 없어요." };
-    case "notConfigured":
-      return { error: "Gmail 설정(GMAIL_USER·GMAIL_APP_PASSWORD)이 아직 없어서 보내지 못했어요." };
-    case "failed":
-      return { error: "보내지 못했어요. 이메일 주소와 Gmail 앱 비밀번호를 확인한 뒤 다시 눌러주세요." };
-  }
 }
 
 /**

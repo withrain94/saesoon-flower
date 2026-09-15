@@ -1,14 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import DocumentDownloadButton from "@/components/ui/DocumentDownloadButton";
 import { useElementWidth } from "@/hooks/useElementWidth";
 import { useT } from "@/hooks/useLocale";
 import { buildBusinessDocument, DOCUMENT_WIDTH } from "@/lib/documents";
 import type { BusinessDocumentType, ReservationRequest } from "@/types/reservation";
 import BusinessDocumentView from "./BusinessDocumentView";
 
-/** 완료 화면 — 요청한 서류 미리보기 + 인쇄/PDF 저장 */
-export default function DocumentsPanel({ reservation }: { reservation: ReservationRequest }) {
+/** 완료 화면 — 요청한 서류 PDF 다운로드 + 미리보기 */
+export default function DocumentsPanel({ id, reservation }: { id: string; reservation: ReservationRequest }) {
   const t = useT();
   const docs = reservation.documents.map((type) => buildBusinessDocument(type, reservation));
   const [activeType, setActiveType] = useState<BusinessDocumentType>(reservation.documents[0]);
@@ -18,18 +19,22 @@ export default function DocumentsPanel({ reservation }: { reservation: Reservati
 
   return (
     <div className="mt-3 rounded-2xl bg-panel p-3 text-left">
-      <div className="flex flex-wrap items-center justify-between gap-2 px-1">
-        <p className="text-[13px] font-bold text-brand-dark">{t.documents.panelTitle}</p>
-        <button
-          type="button"
-          onClick={() => window.print()}
-          className="rounded-lg bg-brand px-3 py-1.5 text-[13px] font-bold text-white transition hover:bg-brand-dark"
-        >
-          {t.documents.print}
-        </button>
+      <p className="px-1 text-[13px] font-bold text-brand-dark">{t.documents.panelTitle}</p>
+      <div className="mt-2 space-y-2">
+        {docs.map((doc) => (
+          <DocumentDownloadButton
+            key={doc.type}
+            id={id}
+            type={doc.type}
+            phone={reservation.ordererPhone}
+            label={t.documents.download(t.documents.options[doc.type])}
+            busyLabel={t.documents.downloading}
+            failedText={t.documents.downloadFailed}
+          />
+        ))}
       </div>
-      <p className="mt-0.5 px-1 text-[12px] text-sub">
-        {t.documents.emailNote(reservation.documentEmail)} {t.documents.koreanOnly}
+      <p className="mt-1.5 px-1 text-[12px] text-sub">
+        {t.documents.downloadNote} {t.documents.koreanOnly}
       </p>
 
       {docs.length > 1 && (

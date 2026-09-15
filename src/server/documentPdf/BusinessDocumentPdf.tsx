@@ -4,7 +4,7 @@ import { Document, Image, Page, StyleSheet, Text, View } from "@react-pdf/render
 import { MISSING_INFO, type BusinessDocument, type DocumentParty } from "@/lib/documents";
 
 /**
- * 견적서·거래명세표 PDF (이메일 첨부용) — 화면용 components/reservation/BusinessDocumentView 와 같은 모양.
+ * 견적서·거래명세표 PDF (다운로드용 — server/documentDownload) — 화면용 components/reservation/BusinessDocumentView 와 같은 모양.
  * 내용은 lib/documents 의 buildBusinessDocument 결과를 그대로 그림.
  */
 

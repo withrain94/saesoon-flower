@@ -55,6 +55,9 @@ export const privacyPath = "/privacy";
 /** 손님 예약 조회·취소 화면 (접수번호를 미리 채우려면 ?no=접수번호) */
 export const lookupPath = "/check";
 
+/** 견적서·거래명세표 PDF 받기 (POST — app/documents/pdf/route.ts) */
+export const documentPdfPath = "/documents/pdf";
+
 /** 새순 소개 사이트 — 예약 탭에 없는 사진·설명을 더 보고 싶은 분께 연결 */
 export const siteUrl = "https://saesoon-jeonju.withrain94.chatgpt.site";
 

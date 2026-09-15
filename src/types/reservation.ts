@@ -140,8 +140,6 @@ export type ReservationRequest = {
   cardPayerContact: string;
   /** 요청한 서류 (필요 없으면 빈 배열) */
   documents: BusinessDocumentType[];
-  /** 서류 받을 이메일 */
-  documentEmail: string;
   /** 서류에 적을 공급받는 자 상호·기관명 */
   documentCompany: string;
   /** 공급받는 자 사업자등록번호 (선택) */
@@ -185,6 +183,8 @@ export type StoredReservation = {
 
 /** 손님 예약 조회 화면에 보내는 내용 (매장 메모 등 매장 전용 정보는 뺌) */
 export type CustomerReservationView = {
+  /** 예약 id — 서류 PDF 받기에 씀 (이름+연락처 확인 뒤에만 내려감) */
+  id: string;
   receiptNumber: string;
   status: ReservationStatus;
   /** 취소 요청을 보냈으면 요청 시각 */
@@ -209,7 +209,6 @@ export type ReservationFormField =
   | "cardPayer"
   | "cardPayerContact"
   | "documents"
-  | "documentEmail"
   | "documentCompany"
   | "documentBusinessNumber"
   | "privacyConsent";

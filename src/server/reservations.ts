@@ -95,7 +95,7 @@ export async function countReservationsByStatus(): Promise<Record<ReservationSta
   return counts;
 }
 
-/** 관리자 상세. 호출 전에 requireAdmin() 필수 */
+/** 예약 한 건. 관리자 상세는 호출 전에 requireAdmin() 필수, 서류 PDF 받기(server/documentDownload)는 연락처를 먼저 확인 */
 export async function getReservation(id: string): Promise<StoredReservation | null> {
   const { data, error } = await createDatabaseClient().from(TABLE).select(COLUMNS).eq("id", id).maybeSingle();
   if (error) throw error;

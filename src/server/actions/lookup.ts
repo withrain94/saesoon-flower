@@ -56,6 +56,7 @@ function failure(error: unknown, action: string): LookupFailure {
 
 function toView(reservation: StoredReservation): CustomerReservationView {
   return {
+    id: reservation.id,
     receiptNumber: formatReceiptNumber(reservation.id),
     status: reservation.status,
     // 입금했다고 답한 취소 요청만 "취소 요청 접수됨" (입금 전 바로 취소는 상태가 취소됨)

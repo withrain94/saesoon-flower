@@ -145,7 +145,6 @@ export function useReservation() {
     }
 
     const request = buildReservationRequest(selection, units, formData, submittedAt, locale);
-    // TODO(이메일): request.documents가 있으면 서버에서 서류(lib/documents)를 PDF로 만들어 documentEmail로 발송
     setSubmitting(true);
     try {
       const result = await submitReservation(request);

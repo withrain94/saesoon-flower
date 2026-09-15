@@ -134,7 +134,6 @@ export function buildReservationRequest(
     cardPayer,
     cardPayerContact: cardPayer === "other" ? text(data, "cardPayerContact") : "",
     documents,
-    documentEmail: wantsDocuments ? text(data, "documentEmail") : "",
     documentCompany: wantsDocuments ? text(data, "documentCompany") : "",
     documentBusinessNumber: wantsDocuments ? text(data, "documentBusinessNumber") : "",
     submittedAt: submittedAt.toISOString(),

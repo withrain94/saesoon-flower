@@ -13,7 +13,7 @@
 
 - 사용자: 새순 전주혁신도시점(24시 무인꽃집) 운영자. 개발자가 아니므로 **한국어로, 쉬운 말로** 설명한다. 코드 용어는 풀어서 말한다.
 - **요청한 것만 처리한다.** 더 좋아 보이는 기능은 먼저 제안만 하고, 사용자가 고르면 만든다.
-- 외부 서비스 연결(DB·메일·결제·알림 등)은 사용자가 요청할 때만 한다. 지금 연결된 것: Supabase(저장·관리자 로그인), 텔레그램(새 예약 알림), 노션(날짜별 예약 표), Gmail(견적서·거래명세표 이메일 — 코드 완료, 사용자 Gmail 앱 비밀번호 설정 대기). **온라인 결제는 요청 전.**
+- 외부 서비스 연결(DB·메일·결제·알림 등)은 사용자가 요청할 때만 한다. 지금 연결된 것: Supabase(저장·관리자 로그인), 텔레그램(새 예약 알림), 노션(날짜별 예약 표). **이메일 발송은 안 하기로 함(2026-09-15 사용자 결정)** · 온라인 결제는 요청 전.
 - **"배포해줘"** = 검사(`npx tsc --noEmit`, `npm run lint`, `npm run build`) 통과 확인 → `git add` → 커밋 → `git push` (GitHub `main`에 올리면 Vercel이 1~2분 뒤 자동 배포) → 배포 주소에서 확인.
   - dev 서버가 켜져 있으면 build 전에 **이 프로젝트의 dev 서버만** 끄고(3000번 포트 프로세스가 `workspace\plant\node_modules\next`인지 확인) build 후 다시 켠다.
   - 커밋 작성자는 이 저장소에 `withrain94` / GitHub noreply 이메일로 설정돼 있다(실제 이메일 노출 방지). 바꾸지 않는다.
@@ -65,9 +65,9 @@
 | 네이버 예약 | **첫 화면에서 먼저 나눈다** (신청서 작성 후 네이버로 가면 이중 작성이 되므로). 결제 방법에는 넣지 않고 작은 "네이버 예약 바로가기" 안내만 | `NaverBookingBanner`, 언어 파일 `naverBanner` |
 | 화분 | 개업·승진·축하 화분은 **네이버 예약으로만** (첫 화면 버튼) | `naverOnlyBookings` |
 | 받는 분·메시지 | 상품 1개마다 카드, 2번째부터 "앞과 같음" 기본 체크, "모두 같음/모두 따로" 버튼. 메시지 "같음"은 같은 종류끼리만 | `lib/units.ts` |
-| 견적서·거래명세표 | 체크 시 이메일·상호(필수)·사업자번호(선택) → 완료 화면·관리자 상세에서 자동 작성·인쇄/PDF. 공급자: 상호 **"새순"**, 대표 김래인, 102-16-53653, 기지로 77 대방디엠시티 1층 D108~109호, 010-5954-3963, 도매 및 소매업/화초 및 식물 소매업. **과세사업자지만 품목이 면세 → 합계만 표시**. 직인 `public/documents/seal-01.png`. **이메일: 신청 완료 즉시 가게 Gmail로 서류별 PDF 첨부 자동 발송**(사용자 결정 2026-09-15, 한글 글꼴 나눔고딕 OFL). 실패하면 매장 텔레그램 알림 → 관리자 상세 "서류 이메일 다시 보내기". 서류 번호·작성일은 한국 시각 | `businessInfo`, `lib/documents.ts`, `server/documentEmail.ts`, `server/documentPdf/`, `lib/documentEmail.ts` |
+| 견적서·거래명세표 | 체크 시 상호(필수)·사업자번호(선택) → 완료 화면·예약 조회·관리자 상세에서 자동 작성, **"PDF 다운로드" 버튼으로 파일 저장만**(이메일 칸·발송 없음, 2026-09-15 사용자 결정). 공급자: 상호 **"새순"**, 대표 김래인, 102-16-53653, 기지로 77 대방디엠시티 1층 D108~109호, 010-5954-3963, 도매 및 소매업/화초 및 식물 소매업. **과세사업자지만 품목이 면세 → 합계만 표시**. 직인 `public/documents/seal-01.png`. PDF 한글 글꼴 나눔고딕(OFL). 서류 번호·작성일은 한국 시각 | `businessInfo`, `lib/documents.ts`, `server/documentDownload.ts`, `server/documentPdf/`, `DocumentDownloadButton` |
 | 예약 전 안내 문자 | 완료 화면 예약자 연락처 아래 "📱 예약 시간이 되기 전에 예약자 연락처로 안내 문자를 보내드려요"(5개 언어, 2026-09-15 배포). **문자는 매장이 직접 보냄 — 자동 발송 없음(요청 전)** | 언어 파일 `complete.reminder`, `ReservationComplete` |
-| 개인정보 | 신청서 맨 아래 **[필수] 개인정보 수집·이용 동의**(5개 언어) + `/privacy` 처리방침(한국어, 위탁: Supabase·Vercel·PayPal·Telegram·Notion·Google(Gmail)). 수집 항목을 바꾸면 언어 파일 `privacy`와 `data/privacy.ts`를 같이 바꿈 | `PrivacyConsentField`, `data/privacy.ts` |
+| 개인정보 | 신청서 맨 아래 **[필수] 개인정보 수집·이용 동의**(5개 언어) + `/privacy` 처리방침(한국어, 위탁: Supabase·Vercel·PayPal·Telegram·Notion). 수집 항목을 바꾸면 언어 파일 `privacy`와 `data/privacy.ts`를 같이 바꿈 | `PrivacyConsentField`, `data/privacy.ts` |
 | 다국어 | 🌐 한국어(기본)·English·日本語·中文(简体)·Tiếng Việt. **직접 쓴 번역**(자동번역 X), 고른 언어는 브라우저에 기억. 주문 데이터는 코드/한국어 + 고객이 본 언어(`locale`). 서류·관리자 화면·알림·노션은 한국어. 해외 전화번호(+국가번호) 허용 | `src/i18n/*.ts`, `useT()` |
 | 예약 저장·관리 | 손님 신청 → 서버에서 다시 검사 → Supabase `reservations` 표. 관리자 `/admin`(이메일·비밀번호, `ADMIN_EMAILS`만, 회원가입 막음). 상태: 접수 → 입금·결제 확인 → 제작 완료 → 전달 완료 / 취소. 접수번호 = id 앞 8자리 | `server/actions/reservation.ts`, `server/reservations.ts`, `app/admin`, `supabase/schema.sql` |
 | 새 예약 알림 | **텔레그램**(사용자 선택). 저장 성공 뒤 매장 텔레그램으로: 접수번호·일시(특별한 날)·상품·금액·결제(PayPal이면 **결제 요청 보낼 이메일** 줄, 2026-09-15 사용자 요청)·**예약자 이름·연락처**(사용자 결정)·호접난 배송·토퍼/서류 여부·외국어 신청·관리자 링크. 실패해도 예약은 저장됨. 봇 **@saesoon_reservation_bot**, 받는 곳 = **사장님 텔레그램 계정 2개**(Kim·래인, 2026-09-15 래인 추가 — 번호는 `.env.local`/Vercel `TELEGRAM_CHAT_ID`에 쉼표로). 직원 추가 = 그 사람이 봇에게 말 건 뒤 `getUpdates`로 채팅 번호 찾아 `TELEGRAM_CHAT_ID`에 쉼표로 추가 | `server/notify.ts`, `lib/reservationNotice.ts` |
@@ -85,13 +85,13 @@
 | 코드 정리 | ✅ 2026-09-15 전체 점검 2회(03:30, 06:50): import 방향·순환 없음, 중복 정리(블랙보드 선택지 찾기 `findBlackboardPreset`, 결제 설명 `describePayment`, 환경변수 읽기 `server/env.ts`·`getSupabasePublicConfig`) |
 
 환경변수 (값은 `.env.local`·Vercel Production에만, 이름은 `.env.example` 참고):
-`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`(Config) · `SUPABASE_SECRET_KEY`(Secret) · `ADMIN_EMAILS`(Config) · `TELEGRAM_BOT_TOKEN`(Secret) · `TELEGRAM_CHAT_ID`(Config) · `NOTION_TOKEN`(Secret) · `NOTION_PARENT_PAGE_ID`(Config) · `GMAIL_USER`(Config) · `GMAIL_APP_PASSWORD`(Secret). `.env.local`에는 앞의 8개 값 있음, Gmail 2개는 사용자가 넣기 전.
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`(Config) · `SUPABASE_SECRET_KEY`(Secret) · `ADMIN_EMAILS`(Config) · `TELEGRAM_BOT_TOKEN`(Secret) · `TELEGRAM_CHAT_ID`(Config) · `NOTION_TOKEN`(Secret) · `NOTION_PARENT_PAGE_ID`(Config) · `NEXT_PUBLIC_KAKAO_JS_KEY`(Config, 카카오 버튼용). `.env.local`에는 앞의 8개 값 있음, 카카오 키는 사용자가 넣기 전.
 
 ## 6. 남은 일·확인 대기
 
 - **예약 조회를 이름+연락처로 변경 (2026-09-15, 사용자 요청, 배포 완료 1a41e12)** — 접수번호 칸 없앰. 예약자 이름(띄어쓰기·대소문자 무시)+연락처가 맞는 예약을 받는 날짜 늦은 순 목록(최대 20건, 1건이면 바로 상세). DB는 `orderer_phone` 끝 4자리로 후보를 찾고 서버에서 이름·전체 번호 확인. 취소는 고른 예약의 접수번호+이름+연락처로 다시 확인. 이름을 신청서와 다르게 적으면 못 찾음(추가 SQL 필요 없음).
 - **완료 화면 카카오톡으로 나에게 보내기·복사 (배포 완료 1a41e12)** — Vercel에 `NEXT_PUBLIC_KAKAO_JS_KEY`(Config)를 넣고 카카오 앱에 사이트 주소를 등록해야 카카오 버튼이 보임. 없으면 복사 버튼만.
-- **견적서·거래명세표 이메일 (2026-09-15, 사용자 요청, 배포 완료 1a41e12 — 아직 발송 안 됨)** — 사용자가 Gmail 앱 비밀번호를 만들어 `.env.local`·Vercel에 `GMAIL_USER`/`GMAIL_APP_PASSWORD` 넣어야 동작. 넣은 뒤 실제 발송 시험 필요.
+- **견적서·거래명세표: 이메일 없애고 PDF 다운로드로 (2026-09-15, 사용자 요청, 배포 전)** — Gmail 설정은 안 하기로 함. 이메일 칸·자동 발송·관리자 "다시 보내기"·nodemailer 삭제. 로컬에서 PDF 생성(한글·직인) 확인. 휴대폰 실제 다운로드는 배포 후 확인 필요.
 - **손님 예약 조회·취소 — 배포 완료 (2026-09-15 07:18, a106beb)** — `/check`(푸터·완료 화면 링크). (당시) 접수번호+연락처 조회, 결제 방법별 "입금/카드 결제/PayPal 결제 하셨나요?" → 안 함=바로 취소(답을 cancel_request.paid=false로 기록) / 함·입금 확인=취소 요청(계좌이체는 환불 은행·계좌·예금주 필수 + 실제 입금자와 다르면 처리 어려움 안내) / 제작 완료 이후=전화. 관리자 취소 카드에 손님 답·환불 계좌·카드 결제자·**현금영수증 번호(발행했으면 취소 발행 안내)**. 텔레그램 알림(계좌 제외). ✅ 사용자가 Supabase에서 추가 SQL(receipt_number·cancel_request) 실행 → 실제 DB로 조회·틀린 연락처 차단·규칙대로 거절 확인(2026-09-15). ✅ 신청서 동의 문구(5개 언어)에 환불 계좌·환불 목적 추가(1e5e78d). ✅ 사용자 실제 사이트 시험(2026-09-15): E9429778 입금 전 바로 취소(paid=false 기록) / 119830EA "이미 입금" 취소 요청(환불 계좌 저장) → 관리자 "취소"로 마무리(첫 시도는 저장 안 됨 — 상태 버튼이 아닌 곳을 누른 것으로 보임, 다시 눌러 11:17 저장). 시험 예약 5건은 사용자 요청으로 2026-09-15 삭제 → DB 예약 0건 (실제 운영 시작, 손님용 링크 https://saesoon-flower.vercel.app — 전용 도메인은 안 쓰기로 함)
 
 1. **노션 첫 실제 확인** — 사용자가 첫 실제 예약을 "입금·결제 확인"으로 바꿀 때 상태 버튼 아래 안내 확인. "노션 연결 설정이 아직 없어서…"가 뜨면 Vercel에 `NOTION_TOKEN`/`NOTION_PARENT_PAGE_ID` 넣고 재배포.

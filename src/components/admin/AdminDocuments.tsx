@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import BusinessDocumentView from "@/components/reservation/BusinessDocumentView";
+import DocumentDownloadButton from "@/components/ui/DocumentDownloadButton";
 import { useElementWidth } from "@/hooks/useElementWidth";
 import { buildBusinessDocument, DOCUMENT_WIDTH } from "@/lib/documents";
 import type { BusinessDocumentType, ReservationRequest } from "@/types/reservation";
 
-/** 고객이 요청한 견적서·거래명세표 미리보기 — 인쇄 / PDF로 저장 (손님 이메일 발송은 DocumentEmailButton·신청 직후 자동) */
-export default function AdminDocuments({ request }: { request: ReservationRequest }) {
+/** 고객이 요청한 견적서·거래명세표 — PDF 다운로드 + 미리보기 */
+export default function AdminDocuments({ id, request }: { id: string; request: ReservationRequest }) {
   const docs = request.documents.map((type) => buildBusinessDocument(type, request));
   const [activeType, setActiveType] = useState<BusinessDocumentType>(request.documents[0]);
   const [areaRef, areaWidth] = useElementWidth<HTMLDivElement>();
@@ -15,38 +16,37 @@ export default function AdminDocuments({ request }: { request: ReservationReques
 
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-2 print:hidden">
-        {docs.length > 1 ? (
-          <div role="tablist" aria-label="서류 종류" className="flex gap-1.5">
-            {docs.map((doc) => (
-              <button
-                key={doc.type}
-                type="button"
-                role="tab"
-                aria-selected={doc.type === activeType}
-                onClick={() => setActiveType(doc.type)}
-                className={`rounded-lg border px-3 py-1.5 text-[13px] font-semibold transition ${
-                  doc.type === activeType ? "border-brand bg-white text-brand-dark" : "border-field bg-white/60 text-body"
-                }`}
-              >
-                {doc.title}
-              </button>
-            ))}
-          </div>
-        ) : (
-          <span />
-        )}
-        <button
-          type="button"
-          onClick={() => window.print()}
-          className="rounded-lg bg-brand px-3 py-1.5 text-[13px] font-bold text-white transition hover:bg-brand-dark"
-        >
-          인쇄 / PDF 저장
-        </button>
+      <div className="grid gap-2 sm:grid-cols-2 print:hidden">
+        {docs.map((doc) => (
+          <DocumentDownloadButton
+            key={doc.type}
+            id={id}
+            type={doc.type}
+            label={`⬇ ${doc.title} PDF 다운로드`}
+            busyLabel="파일 만드는 중…"
+            failedText="파일을 만들지 못했어요. 잠시 후 다시 눌러주세요."
+          />
+        ))}
       </div>
-      <p className="mt-1 text-[12px] text-sub print:hidden">
-        인쇄 창에서 &lsquo;PDF로 저장&rsquo;을 고른 뒤 {request.documentEmail}로 보내주세요. (요청한 서류가 모두 한 장씩 저장돼요)
-      </p>
+
+      {docs.length > 1 && (
+        <div role="tablist" aria-label="서류 종류" className="mt-3 flex gap-1.5 print:hidden">
+          {docs.map((doc) => (
+            <button
+              key={doc.type}
+              type="button"
+              role="tab"
+              aria-selected={doc.type === activeType}
+              onClick={() => setActiveType(doc.type)}
+              className={`rounded-lg border px-3 py-1.5 text-[13px] font-semibold transition ${
+                doc.type === activeType ? "border-brand bg-white text-brand-dark" : "border-field bg-white/60 text-body"
+              }`}
+            >
+              {doc.title}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div ref={areaRef} className="print-area mt-2 overflow-hidden rounded-xl border border-line bg-white">
         {docs.map((doc) => (

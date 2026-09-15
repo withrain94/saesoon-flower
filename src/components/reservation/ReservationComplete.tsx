@@ -85,7 +85,7 @@ export default function ReservationComplete({
         )}
       </div>
 
-      {reservation.documents.length > 0 && <DocumentsPanel reservation={reservation} />}
+      {reservation.documents.length > 0 && <DocumentsPanel id={submitted.id} reservation={reservation} />}
 
       <div className="mt-3">
         <OrderSummary summary={summary} />

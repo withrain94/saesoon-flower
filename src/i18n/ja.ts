@@ -471,20 +471,19 @@ export const ja: Messages = {
 
   documents: {
     toggle: "見積書・取引明細書が必要です",
-    description: "会社・機関の行事などで証憑が必要な場合はチェックしてください。お申し込み後すぐに、ご入力のメールアドレスへPDFをお送りします。",
+    description: "会社・機関の行事などで証憑が必要な場合はチェックしてください。お申し込み後、完了画面ですぐにPDFファイルをダウンロードできます。",
     groupAria: "必要な書類",
     options: { quote: "見積書", statement: "取引明細書" },
-    emailAria: "書類を受け取るメールアドレス",
-    emailPlaceholder: "書類を受け取るメールアドレス（例: name@company.com）",
     companyAria: "会社名・機関名",
     companyPlaceholder: "会社名・機関名（受領者）",
     businessNumberAria: "事業者登録番号",
     businessNumberPlaceholder: "事業者登録番号（任意） 000-00-00000",
     businessNumberTitle: "事業者登録番号10桁をご確認ください。（例: 123-45-67890）",
     panelTitle: "ご依頼の書類",
-    print: "印刷 / PDF保存",
-    emailNote: (email) =>
-      `${email} にPDFファイルをお送りします。数分たっても届かない場合は、迷惑メールフォルダをご確認いただくか、お店にご連絡ください。今すぐ必要な場合は、印刷画面で「PDFに保存」をお選びください。`,
+    download: (title) => `⬇ ${title} PDFダウンロード`,
+    downloading: "ファイルを作成中…",
+    downloadNote: "押すとPDFファイルがすぐに保存されます。スマートフォンでは「ダウンロード」フォルダ（iPhoneは「ファイル」アプリ）でご確認ください。この画面を閉じる前に保存してください。",
+    downloadFailed: `ファイルを受け取れませんでした。もう一度お試しください。カカオトークなどのアプリ内で開いている場合は、SafariやChromeでお試しください。それでもできない場合はお店（${businessInfo.phone}）にご連絡ください。`,
     tabsAria: "書類の種類",
     koreanOnly: "書類は韓国語で作成されます。",
   },
@@ -531,7 +530,7 @@ export const ja: Messages = {
     items: [
       {
         title: "収集する項目",
-        body: "予約者のお名前・電話番号（必須）、受取人のお名前・電話番号、メッセージの文言、昇進トッパーのお名前・役職、胡蝶蘭の配送先のお店・予約名、現金領収証の番号、カード決済される方の連絡先、PayPal支払いリクエスト用メールアドレス、書類送付先メールアドレス・会社名・事業者登録番号、入金後にキャンセルする場合の返金先の銀行名・口座番号・口座名義（該当する場合）",
+        body: "予約者のお名前・電話番号（必須）、受取人のお名前・電話番号、メッセージの文言、昇進トッパーのお名前・役職、胡蝶蘭の配送先のお店・予約名、現金領収証の番号、カード決済される方の連絡先、PayPal支払いリクエスト用メールアドレス、書類に記載する会社名・事業者登録番号、入金後にキャンセルする場合の返金先の銀行名・口座番号・口座名義（該当する場合）",
       },
       {
         title: "利用目的",
@@ -575,7 +574,6 @@ export const ja: Messages = {
     cashReceiptBusiness: "現金領収証の事業者登録番号をご確認ください。",
     cardPayer: "カード決済される方の連絡先をご記入ください。",
     paypalEmail: "PayPal支払いリクエストを受け取るメールアドレスをご確認ください。",
-    documentEmail: "書類を受け取るメールアドレスをご確認ください。",
     documentCompany: "書類に記載する会社名・機関名をご入力ください。",
     documentBusinessNumber: "書類用の事業者登録番号をご確認ください。",
   },

@@ -470,20 +470,19 @@ export const vi: Messages = {
 
   documents: {
     toggle: "Tôi cần báo giá · phiếu giao dịch",
-    description: "Đánh dấu nếu công ty hoặc cơ quan cần chứng từ. Chúng tôi sẽ gửi ngay tệp PDF đến email bạn nhập.",
+    description: "Đánh dấu nếu công ty hoặc cơ quan cần chứng từ. Sau khi gửi đơn, bạn có thể tải ngay tệp PDF ở màn hình hoàn tất.",
     groupAria: "Chứng từ cần",
     options: { quote: "Báo giá", statement: "Phiếu giao dịch" },
-    emailAria: "Email nhận chứng từ",
-    emailPlaceholder: "Email nhận chứng từ (VD: name@company.com)",
     companyAria: "Tên công ty · cơ quan",
     companyPlaceholder: "Tên công ty · cơ quan (bên nhận)",
     businessNumberAria: "Mã số kinh doanh",
     businessNumberPlaceholder: "Mã số kinh doanh (không bắt buộc) 000-00-00000",
     businessNumberTitle: "Vui lòng kiểm tra mã số kinh doanh 10 chữ số. (VD: 123-45-67890)",
     panelTitle: "Chứng từ đã yêu cầu",
-    print: "In / Lưu PDF",
-    emailNote: (email) =>
-      `Chúng tôi sẽ gửi tệp PDF đến ${email}. Nếu sau vài phút vẫn chưa nhận được, hãy kiểm tra thư rác hoặc liên hệ tiệm. Nếu cần ngay, hãy chọn “Lưu dưới dạng PDF” trong cửa sổ in.`,
+    download: (title) => `⬇ Tải ${title} (PDF)`,
+    downloading: "Đang tạo tệp…",
+    downloadNote: "Nhấn để lưu ngay tệp PDF. Trên điện thoại, hãy tìm trong thư mục Tải xuống (iPhone: ứng dụng Tệp). Vui lòng lưu trước khi đóng trang này.",
+    downloadFailed: `Không tải được tệp. Vui lòng thử lại; nếu bạn đang mở trong ứng dụng như KakaoTalk, hãy thử bằng Safari hoặc Chrome. Nếu vẫn không được, vui lòng liên hệ tiệm (${businessInfo.phone}).`,
     tabsAria: "Loại chứng từ",
     koreanOnly: "Chứng từ được lập bằng tiếng Hàn.",
   },
@@ -530,7 +529,7 @@ export const vi: Messages = {
     items: [
       {
         title: "Thông tin thu thập",
-        body: "Tên và số điện thoại người đặt (bắt buộc); tên và số điện thoại người nhận, nội dung lời nhắn, tên và chức vụ trên thẻ cắm thăng chức, nhà hàng giao lan và tên đặt bàn, số hóa đơn tiền mặt, liên hệ người thanh toán thẻ, email nhận yêu cầu PayPal, email nhận chứng từ, tên công ty và mã số kinh doanh, tên ngân hàng, số tài khoản và chủ tài khoản nhận hoàn tiền khi hủy sau khi đã thanh toán (nếu có)",
+        body: "Tên và số điện thoại người đặt (bắt buộc); tên và số điện thoại người nhận, nội dung lời nhắn, tên và chức vụ trên thẻ cắm thăng chức, nhà hàng giao lan và tên đặt bàn, số hóa đơn tiền mặt, liên hệ người thanh toán thẻ, email nhận yêu cầu PayPal, tên công ty và mã số kinh doanh, tên ngân hàng, số tài khoản và chủ tài khoản nhận hoàn tiền khi hủy sau khi đã thanh toán (nếu có)",
       },
       {
         title: "Mục đích sử dụng",
@@ -574,7 +573,6 @@ export const vi: Messages = {
     cashReceiptBusiness: "Vui lòng kiểm tra mã số kinh doanh cho hóa đơn tiền mặt.",
     cardPayer: "Vui lòng nhập liên hệ người thanh toán thẻ.",
     paypalEmail: "Vui lòng kiểm tra email nhận yêu cầu thanh toán PayPal.",
-    documentEmail: "Vui lòng kiểm tra email nhận chứng từ.",
     documentCompany: "Vui lòng nhập tên công ty · cơ quan cho chứng từ.",
     documentBusinessNumber: "Vui lòng kiểm tra mã số kinh doanh cho chứng từ.",
   },

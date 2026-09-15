@@ -53,17 +53,6 @@ export function getNotionEnv() {
   return { token, parentPageId };
 }
 
-/**
- * 견적서·거래명세표 이메일 — GMAIL_USER(보내는 가게 Gmail 주소) + GMAIL_APP_PASSWORD(구글 "앱 비밀번호" 16자리, 비밀).
- * 둘 중 하나라도 없으면 이메일 보내기 끔. 앱 비밀번호는 띄어쓰기를 넣어 복사해도 됨
- */
-export function getGmailEnv() {
-  const user = process.env.GMAIL_USER?.trim();
-  const appPassword = process.env.GMAIL_APP_PASSWORD?.replace(/\s/g, "");
-  if (!user || !appPassword) return null;
-  return { user, appPassword };
-}
-
 /** 관리자 페이지에 들어올 수 있는 이메일 (쉼표로 여러 개) */
 export function getAdminEmails() {
   return (process.env.ADMIN_EMAILS ?? "")

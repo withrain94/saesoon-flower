@@ -16,7 +16,6 @@ import { notionPageTitle } from "@/lib/notionReservation";
 import type { StoredReservation } from "@/types/reservation";
 import AdminDocuments from "./AdminDocuments";
 import CancelRequestCard from "./CancelRequestCard";
-import DocumentEmailButton from "./DocumentEmailButton";
 import AdminMemoForm from "./AdminMemoForm";
 import NotionSyncButton from "./NotionSyncButton";
 import StatusBadge from "./StatusBadge";
@@ -143,10 +142,8 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
           <Rows className="mb-3 print:hidden">
             <Row label="상호·기관명">{request.documentCompany}</Row>
             <Row label="사업자등록번호">{request.documentBusinessNumber || "-"}</Row>
-            <Row label="보낼 이메일">{request.documentEmail}</Row>
           </Rows>
-          <DocumentEmailButton id={id} />
-          <AdminDocuments request={request} />
+          <AdminDocuments id={id} request={request} />
         </Card>
       )}
 

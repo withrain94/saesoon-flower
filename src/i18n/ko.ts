@@ -497,20 +497,19 @@ export const ko = {
 
   documents: {
     toggle: "견적서·거래명세표가 필요해요",
-    description: "회사·기관 행사 등 증빙이 필요하면 체크해 주세요. 신청하면 바로 적어주신 이메일로 PDF를 보내드려요.",
+    description: "회사·기관 행사 등 증빙이 필요하면 체크해 주세요. 신청을 마치면 완료 화면에서 바로 PDF 파일로 받을 수 있어요.",
     groupAria: "필요한 서류",
     options: { quote: "견적서", statement: "거래명세표" },
-    emailAria: "서류 받을 이메일",
-    emailPlaceholder: "서류 받을 이메일 (예: name@company.com)",
     companyAria: "상호·기관명",
     companyPlaceholder: "상호·기관명 (공급받는 자)",
     businessNumberAria: "사업자등록번호",
     businessNumberPlaceholder: "사업자등록번호 (선택) 000-00-00000",
     businessNumberTitle: "사업자등록번호 10자리를 확인해 주세요. (예: 123-45-67890)",
     panelTitle: "요청하신 서류",
-    print: "인쇄 / PDF 저장",
-    emailNote: (email: string) =>
-      `${email}로 PDF 파일을 보내드려요. 몇 분 뒤에도 메일이 없으면 스팸함을 확인하거나 매장에 연락해 주세요. 지금 바로 필요하면 인쇄 창에서 ‘PDF로 저장’을 골라주세요.`,
+    download: (title: string) => `⬇ ${title} PDF 다운로드`,
+    downloading: "파일 만드는 중…",
+    downloadNote: "누르면 PDF 파일이 바로 저장돼요. 휴대폰은 '다운로드' 폴더(아이폰은 파일 앱)에서 찾을 수 있어요. 이 화면을 닫기 전에 저장해 주세요.",
+    downloadFailed: `파일을 받지 못했어요. 다시 눌러보고, 카카오톡 등 앱 안에서 열었다면 Safari·Chrome에서 시도해 주세요. 계속 안 되면 매장(${businessInfo.phone})으로 연락해 주세요.`,
     tabsAria: "서류 종류",
     /** 외국어 화면에서만 — 서류는 한국어로 작성됨 */
     koreanOnly: "",
@@ -559,7 +558,7 @@ export const ko = {
     items: [
       {
         title: "수집 항목",
-        body: "예약자 성함·연락처(필수), 받는 분 성함·연락처, 메시지 문구, 승진 토퍼 이름·직급, 호접난 배송 식당·식당 예약 이름, 현금영수증 번호, 카드 결제하실 분 연락처, PayPal 결제 요청 이메일, 서류 받을 이메일·상호·사업자등록번호, 입금 후 예약 취소 시 환불받을 은행명·계좌번호·예금주 (해당하는 경우)",
+        body: "예약자 성함·연락처(필수), 받는 분 성함·연락처, 메시지 문구, 승진 토퍼 이름·직급, 호접난 배송 식당·식당 예약 이름, 현금영수증 번호, 카드 결제하실 분 연락처, PayPal 결제 요청 이메일, 서류에 적을 상호·사업자등록번호, 입금 후 예약 취소 시 환불받을 은행명·계좌번호·예금주 (해당하는 경우)",
       },
       {
         title: "이용 목적",
@@ -604,7 +603,6 @@ export const ko = {
     cashReceiptBusiness: "현금영수증 사업자등록번호를 확인해 주세요.",
     cardPayer: "카드 결제하실 분 연락처를 적어주세요.",
     paypalEmail: "PayPal 결제 요청 받을 이메일을 확인해 주세요.",
-    documentEmail: "서류 받을 이메일을 확인해 주세요.",
     documentCompany: "서류에 적을 상호·기관명을 입력해 주세요.",
     documentBusinessNumber: "서류용 사업자등록번호를 확인해 주세요.",
   },
