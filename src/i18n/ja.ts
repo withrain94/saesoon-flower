@@ -45,7 +45,8 @@ export const ja: Messages = {
   },
 
   header: {
-    siteLink: "セスン紹介サイト ›",
+    siteLink: "紹介 ›",
+    lookupLink: "予約確認",
     language: "言語",
   },
 
@@ -516,6 +517,7 @@ export const ja: Messages = {
     bank: (bank, number, holder) => `振込先: ${bank} ${number}（${holder}）`,
     payment: (label) => `お支払い: ${label}`,
     lookupButton: "予約の確認・キャンセル",
+    bookButton: "セスンで予約",
   },
 
   submitBar: {

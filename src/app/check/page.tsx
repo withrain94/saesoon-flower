@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function CheckPage() {
   return (
     <div className="mx-auto w-full max-w-lg flex-1 bg-white shadow-[0_0_24px_rgba(0,0,0,0.04)]">
-      <StoreHeader />
+      <StoreHeader showLookupLink={false} />
       <main>
         <ReservationLookup />
       </main>

@@ -217,7 +217,8 @@ export const ko = {
   },
 
   header: {
-    siteLink: "새순 소개 사이트 ›",
+    siteLink: "소개 ›",
+    lookupLink: "예약 조회",
     language: "언어",
   },
 
@@ -544,6 +545,7 @@ export const ko = {
     bank: (bank: string, number: string, holder: string) => `입금 계좌: ${bank} ${number} (${holder})`,
     payment: (label: string) => `결제: ${label}`,
     lookupButton: "예약 조회·취소",
+    bookButton: "새순 예약하기",
   },
 
   submitBar: {

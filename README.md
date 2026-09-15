@@ -21,7 +21,7 @@ src/
 ├─ components/
 │  ├─ lookup/                손님 예약 조회·취소 — ReservationLookup(예약자 이름+연락처), LookupResultList(여러 건이면 목록), LookupReservationDetails, LookupCancelPanel(입금 전 취소 / 입금 후 환불 계좌 받고 취소 요청)
 │  ├─ admin/                 관리자 화면 — CancelRequestCard(손님 취소 요청·환불 계좌), AdminHeader, LoginForm, StatusFilterTabs, StatusBadge, ReservationListItem, ReservationDetail, StatusChanger, AdminMemoForm, AdminDocuments, NotionSyncButton
-│  ├─ layout/                StoreHeader(+ LanguageSwitcher 🌐), Hero, SiteFooter — 매장 공통 화면
+│  ├─ layout/                StoreHeader(예약 조회 버튼 — /check에선 숨김 + 소개 사이트 + LanguageSwitcher 🌐), Hero, SiteFooter — 매장 공통 화면
 │  ├─ reservation/           예약 기능
 │  │  ├─ ReservationPage.tsx   섹션 조립만 담당
 │  │  ├─ useReservation.ts     상태·제출 로직 (submit → server/actions/reservation 으로 저장)

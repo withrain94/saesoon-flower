@@ -20,7 +20,8 @@ type KakaoSdk = {
       objectType: "text";
       text: string;
       link: { mobileWebUrl: string; webUrl: string };
-      buttonTitle?: string;
+      /** 최대 2개 — 링크 주소는 카카오 앱 [제품 링크 관리] > [웹 도메인]에 등록돼 있어야 버튼이 보임 */
+      buttons?: { title: string; link: { mobileWebUrl: string; webUrl: string } }[];
     }) => void;
   };
 };
@@ -61,11 +62,15 @@ export default function ShareReservationButtons({ id, request }: { id: string; r
     if (!kakao?.isInitialized()) return shareOther();
     try {
       const url = lookupUrl();
+      const home = `${window.location.origin}/`;
       kakao.Share.sendDefault({
         objectType: "text",
         text: kakaoText,
         link: { mobileWebUrl: url, webUrl: url },
-        buttonTitle: t.share.lookupButton,
+        buttons: [
+          { title: t.share.lookupButton, link: { mobileWebUrl: url, webUrl: url } },
+          { title: t.share.bookButton, link: { mobileWebUrl: home, webUrl: home } },
+        ],
       });
     } catch {
       shareOther();

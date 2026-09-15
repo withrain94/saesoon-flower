@@ -51,7 +51,8 @@ export const en: Messages = {
   },
 
   header: {
-    siteLink: "About Saesoon ›",
+    siteLink: "About ›",
+    lookupLink: "My booking",
     language: "Language",
   },
 
@@ -524,6 +525,7 @@ export const en: Messages = {
     bank: (bank, number, holder) => `Bank transfer: ${bank} ${number} (${holder})`,
     payment: (label) => `Payment: ${label}`,
     lookupButton: "Check or cancel",
+    bookButton: "Book flowers",
   },
 
   submitBar: {

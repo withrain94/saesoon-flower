@@ -43,7 +43,8 @@ export const vi: Messages = {
   },
 
   header: {
-    siteLink: "Giới thiệu Saesoon ›",
+    siteLink: "Giới thiệu ›",
+    lookupLink: "Tra cứu đơn",
     language: "Ngôn ngữ",
   },
 
@@ -515,6 +516,7 @@ export const vi: Messages = {
     bank: (bank, number, holder) => `Chuyển khoản: ${bank} ${number} (${holder})`,
     payment: (label) => `Thanh toán: ${label}`,
     lookupButton: "Tra cứu · hủy đặt hàng",
+    bookButton: "Đặt hoa",
   },
 
   submitBar: {

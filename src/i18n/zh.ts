@@ -45,7 +45,8 @@ export const zh: Messages = {
   },
 
   header: {
-    siteLink: "Saesoon 介绍网站 ›",
+    siteLink: "介绍 ›",
+    lookupLink: "查询预约",
     language: "语言",
   },
 
@@ -477,6 +478,7 @@ export const zh: Messages = {
     bank: (bank, number, holder) => `汇款账户：${bank} ${number}（${holder}）`,
     payment: (label) => `付款：${label}`,
     lookupButton: "查询·取消预约",
+    bookButton: "去预约",
   },
 
   submitBar: {
