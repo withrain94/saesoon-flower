@@ -4,8 +4,10 @@ import { after } from "next/server";
 import { buildCancelNotice } from "@/lib/cancelNotice";
 import {
   getCustomerCancelOption,
+  isSameName,
   isSamePhone,
   normalizeReceiptNumber,
+  phoneLastDigits,
   toRefundAccount,
 } from "@/lib/customerLookup";
 import { formatReceiptNumber } from "@/lib/format";
@@ -13,19 +15,29 @@ import type { CustomerReservationView, StoredReservation } from "@/types/reserva
 import { ADMIN_HOME_PATH } from "../auth";
 import { getSiteOrigin, getSupabaseEnv } from "../env";
 import { sendTelegramMessage } from "../notify";
-import { cancelUnpaidReservation, findReservationsByReceipt, saveCancelRequest } from "../reservations";
+import {
+  cancelUnpaidReservation,
+  findReservationsByPhoneEnding,
+  findReservationsByReceipt,
+  saveCancelRequest,
+} from "../reservations";
 
 /**
- * 손님 예약 조회·취소 — 누구나 부를 수 있는 서버 함수이므로 매번 접수번호 + 연락처를 다시 확인한다.
+ * 손님 예약 조회·취소 — 누구나 부를 수 있는 서버 함수이므로 매번 예약자 이름 + 연락처를 다시 확인한다.
  * 화면 문구는 손님 언어로 화면에서 고르도록 오류 종류(code)만 돌려줌.
  */
 
 export type LookupErrorCode = "notFound" | "unavailable" | "notCancelable" | "invalidRefund" | "failed";
-export type LookupResult = { ok: true; reservation: CustomerReservationView } | { ok: false; code: LookupErrorCode };
+type LookupFailure = { ok: false; code: LookupErrorCode };
+export type LookupResult = { ok: true; reservation: CustomerReservationView } | LookupFailure;
+export type LookupListResult = { ok: true; reservations: CustomerReservationView[] } | LookupFailure;
 
-/** 틀린 번호를 빠르게 여러 번 넣어보지 못하게 실패 응답을 조금 늦춤 */
+/** 한 번에 보여줄 예약 수 (받는 날짜 늦은 순) */
+const MAX_RESULTS = 20;
+
+/** 틀린 이름·번호를 빠르게 여러 번 넣어보지 못하게 실패 응답을 조금 늦춤 */
 const FAIL_DELAY_MS = 800;
-const slowFail = async (code: LookupErrorCode): Promise<LookupResult> => {
+const slowFail = async (code: LookupErrorCode): Promise<LookupFailure> => {
   await new Promise((resolve) => setTimeout(resolve, FAIL_DELAY_MS));
   return { ok: false, code };
 };
@@ -36,7 +48,7 @@ function isMissingColumn(error: unknown) {
   return code === "42703" || code === "PGRST204";
 }
 
-function failure(error: unknown, action: string): LookupResult {
+function failure(error: unknown, action: string): LookupFailure {
   if (isMissingColumn(error)) return { ok: false, code: "unavailable" };
   console.error(`[lookup] ${action} 실패`, error instanceof Error ? error.message : "unknown");
   return { ok: false, code: "failed" };
@@ -52,26 +64,40 @@ function toView(reservation: StoredReservation): CustomerReservationView {
   };
 }
 
-/** 접수번호 + 예약자 연락처가 모두 맞는 예약 (없으면 null) */
-async function findOwnReservation(receipt: string, phone: string) {
-  const receiptNumber = normalizeReceiptNumber(String(receipt ?? ""));
-  if (!receiptNumber || typeof phone !== "string") return null;
-  const candidates = await findReservationsByReceipt(receiptNumber);
-  return candidates.find((reservation) => isSamePhone(reservation.request.ordererPhone, phone)) ?? null;
+const isOwner = (reservation: StoredReservation, name: string, phone: string) =>
+  isSameName(reservation.request.ordererName, name) && isSamePhone(reservation.request.ordererPhone, phone);
+
+/** 예약자 이름 + 연락처가 모두 맞는 예약들 (받는 날짜 늦은 순) */
+async function findOwnReservations(name: unknown, phone: unknown) {
+  if (typeof name !== "string" || typeof phone !== "string") return [];
+  const lastDigits = phoneLastDigits(phone);
+  if (!lastDigits || !name.trim()) return [];
+  const candidates = await findReservationsByPhoneEnding(lastDigits);
+  return candidates.filter((reservation) => isOwner(reservation, name, phone)).slice(0, MAX_RESULTS);
 }
 
-export async function lookupReservation(receipt: string, phone: string): Promise<LookupResult> {
+/** 접수번호로 고른 예약 한 건 — 이름 + 연락처도 맞아야 함 (없으면 null) */
+async function findOwnReservation(receipt: unknown, name: unknown, phone: unknown) {
+  const receiptNumber = normalizeReceiptNumber(String(receipt ?? ""));
+  if (!receiptNumber || typeof name !== "string" || typeof phone !== "string") return null;
+  const candidates = await findReservationsByReceipt(receiptNumber);
+  return candidates.find((reservation) => isOwner(reservation, name, phone)) ?? null;
+}
+
+export async function lookupReservations(name: string, phone: string): Promise<LookupListResult> {
   if (!getSupabaseEnv()) return { ok: false, code: "unavailable" };
   try {
-    const reservation = await findOwnReservation(receipt, phone);
-    return reservation ? { ok: true, reservation: toView(reservation) } : slowFail("notFound");
+    const reservations = await findOwnReservations(name, phone);
+    return reservations.length > 0 ? { ok: true, reservations: reservations.map(toView) } : slowFail("notFound");
   } catch (error) {
     return failure(error, "조회");
   }
 }
 
 export type CancelInput = {
+  /** 조회 결과에서 고른 예약의 접수번호 */
   receipt: string;
+  name: string;
   phone: string;
   /** 입금 전 예약에서 "이미 입금(결제)했어요"를 골랐는지 */
   alreadyPaid: boolean;
@@ -87,7 +113,7 @@ export type CancelInput = {
 export async function cancelReservationByCustomer(input: CancelInput): Promise<LookupResult> {
   if (!getSupabaseEnv()) return { ok: false, code: "unavailable" };
   try {
-    const reservation = await findOwnReservation(input?.receipt, input?.phone);
+    const reservation = await findOwnReservation(input?.receipt, input?.name, input?.phone);
     if (!reservation) return slowFail("notFound");
 
     const option = getCustomerCancelOption(reservation.status, reservation.cancelRequest !== null);

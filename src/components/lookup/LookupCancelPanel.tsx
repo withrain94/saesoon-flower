@@ -15,11 +15,13 @@ import type { CustomerReservationView } from "@/types/reservation";
  */
 export default function LookupCancelPanel({
   reservation,
+  name,
   phone,
   onChange,
 }: {
   reservation: CustomerReservationView;
-  /** 조회할 때 넣은 연락처 — 취소할 때 서버에서 다시 확인 */
+  /** 조회할 때 넣은 예약자 이름·연락처 — 취소할 때 서버에서 다시 확인 */
+  name: string;
   phone: string;
   onChange: (reservation: CustomerReservationView, done: "canceled" | "requested") => void;
 }) {
@@ -62,6 +64,7 @@ export default function LookupCancelPanel({
     startTransition(async () => {
       const result = await cancelReservationByCustomer({
         receipt: reservation.receiptNumber,
+        name,
         phone,
         alreadyPaid: paid,
         refund,

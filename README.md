@@ -19,7 +19,7 @@ src/
 │  └─ admin/                 관리자 페이지 — login / 목록(page.tsx, ?status= 필터) / [id] 상세
 ├─ proxy.ts                  /admin 요청마다 로그인 세션 갱신 (Next 16: middleware → proxy)
 ├─ components/
-│  ├─ lookup/                손님 예약 조회·취소 — ReservationLookup(접수번호+연락처), LookupReservationDetails, LookupCancelPanel(입금 전 취소 / 입금 후 환불 계좌 받고 취소 요청)
+│  ├─ lookup/                손님 예약 조회·취소 — ReservationLookup(예약자 이름+연락처), LookupResultList(여러 건이면 목록), LookupReservationDetails, LookupCancelPanel(입금 전 취소 / 입금 후 환불 계좌 받고 취소 요청)
 │  ├─ admin/                 관리자 화면 — CancelRequestCard(손님 취소 요청·환불 계좌), AdminHeader, LoginForm, StatusFilterTabs, StatusBadge, ReservationListItem, ReservationDetail, StatusChanger, AdminMemoForm, AdminDocuments, NotionSyncButton
 │  ├─ layout/                StoreHeader(+ LanguageSwitcher 🌐), Hero, SiteFooter — 매장 공통 화면
 │  ├─ reservation/           예약 기능
@@ -31,13 +31,13 @@ src/
 │  │  ├─ SpecialEventBanner / EventDayNotice   특별한 날(인재개발원 승진식 등) 첫 화면 안내 + 날짜 섹션 안내
 │  │  ├─ DateTimeSection / Calendar / TimeSlotGroup
 │  │  ├─ RecipientMessageField / UnitDetailCard / MessageEditor   상품 1개마다 받는 분·메시지 ("앞과 같음")
-│  │  └─ ReserveSection / OrdererForm / PaymentMethodField / BankAccountCard / DocumentRequestField / DocumentsPanel / BusinessDocumentView / ColorField / OrchidDeliveryField / PrivacyConsentField / OrderSummary / ReservationComplete / SubmitBar
+│  │  └─ ReserveSection / OrdererForm / PaymentMethodField / BankAccountCard / DocumentRequestField / DocumentsPanel / BusinessDocumentView / ColorField / OrchidDeliveryField / PrivacyConsentField / OrderSummary / ReservationComplete / ShareReservationButtons(카카오톡으로 나에게 보내기·복사) / SubmitBar
 │  └─ ui/                    Field, Checkbox, QuantityStepper, SectionHeading, ErrorText, icons … 재사용 부품
-├─ server/                   서버 전용 (브라우저로 안 감) — env(환경변수 읽기 전부), supabase(DB·로그인 클라이언트), auth(requireAdmin), reservations(저장·목록·수정), notify(새 예약 텔레그램 알림), notion(날짜별 예약 표 올리기)
-│  └─ actions/               "use server" 함수 — reservation(고객 신청 검사·저장), lookup(손님 조회·취소 — 매번 접수번호+연락처 재확인), admin(로그인·로그아웃·상태·메모·노션 다시 올리기)
+├─ server/                   서버 전용 (브라우저로 안 감) — env(환경변수 읽기 전부), supabase(DB·로그인 클라이언트), auth(requireAdmin), reservations(저장·목록·수정), notify(새 예약 텔레그램 알림), notion(날짜별 예약 표 올리기), documentEmail(견적서·거래명세표 Gmail 발송) · documentPdf/(서류 PDF 그리기 + 한글 글꼴)
+│  └─ actions/               "use server" 함수 — reservation(고객 신청 검사·저장), lookup(손님 조회·취소 — 매번 예약자 이름+연락처 재확인), admin(로그인·로그아웃·상태·메모·노션 다시 올리기·서류 이메일 다시 보내기)
 ├─ hooks/                    useNow(한국 시각), useLocale(언어·useT), useLookupT(조회 화면 문구 — i18n/lookup/), useActiveSection, useElementWidth
-├─ lib/                      순수 함수 (date, time, events, format, selection, units, payment, reservationRequest, reservationValidation, documents)
-│                            + 매장용 한국어 표시: adminFormat(관리자 화면 공용), reservationNotice(텔레그램 문구), notionReservation(노션 표 칸) · supabaseUrl(Supabase 공개 설정)
+├─ lib/                      순수 함수 (date, time, events, format, selection, units, payment, reservationRequest, reservationValidation, documents, documentEmail(서류 이메일 문구))
+│                            + 매장용 한국어 표시: adminFormat(관리자 화면 공용), reservationNotice(텔레그램 문구), notionReservation(노션 표 칸) · supabaseUrl(Supabase 공개 설정) · reservationShare(완료 화면 카카오톡 공유 글, 카카오 키)
 ├─ i18n/                     화면 문구 — ko(기준)·en·ja·zh·vi. 모양이 ko와 다르면 타입 오류 / index.ts: 언어 목록·messages
 ├─ data/                     정적 데이터 (products, shop, reservationOptions, events) — 금액·사진·날짜·선택지 코드만, 문구는 i18n
 └─ types/                    공용 타입 (ReservationRequest = 저장할 예약 한 건)
@@ -66,9 +66,10 @@ public/flowers/              상품 사진 ({종류}-{금액}-{번호}.jpg — b
 6. 신청서 input의 `name`은 `ReservationFormField`와 같아야 하고, 입력값은 `lib/reservationRequest.ts`에서만 읽는다.
    받는 분·메시지는 상품 1개 단위 상태(`UnitDetail`)로 관리하고, "앞과 같음" 해석은 `lib/units.ts`의 `resolveUnits` 하나로만 한다.
 7. 고객 신청 저장은 `useReservation.ts`의 `submit` → `server/actions/reservation.ts`(`validateReservationRequest`로 다시 검사 → `insertReservation`) 한 길로만 한다. 새 예약 알림(`server/notify.ts`, 문구는 `lib/reservationNotice.ts`)도 이 서버 함수에서 저장 성공 뒤 `after()`로 보낸다 — 알림 실패가 예약을 막지 않게.
-   손님 예약 조회·취소는 `server/actions/lookup.ts` 한 길로만 한다. 규칙(누가 무엇을 할 수 있나)은 `lib/customerLookup.ts`의 `getCustomerCancelOption` 하나: 접수 → 바로 취소("이미 입금했어요"면 취소 요청) / 입금·결제 확인 → 취소 요청(계좌이체는 환불 계좌 필수) / 제작 완료 이후 → 전화. 취소 요청은 `cancel_request` 칸에만 저장하고 상태는 매장이 환불 후 관리자에서 "취소"로 바꾼다. 조회 화면 문구는 `i18n/lookup/{언어}.ts`.
+   손님 예약 조회·취소는 `server/actions/lookup.ts` 한 길로만 한다. 조회는 예약자 이름(`isSameName`)+연락처(`isSamePhone`)가 모두 맞아야 하고, 취소는 고른 예약의 접수번호까지 다시 확인한다. 규칙(누가 무엇을 할 수 있나)은 `lib/customerLookup.ts`의 `getCustomerCancelOption` 하나: 접수 → 바로 취소("이미 입금했어요"면 취소 요청) / 입금·결제 확인 → 취소 요청(계좌이체는 환불 계좌 필수) / 제작 완료 이후 → 전화. 취소 요청은 `cancel_request` 칸에만 저장하고 상태는 매장이 환불 후 관리자에서 "취소"로 바꾼다. 조회 화면 문구는 `i18n/lookup/{언어}.ts`.
    관리자 화면·텔레그램·노션에 쓰는 한국어 설명(결제 방법·호접난 받는 방법·색감·메시지 등)은 `lib/adminFormat.ts`의 `describe…` 함수를 같이 쓴다 — 곳곳에서 따로 만들지 않는다.
    노션 날짜별 예약 표는 관리자 상태·메모 저장 뒤 `server/notion.ts`의 `syncReservationToNotion` 하나로만 맞춘다 (입금·결제 확인 이후 상태면 받는 날짜 페이지 표에 추가, 접수번호 칸으로 찾아 갱신, 취소면 [취소] 표시). 표 칸·페이지 이름은 `lib/notionReservation.ts`.
-8. 견적서·거래명세표 내용은 `lib/documents.ts`의 `buildBusinessDocument` 하나로만 만든다 (화면·인쇄·나중에 이메일 PDF 공용). 공급자 정보는 `data/shop.ts`의 `businessInfo`.
+8. 견적서·거래명세표 내용은 `lib/documents.ts`의 `buildBusinessDocument` 하나로만 만든다 (화면·인쇄·이메일 PDF 공용). 공급자 정보는 `data/shop.ts`의 `businessInfo`.
+   서류 이메일은 신청 저장 뒤 `after()`로 `server/documentEmail.ts`의 `sendDocumentEmail` 하나로만 보낸다 (PDF 모양은 `server/documentPdf/BusinessDocumentPdf.tsx` — 화면 `BusinessDocumentView`를 바꾸면 같이 바꾼다). 글꼴·직인 파일은 `next.config.ts`의 `outputFileTracingIncludes`로 배포에 포함.
 9. 특별한 날(인재개발원 승진식 등)은 `data/events.ts`의 `specialEvents`에 한 줄 추가한다. (예: `institutePromotion(10, "2026-11-20")`)
    달력 표시·그날 고를 수 있는 시간(`slots`)·첫 화면 배너·예약 마감 안내가 자동으로 따라온다. 예약 가능 여부는 `lib/time.ts`의 `isSlotBookable` 하나로만 판단한다.

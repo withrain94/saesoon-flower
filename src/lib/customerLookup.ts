@@ -22,6 +22,19 @@ export function isSamePhone(a: string, b: string) {
   return left.length >= 7 && left === phoneDigits(b);
 }
 
+/** 연락처 끝 4자리 — DB에서 조회 후보를 좁히는 데 씀. 번호가 너무 짧으면 null */
+export function phoneLastDigits(value: string) {
+  const digits = phoneDigits(value);
+  return digits.length >= 7 ? digits.slice(-4) : null;
+}
+
+/** 이름 비교 — 띄어쓰기·대소문자는 무시 ("김 새순" = "김새순", "John Kim" = "john kim") */
+export function isSameName(a: string, b: string) {
+  const clean = (value: string) => value.normalize("NFC").replace(/\s/g, "").toLowerCase();
+  const left = clean(a);
+  return left.length > 0 && left === clean(b);
+}
+
 /**
  * 손님이 조회 화면에서 할 수 있는 일
  * - cancel: 입금 전(접수) — 바로 취소 또는 "이미 입금했어요"면 취소 요청

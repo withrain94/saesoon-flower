@@ -4,9 +4,10 @@ import type { LookupMessages } from "./ko";
 /** 中文(简体) — 모양은 lookup/ko.ts와 같아야 한다 */
 export const lookupZh: LookupMessages = {
   pageTitle: "查询预约",
-  intro: "输入提交完成页面上的受理编号和预约人电话号码，即可查看预约内容。",
+  intro: "输入预约时填写的预约人姓名和电话号码，即可查看预约内容。",
   receiptLabel: "受理编号",
-  receiptPlaceholder: "例：5D7BBC7E",
+  nameLabel: "预约人姓名",
+  namePlaceholder: "预约时填写的姓名",
   phoneLabel: "预约人电话",
   phonePlaceholder: "预约时填写的电话号码",
   submit: "查询",
@@ -14,11 +15,14 @@ export const lookupZh: LookupMessages = {
   backToReservation: "‹ 返回预约页面",
   lookupLink: "查询·取消预约",
   completeLookup: "打开预约查询·取消页面",
-  completeLookupNote: "随时可以用受理编号和电话号码再次查询。",
+  completeLookupNote: "随时可以用姓名和电话号码再次查询。",
   otherReservation: "查询其他预约",
+  resultsTitle: (count) => `找到 ${count} 个预约`,
+  resultsHint: "请点击要查看或取消的预约。",
+  backToList: "‹ 返回预约列表",
 
   errors: {
-    notFound: "没有找到受理编号和电话号码一致的预约，请再确认一下。",
+    notFound: "没有找到姓名和电话号码一致的预约，请按预约时填写的内容输入。",
     unavailable: `目前无法在线查询，请致电（+82 ${businessInfo.phone.slice(1)}）咨询。`,
     notCancelable: `当前状态无法在线取消，请致电（+82 ${businessInfo.phone.slice(1)}）咨询。`,
     invalidRefund: "请准确填写退款银行名称、账号和户名。",

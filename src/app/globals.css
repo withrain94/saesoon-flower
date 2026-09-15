@@ -30,6 +30,10 @@
   --color-panel-line: #ecdcdd;
   --color-hero-shade: #4a3538;
 
+  /* 카카오톡 공유 버튼 (카카오 공식 노란색) */
+  --color-kakao: #fee500;
+  --color-kakao-ink: #191919;
+
   /* 견적서·거래명세표 (인쇄용 흑백) */
   --color-doc-ink: #111111;
   --color-doc-sub: #666666;

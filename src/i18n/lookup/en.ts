@@ -4,9 +4,10 @@ import type { LookupMessages } from "./ko";
 /** English — 모양은 lookup/ko.ts와 같아야 한다 */
 export const lookupEn: LookupMessages = {
   pageTitle: "Check your reservation",
-  intro: "Enter the reservation number from the confirmation screen and the phone number you used to see your reservation.",
+  intro: "Enter the name and phone number you used when booking to see your reservation.",
   receiptLabel: "Reservation number",
-  receiptPlaceholder: "e.g. 5D7BBC7E",
+  nameLabel: "Name",
+  namePlaceholder: "The name you entered when booking",
   phoneLabel: "Phone number",
   phonePlaceholder: "The number you entered when booking",
   submit: "Check",
@@ -14,11 +15,14 @@ export const lookupEn: LookupMessages = {
   backToReservation: "‹ Back to booking",
   lookupLink: "Check or cancel a reservation",
   completeLookup: "Open reservation check & cancel",
-  completeLookupNote: "You can check again any time with your reservation number and phone number.",
+  completeLookupNote: "You can check again any time with your name and phone number.",
   otherReservation: "Check another reservation",
+  resultsTitle: (count) => `We found ${count} reservations`,
+  resultsHint: "Tap a reservation to view or cancel it.",
+  backToList: "‹ Back to the list",
 
   errors: {
-    notFound: "We couldn't find a reservation matching that number and phone. Please check and try again.",
+    notFound: "We couldn't find a reservation matching that name and phone number. Please enter them exactly as you did when booking.",
     unavailable: `Online check is not available right now. Please call us (+82 ${businessInfo.phone.slice(1)}).`,
     notCancelable: `This reservation can't be canceled online at this stage. Please call us (+82 ${businessInfo.phone.slice(1)}).`,
     invalidRefund: "Please enter the bank name, account number and account holder for your refund.",

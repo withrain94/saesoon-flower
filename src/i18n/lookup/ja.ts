@@ -4,9 +4,10 @@ import type { LookupMessages } from "./ko";
 /** 日本語 — 모양은 lookup/ko.ts와 같아야 한다 */
 export const lookupJa: LookupMessages = {
   pageTitle: "予約の確認",
-  intro: "申込完了画面の受付番号と、予約者の電話番号を入力すると予約内容を確認できます。",
+  intro: "申込時に入力した予約者のお名前と電話番号を入力すると、予約内容を確認できます。",
   receiptLabel: "受付番号",
-  receiptPlaceholder: "例: 5D7BBC7E",
+  nameLabel: "予約者のお名前",
+  namePlaceholder: "申込時に入力したお名前",
   phoneLabel: "予約者の電話番号",
   phonePlaceholder: "申込時に入力した電話番号",
   submit: "確認する",
@@ -14,11 +15,14 @@ export const lookupJa: LookupMessages = {
   backToReservation: "‹ 予約ページへ",
   lookupLink: "予約の確認・キャンセル",
   completeLookup: "予約の確認・キャンセル画面を開く",
-  completeLookupNote: "受付番号と電話番号でいつでも確認できます。",
+  completeLookupNote: "お名前と電話番号でいつでも確認できます。",
   otherReservation: "別の予約を確認",
+  resultsTitle: (count) => `予約が${count}件見つかりました`,
+  resultsHint: "確認・キャンセルする予約を選んでください。",
+  backToList: "‹ 予約一覧に戻る",
 
   errors: {
-    notFound: "受付番号と電話番号が一致する予約が見つかりませんでした。もう一度ご確認ください。",
+    notFound: "お名前と電話番号が一致する予約が見つかりませんでした。申込時と同じように入力してください。",
     unavailable: `現在オンラインで確認できません。お電話（+82 ${businessInfo.phone.slice(1)}）でお問い合わせください。`,
     notCancelable: `現在の状態ではオンラインでキャンセルできません。お電話（+82 ${businessInfo.phone.slice(1)}）でお問い合わせください。`,
     invalidRefund: "返金先の銀行名・口座番号・口座名義をすべて正しく入力してください。",

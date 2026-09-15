@@ -118,7 +118,24 @@ export async function updateReservation(
   if (error) throw error;
 }
 
-/** 손님 예약 조회 — 접수번호(id 앞 8자리)로 찾음. 연락처 확인은 부르는 쪽에서 */
+/**
+ * 손님 예약 조회 — 예약자 연락처 끝 4자리로 후보를 찾음 (받는 날짜 늦은 순).
+ * 이름·전체 연락처 확인은 부르는 쪽에서. lastDigits는 숫자 4자리만 (검색 패턴에 그대로 들어감)
+ */
+export async function findReservationsByPhoneEnding(lastDigits: string): Promise<StoredReservation[]> {
+  if (!/^\d{4}$/.test(lastDigits)) return [];
+  const { data, error } = await createDatabaseClient()
+    .from(TABLE)
+    .select(COLUMNS)
+    .like("orderer_phone", `%${lastDigits}`)
+    .order("reservation_date", { ascending: false })
+    .order("reservation_time", { ascending: false })
+    .limit(200);
+  if (error) throw error;
+  return (data as ReservationRow[]).map(fromRow);
+}
+
+/** 손님 취소 — 접수번호(id 앞 8자리)로 찾음. 이름·연락처 확인은 부르는 쪽에서 */
 export async function findReservationsByReceipt(receiptNumber: string): Promise<StoredReservation[]> {
   const { data, error } = await createDatabaseClient()
     .from(TABLE)

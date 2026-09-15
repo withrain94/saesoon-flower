@@ -497,7 +497,7 @@ export const ko = {
 
   documents: {
     toggle: "견적서·거래명세표가 필요해요",
-    description: "회사·기관 행사 등 증빙이 필요하면 체크해 주세요. 신청하면 바로 만들어 드려요.",
+    description: "회사·기관 행사 등 증빙이 필요하면 체크해 주세요. 신청하면 바로 적어주신 이메일로 PDF를 보내드려요.",
     groupAria: "필요한 서류",
     options: { quote: "견적서", statement: "거래명세표" },
     emailAria: "서류 받을 이메일",
@@ -510,7 +510,7 @@ export const ko = {
     panelTitle: "요청하신 서류",
     print: "인쇄 / PDF 저장",
     emailNote: (email: string) =>
-      `매장에서 확인 후 ${email}로 보내드려요. 지금 바로 필요하면 인쇄 창에서 ‘PDF로 저장’을 골라주세요.`,
+      `${email}로 PDF 파일을 보내드려요. 몇 분 뒤에도 메일이 없으면 스팸함을 확인하거나 매장에 연락해 주세요. 지금 바로 필요하면 인쇄 창에서 ‘PDF로 저장’을 골라주세요.`,
     tabsAria: "서류 종류",
     /** 외국어 화면에서만 — 서류는 한국어로 작성됨 */
     koreanOnly: "",
@@ -520,6 +520,7 @@ export const ko = {
     title: "작성이 완료되었습니다! 🎉",
     receiptNumber: (no: string) => `접수번호 ${no}`,
     orderer: (name: string, phone: string) => `예약자 ${name} · ${phone}`,
+    reminder: "예약 시간이 되기 전에 예약자 연락처로 안내 문자를 보내드려요.",
     paymentMethod: (label: string) => `결제 방법 · ${label}`,
     cashReceipt: (label: string, number: string) => `현금영수증 · ${label} ${number}`,
     cardPayer: (contact: string) => `결제하실 분 · ${contact}`,
@@ -528,6 +529,22 @@ export const ko = {
     orchidDelivery: (text: string) => `호접난 받는 방법 · ${text}`,
     recipient: (text: string) => `받는 분 · ${text}`,
     message: (text: string) => `메시지 · ${text}`,
+  },
+
+  /** 신청 완료 화면 — 예약 내용을 카카오톡 등으로 나에게 보내기 */
+  share: {
+    kakao: "카카오톡으로 나에게 보내기",
+    kakaoHint: "공유 창에서 '나와의 채팅'을 고르면 내 카톡에 저장돼요.",
+    other: "예약 내용 복사·다른 앱으로 보내기",
+    copied: "예약 내용을 복사했어요. 카톡 '나와의 채팅' 등에 붙여넣어 보관하세요.",
+    failed: "보내지 못했어요. 이 화면을 캡처해 두세요.",
+    title: (shopName: string) => `[${shopName}] 예약 접수 완료`,
+    receipt: (no: string) => `접수번호 ${no}`,
+    items: (first: string, others: number) => (others > 0 ? `${first} 외 ${others}건` : first),
+    total: (price: string) => `합계 ${price}`,
+    bank: (bank: string, number: string, holder: string) => `입금 계좌: ${bank} ${number} (${holder})`,
+    payment: (label: string) => `결제: ${label}`,
+    lookupButton: "예약 조회·취소",
   },
 
   submitBar: {

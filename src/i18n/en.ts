@@ -479,7 +479,7 @@ export const en: Messages = {
 
   documents: {
     toggle: "I need a quote / transaction statement",
-    description: "Check this if your company or organization needs supporting documents. We'll create them right away.",
+    description: "Check this if your company or organization needs supporting documents. We'll email you the PDF files right away.",
     groupAria: "Documents needed",
     options: { quote: "Quote", statement: "Transaction statement" },
     emailAria: "Email for the documents",
@@ -492,7 +492,7 @@ export const en: Messages = {
     panelTitle: "Requested documents",
     print: "Print / Save PDF",
     emailNote: (email) =>
-      `The shop will send them to ${email} after checking. If you need them now, choose “Save as PDF” in the print window.`,
+      `We'll email the PDF files to ${email}. If nothing arrives within a few minutes, check your spam folder or contact the shop. If you need them now, choose “Save as PDF” in the print window.`,
     tabsAria: "Document type",
     koreanOnly: "Documents are issued in Korean.",
   },
@@ -501,6 +501,7 @@ export const en: Messages = {
     title: "Your request has been submitted! 🎉",
     receiptNumber: (no) => `Request no. ${no}`,
     orderer: (name, phone) => `Reserved by ${name} · ${phone}`,
+    reminder: "We will text a reminder to the contact number above before your reservation time.",
     paymentMethod: (label) => `Payment · ${label}`,
     cashReceipt: (label, number) => `Cash receipt · ${label} ${number}`,
     cardPayer: (contact) => `Card payer · ${contact}`,
@@ -509,6 +510,21 @@ export const en: Messages = {
     orchidDelivery: (text) => `Orchids · ${text}`,
     recipient: (text) => `Recipient · ${text}`,
     message: (text) => `Message · ${text}`,
+  },
+
+  share: {
+    kakao: "Send to myself on KakaoTalk",
+    kakaoHint: "In the share window, choose 'Chat with myself' to keep it in your KakaoTalk.",
+    other: "Copy details or share with another app",
+    copied: "Reservation details copied. Paste them into a chat or note to keep them.",
+    failed: "Couldn't share. Please take a screenshot of this screen.",
+    title: (shopName) => `[${shopName}] Reservation received`,
+    receipt: (no) => `Reservation no. ${no}`,
+    items: (first, others) => (others > 0 ? `${first} and ${others} more` : first),
+    total: (price) => `Total ${price}`,
+    bank: (bank, number, holder) => `Bank transfer: ${bank} ${number} (${holder})`,
+    payment: (label) => `Payment: ${label}`,
+    lookupButton: "Check or cancel",
   },
 
   submitBar: {

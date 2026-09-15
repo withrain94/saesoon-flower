@@ -2,9 +2,9 @@ import { allProducts } from "@/data/products";
 import { documentOptions, paymentMethodOptions } from "@/data/reservationOptions";
 import { businessInfo } from "@/data/shop";
 import { formatDateLabel } from "@/lib/date";
-import { formatDocumentDate, formatKoreanAmount } from "@/lib/format";
+import { formatKoreanAmount } from "@/lib/format";
 import { getItemName } from "@/lib/selection";
-import { formatTimeLabel } from "@/lib/time";
+import { formatTimeLabel, toNowInTimeZone } from "@/lib/time";
 import type { BusinessDocumentType, ReservationRequest } from "@/types/reservation";
 
 /** 서류 원래 너비(px) — A4 폭에 맞춘 레이아웃 기준 */
@@ -43,10 +43,18 @@ export type BusinessDocument = {
 
 const orEmpty = (value: string) => value.trim() || MISSING_INFO;
 
-function documentNumber(submittedAt: string) {
-  const date = new Date(submittedAt);
+/**
+ * 서류 번호·작성일 — 한국 시각 기준 (서버(UTC)에서 만드는 이메일 PDF와 손님 화면이 같게)
+ * "2026-09-14T06:30:00Z" → { number: "SS-20260914-1530", issuedDate: "2026. 9. 14." }
+ */
+function documentStamp(submittedAt: string) {
+  const { dateKey, minutes } = toNowInTimeZone(new Date(submittedAt));
+  const [year, month, day] = dateKey.split("-");
   const pad = (n: number) => String(n).padStart(2, "0");
-  return `SS-${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}-${pad(date.getHours())}${pad(date.getMinutes())}`;
+  return {
+    number: `SS-${year}${month}${day}-${pad(Math.floor(minutes / 60))}${pad(minutes % 60)}`,
+    issuedDate: `${year}. ${Number(month)}. ${Number(day)}.`,
+  };
 }
 
 export function buildBusinessDocument(
@@ -54,7 +62,7 @@ export function buildBusinessDocument(
   reservation: ReservationRequest,
 ): BusinessDocument {
   const title = documentOptions.find((option) => option.value === type)?.label ?? "";
-  const issuedDate = formatDocumentDate(reservation.submittedAt);
+  const { number, issuedDate } = documentStamp(reservation.submittedAt);
   const schedule = `${formatDateLabel(reservation.date)} ${formatTimeLabel(reservation.time)}`;
   const payment = paymentMethodOptions.find((option) => option.value === reservation.paymentMethod);
 
@@ -93,7 +101,7 @@ export function buildBusinessDocument(
   return {
     type,
     title,
-    number: documentNumber(reservation.submittedAt),
+    number,
     issuedDate,
     supplier: [
       { label: "상호", value: orEmpty(businessInfo.tradeName) },

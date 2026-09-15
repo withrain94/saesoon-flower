@@ -5,6 +5,7 @@ import { DEFAULT_LOCALE, isLocale, messages } from "@/i18n";
 import { validateReservationRequest } from "@/lib/reservationValidation";
 import { toNowInTimeZone } from "@/lib/time";
 import type { ReservationRequest } from "@/types/reservation";
+import { sendDocumentEmailAfterSubmit } from "../documentEmail";
 import { getSiteOrigin, getSupabaseEnv } from "../env";
 import { notifyNewReservation } from "../notify";
 import { insertReservation } from "../reservations";
@@ -33,6 +34,10 @@ export async function submitReservation(input: unknown): Promise<SubmitReservati
     const id = await insertReservation(result.request);
     // 매장 알림은 손님 완료 화면을 기다리게 하지 않도록 응답 뒤에 보냄 (실패해도 예약은 그대로)
     after(() => notifyNewReservation(id, result.request, getSiteOrigin()));
+    // 견적서·거래명세표를 요청했으면 PDF로 손님 이메일에 보냄 (실패하면 매장 텔레그램으로 알림)
+    if (result.request.documents.length > 0) {
+      after(() => sendDocumentEmailAfterSubmit(id, result.request, getSiteOrigin()));
+    }
     return { ok: true, id, request: result.request };
   } catch (error) {
     // 고객 정보는 남기지 않고 오류 종류만 서버 로그에

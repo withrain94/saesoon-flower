@@ -471,7 +471,7 @@ export const ja: Messages = {
 
   documents: {
     toggle: "見積書・取引明細書が必要です",
-    description: "会社・機関の行事などで証憑が必要な場合はチェックしてください。すぐに作成します。",
+    description: "会社・機関の行事などで証憑が必要な場合はチェックしてください。お申し込み後すぐに、ご入力のメールアドレスへPDFをお送りします。",
     groupAria: "必要な書類",
     options: { quote: "見積書", statement: "取引明細書" },
     emailAria: "書類を受け取るメールアドレス",
@@ -484,7 +484,7 @@ export const ja: Messages = {
     panelTitle: "ご依頼の書類",
     print: "印刷 / PDF保存",
     emailNote: (email) =>
-      `お店で確認後、${email} にお送りします。今すぐ必要な場合は、印刷画面で「PDFに保存」をお選びください。`,
+      `${email} にPDFファイルをお送りします。数分たっても届かない場合は、迷惑メールフォルダをご確認いただくか、お店にご連絡ください。今すぐ必要な場合は、印刷画面で「PDFに保存」をお選びください。`,
     tabsAria: "書類の種類",
     koreanOnly: "書類は韓国語で作成されます。",
   },
@@ -493,6 +493,7 @@ export const ja: Messages = {
     title: "お申し込みが完了しました！🎉",
     receiptNumber: (no) => `受付番号 ${no}`,
     orderer: (name, phone) => `予約者 ${name}・${phone}`,
+    reminder: "ご予約時間の前に、予約者の連絡先へご案内のメッセージをお送りします。",
     paymentMethod: (label) => `お支払い方法・${label}`,
     cashReceipt: (label, number) => `現金領収証・${label} ${number}`,
     cardPayer: (contact) => `決済される方・${contact}`,
@@ -501,6 +502,21 @@ export const ja: Messages = {
     orchidDelivery: (text) => `胡蝶蘭の受け取り・${text}`,
     recipient: (text) => `受取人・${text}`,
     message: (text) => `メッセージ・${text}`,
+  },
+
+  share: {
+    kakao: "カカオトークで自分に送る",
+    kakaoHint: "共有画面で「自分とのチャット」を選ぶと、自分のカカオトークに保存されます。",
+    other: "予約内容をコピー・他のアプリで送る",
+    copied: "予約内容をコピーしました。チャットやメモに貼り付けて保管してください。",
+    failed: "送れませんでした。この画面をスクリーンショットで保存してください。",
+    title: (shopName) => `[${shopName}] 予約受付完了`,
+    receipt: (no) => `受付番号 ${no}`,
+    items: (first, others) => (others > 0 ? `${first} ほか${others}件` : first),
+    total: (price) => `合計 ${price}`,
+    bank: (bank, number, holder) => `振込先: ${bank} ${number}（${holder}）`,
+    payment: (label) => `お支払い: ${label}`,
+    lookupButton: "予約の確認・キャンセル",
   },
 
   submitBar: {

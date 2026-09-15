@@ -432,7 +432,7 @@ export const zh: Messages = {
 
   documents: {
     toggle: "需要报价单·交易明细单",
-    description: "公司·机构活动等需要凭证时请勾选，提交后立即为您生成。",
+    description: "公司·机构活动等需要凭证时请勾选，提交后立即将 PDF 发送到您填写的邮箱。",
     groupAria: "需要的文件",
     options: { quote: "报价单", statement: "交易明细单" },
     emailAria: "接收文件的邮箱",
@@ -444,7 +444,8 @@ export const zh: Messages = {
     businessNumberTitle: "请确认10位营业执照号。（例：123-45-67890）",
     panelTitle: "申请的文件",
     print: "打印 / 保存 PDF",
-    emailNote: (email) => `店家确认后会发送到 ${email}。如需立即使用，请在打印窗口选择“另存为 PDF”。`,
+    emailNote: (email) =>
+      `我们会将 PDF 文件发送到 ${email}。几分钟后仍未收到，请查看垃圾邮件或联系店家。如需立即使用，请在打印窗口选择“另存为 PDF”。`,
     tabsAria: "文件种类",
     koreanOnly: "文件以韩文开具。",
   },
@@ -453,6 +454,7 @@ export const zh: Messages = {
     title: "申请已提交！🎉",
     receiptNumber: (no) => `受理编号 ${no}`,
     orderer: (name, phone) => `预约人 ${name} · ${phone}`,
+    reminder: "在预约时间之前，我们会向预约人的联系电话发送提醒短信。",
     paymentMethod: (label) => `付款方式 · ${label}`,
     cashReceipt: (label, number) => `现金收据 · ${label} ${number}`,
     cardPayer: (contact) => `付款人 · ${contact}`,
@@ -461,6 +463,21 @@ export const zh: Messages = {
     orchidDelivery: (text) => `蝴蝶兰取货 · ${text}`,
     recipient: (text) => `收花人 · ${text}`,
     message: (text) => `留言 · ${text}`,
+  },
+
+  share: {
+    kakao: "通过 KakaoTalk 发给自己",
+    kakaoHint: "在分享窗口选择“与自己聊天”，即可保存到自己的 KakaoTalk。",
+    other: "复制预约内容·用其他应用发送",
+    copied: "已复制预约内容，请粘贴到聊天或备忘录中保存。",
+    failed: "发送失败，请截图保存此页面。",
+    title: (shopName) => `[${shopName}] 预约已受理`,
+    receipt: (no) => `受理编号 ${no}`,
+    items: (first, others) => (others > 0 ? `${first} 等${others + 1}项` : first),
+    total: (price) => `合计 ${price}`,
+    bank: (bank, number, holder) => `汇款账户：${bank} ${number}（${holder}）`,
+    payment: (label) => `付款：${label}`,
+    lookupButton: "查询·取消预约",
   },
 
   submitBar: {

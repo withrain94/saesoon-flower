@@ -4,9 +4,10 @@ import type { LookupMessages } from "./ko";
 /** Tiếng Việt — 모양은 lookup/ko.ts와 같아야 한다 */
 export const lookupVi: LookupMessages = {
   pageTitle: "Tra cứu đặt hàng",
-  intro: "Nhập mã tiếp nhận trên màn hình hoàn tất và số điện thoại người đặt để xem nội dung đặt hàng.",
+  intro: "Nhập tên và số điện thoại người đặt đã điền khi đặt hàng để xem nội dung đặt hàng.",
   receiptLabel: "Mã tiếp nhận",
-  receiptPlaceholder: "Ví dụ: 5D7BBC7E",
+  nameLabel: "Tên người đặt",
+  namePlaceholder: "Tên đã nhập khi đặt",
   phoneLabel: "Số điện thoại người đặt",
   phonePlaceholder: "Số điện thoại đã nhập khi đặt",
   submit: "Tra cứu",
@@ -14,11 +15,14 @@ export const lookupVi: LookupMessages = {
   backToReservation: "‹ Về trang đặt hàng",
   lookupLink: "Tra cứu · hủy đặt hàng",
   completeLookup: "Mở trang tra cứu · hủy đặt hàng",
-  completeLookupNote: "Bạn có thể kiểm tra lại bất cứ lúc nào bằng mã tiếp nhận và số điện thoại.",
+  completeLookupNote: "Bạn có thể kiểm tra lại bất cứ lúc nào bằng tên và số điện thoại.",
   otherReservation: "Tra cứu đơn khác",
+  resultsTitle: (count) => `Tìm thấy ${count} đơn đặt hàng`,
+  resultsHint: "Chạm vào đơn muốn xem hoặc hủy.",
+  backToList: "‹ Quay lại danh sách",
 
   errors: {
-    notFound: "Không tìm thấy đơn khớp với mã tiếp nhận và số điện thoại. Vui lòng kiểm tra lại.",
+    notFound: "Không tìm thấy đơn khớp với tên và số điện thoại. Vui lòng nhập đúng như khi đặt hàng.",
     unavailable: `Hiện không thể tra cứu trực tuyến. Vui lòng gọi điện (+82 ${businessInfo.phone.slice(1)}).`,
     notCancelable: `Ở trạng thái hiện tại không thể hủy trực tuyến. Vui lòng gọi điện (+82 ${businessInfo.phone.slice(1)}).`,
     invalidRefund: "Vui lòng nhập đầy đủ và chính xác tên ngân hàng, số tài khoản và chủ tài khoản nhận hoàn tiền.",

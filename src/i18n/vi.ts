@@ -470,7 +470,7 @@ export const vi: Messages = {
 
   documents: {
     toggle: "Tôi cần báo giá · phiếu giao dịch",
-    description: "Đánh dấu nếu công ty hoặc cơ quan cần chứng từ. Chúng tôi sẽ lập ngay.",
+    description: "Đánh dấu nếu công ty hoặc cơ quan cần chứng từ. Chúng tôi sẽ gửi ngay tệp PDF đến email bạn nhập.",
     groupAria: "Chứng từ cần",
     options: { quote: "Báo giá", statement: "Phiếu giao dịch" },
     emailAria: "Email nhận chứng từ",
@@ -483,7 +483,7 @@ export const vi: Messages = {
     panelTitle: "Chứng từ đã yêu cầu",
     print: "In / Lưu PDF",
     emailNote: (email) =>
-      `Sau khi kiểm tra, tiệm sẽ gửi đến ${email}. Nếu cần ngay, hãy chọn “Lưu dưới dạng PDF” trong cửa sổ in.`,
+      `Chúng tôi sẽ gửi tệp PDF đến ${email}. Nếu sau vài phút vẫn chưa nhận được, hãy kiểm tra thư rác hoặc liên hệ tiệm. Nếu cần ngay, hãy chọn “Lưu dưới dạng PDF” trong cửa sổ in.`,
     tabsAria: "Loại chứng từ",
     koreanOnly: "Chứng từ được lập bằng tiếng Hàn.",
   },
@@ -492,6 +492,7 @@ export const vi: Messages = {
     title: "Đã gửi đơn thành công! 🎉",
     receiptNumber: (no) => `Mã đơn ${no}`,
     orderer: (name, phone) => `Người đặt ${name} · ${phone}`,
+    reminder: "Trước giờ hẹn, chúng tôi sẽ gửi tin nhắn nhắc lịch đến số điện thoại của người đặt.",
     paymentMethod: (label) => `Thanh toán · ${label}`,
     cashReceipt: (label, number) => `Hóa đơn tiền mặt · ${label} ${number}`,
     cardPayer: (contact) => `Người thanh toán · ${contact}`,
@@ -500,6 +501,21 @@ export const vi: Messages = {
     orchidDelivery: (text) => `Lan hồ điệp · ${text}`,
     recipient: (text) => `Người nhận · ${text}`,
     message: (text) => `Lời nhắn · ${text}`,
+  },
+
+  share: {
+    kakao: "Gửi cho chính mình qua KakaoTalk",
+    kakaoHint: "Trong cửa sổ chia sẻ, chọn 'Trò chuyện với chính mình' để lưu vào KakaoTalk của bạn.",
+    other: "Sao chép nội dung · gửi bằng ứng dụng khác",
+    copied: "Đã sao chép nội dung đặt hàng. Hãy dán vào tin nhắn hoặc ghi chú để lưu lại.",
+    failed: "Không gửi được. Vui lòng chụp màn hình trang này.",
+    title: (shopName) => `[${shopName}] Đã tiếp nhận đặt hàng`,
+    receipt: (no) => `Mã tiếp nhận ${no}`,
+    items: (first, others) => (others > 0 ? `${first} và ${others} sản phẩm khác` : first),
+    total: (price) => `Tổng ${price}`,
+    bank: (bank, number, holder) => `Chuyển khoản: ${bank} ${number} (${holder})`,
+    payment: (label) => `Thanh toán: ${label}`,
+    lookupButton: "Tra cứu · hủy đặt hàng",
   },
 
   submitBar: {

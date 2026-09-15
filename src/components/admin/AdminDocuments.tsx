@@ -6,7 +6,7 @@ import { useElementWidth } from "@/hooks/useElementWidth";
 import { buildBusinessDocument, DOCUMENT_WIDTH } from "@/lib/documents";
 import type { BusinessDocumentType, ReservationRequest } from "@/types/reservation";
 
-/** 고객이 요청한 견적서·거래명세표 — 인쇄 / PDF로 저장해서 고객 이메일로 보냄 */
+/** 고객이 요청한 견적서·거래명세표 미리보기 — 인쇄 / PDF로 저장 (손님 이메일 발송은 DocumentEmailButton·신청 직후 자동) */
 export default function AdminDocuments({ request }: { request: ReservationRequest }) {
   const docs = request.documents.map((type) => buildBusinessDocument(type, request));
   const [activeType, setActiveType] = useState<BusinessDocumentType>(request.documents[0]);

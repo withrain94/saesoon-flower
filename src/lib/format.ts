@@ -27,9 +27,3 @@ export function formatKoreanAmount(amount: number) {
 
   return `일금 ${groups.join("")}원정`;
 }
-
-/** "2026-09-14T03:00:00.000Z" → "2026. 9. 14." (브라우저 로컬 날짜) */
-export function formatDocumentDate(iso: string) {
-  const date = new Date(iso);
-  return `${date.getFullYear()}. ${date.getMonth() + 1}. ${date.getDate()}.`;
-}

@@ -7,9 +7,10 @@ import type { ReservationStatus } from "@/types/reservation";
  */
 export const lookupKo = {
   pageTitle: "예약 조회",
-  intro: "신청 완료 화면의 접수번호와 예약자 연락처를 넣으면 예약 내용을 볼 수 있어요.",
+  intro: "신청할 때 적은 예약자 이름과 연락처를 넣으면 예약 내용을 볼 수 있어요.",
   receiptLabel: "접수번호",
-  receiptPlaceholder: "예: 5D7BBC7E",
+  nameLabel: "예약자 이름",
+  namePlaceholder: "신청할 때 적은 이름",
   phoneLabel: "예약자 연락처",
   phonePlaceholder: "신청할 때 적은 연락처",
   submit: "조회하기",
@@ -17,11 +18,15 @@ export const lookupKo = {
   backToReservation: "‹ 예약 페이지로",
   lookupLink: "예약 조회·취소",
   completeLookup: "예약 조회·취소 화면 열기",
-  completeLookupNote: "접수번호와 연락처로 언제든 다시 확인할 수 있어요.",
+  completeLookupNote: "예약자 이름과 연락처로 언제든 다시 확인할 수 있어요.",
   otherReservation: "다른 예약 조회",
+  /** 같은 이름·연락처로 예약이 여러 건일 때 */
+  resultsTitle: (count: number) => `예약 ${count}건을 찾았어요`,
+  resultsHint: "확인하거나 취소할 예약을 눌러주세요.",
+  backToList: "‹ 찾은 예약 목록으로",
 
   errors: {
-    notFound: "접수번호와 연락처가 맞는 예약을 찾지 못했어요. 다시 확인해 주세요.",
+    notFound: "이름과 연락처가 맞는 예약을 찾지 못했어요. 신청할 때 적은 그대로 넣어주세요.",
     unavailable: `지금은 온라인 조회를 할 수 없어요. 전화(${businessInfo.phone})로 문의해 주세요.`,
     notCancelable: `지금 상태에서는 온라인으로 취소할 수 없어요. 전화(${businessInfo.phone})로 문의해 주세요.`,
     invalidRefund: "환불받을 은행명·계좌번호·예금주를 모두 정확히 적어주세요.",

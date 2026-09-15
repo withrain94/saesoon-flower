@@ -7,6 +7,13 @@ const nextConfig: NextConfig = {
    * PC의 IP가 바뀌면 이 값도 바꿔야 함.
    */
   allowedDevOrigins: ["192.168.45.245"],
+  /**
+   * 견적서·거래명세표 이메일 PDF에 쓰는 한글 글꼴·직인 파일 — 서버에서 파일로 읽으므로 배포 때 같이 올라가게 함
+   * (server/documentPdf/renderDocumentPdf.ts)
+   */
+  outputFileTracingIncludes: {
+    "/**": ["./src/server/documentPdf/fonts/*.ttf", "./public/documents/*.png"],
+  },
 };
 
 export default nextConfig;
