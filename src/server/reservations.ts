@@ -121,13 +121,16 @@ export async function updateReservation(
 /**
  * 손님 예약 조회 — 예약자 연락처 끝 4자리로 후보를 찾음 (받는 날짜 늦은 순).
  * 이름·전체 연락처 확인은 부르는 쪽에서. lastDigits는 숫자 4자리만 (검색 패턴에 그대로 들어감)
+ * 저장된 번호 끝자리 사이에 띄어쓰기·하이픈이 있어도 찾도록 숫자 사이에 숫자 아닌 글자를 허용
+ * ("+1 212 555 12 34" 도 "1234"로 찾음)
  */
 export async function findReservationsByPhoneEnding(lastDigits: string): Promise<StoredReservation[]> {
   if (!/^\d{4}$/.test(lastDigits)) return [];
+  const pattern = `${lastDigits.split("").join("[^0-9]*")}[^0-9]*$`;
   const { data, error } = await createDatabaseClient()
     .from(TABLE)
     .select(COLUMNS)
-    .like("orderer_phone", `%${lastDigits}`)
+    .regexMatch("orderer_phone", pattern)
     .order("reservation_date", { ascending: false })
     .order("reservation_time", { ascending: false })
     .limit(200);
