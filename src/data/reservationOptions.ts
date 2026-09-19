@@ -3,9 +3,9 @@ import type {
   CardPayerType,
   CashReceiptType,
   MessageType,
-  OrchidDeliveryMethod,
   PaymentMethod,
   ProductCategoryId,
+  ReceiveMethod,
 } from "@/types/reservation";
 
 /**
@@ -101,8 +101,18 @@ export const cashReceiptOptions: CashReceiptOption[] = [
   { value: "expense", input: { pattern: BUSINESS_NUMBER_PATTERN, inputMode: "numeric" } },
 ];
 
-/** 호접난 받는 방법 — 첫 번째가 기본값 */
-export const orchidDeliveryMethods: OrchidDeliveryMethod[] = ["pickup", "restaurant"];
+/** 받는 방법 — 첫 번째가 기본값 */
+export const receiveMethods: ReceiveMethod[] = ["pickup", "delivery"];
+
+/**
+ * 배송 무료 기준 (배송을 고르면 안내로만 보여줌 — 배송비는 매장이 확인 후 문자로 안내, 자동 계산 없음).
+ * id는 언어 파일 delivery.freeRules의 키, minPrice = 이 금액 이상이면 무료배송
+ */
+export const deliveryFreeRules: { id: "institute" | "nearby" | "jeonju"; minPrice: number }[] = [
+  { id: "institute", minPrice: 50000 },
+  { id: "nearby", minPrice: 70000 },
+  { id: "jeonju", minPrice: 100000 },
+];
 
 /** 호접난 무료 배송 상견례 식당 — 값은 저장되는 한국어 식당 이름 (외국어 표기는 언어 파일 restaurants) */
 export const orchidRestaurants = ["호남각", "궁", "고궁담"] as const;

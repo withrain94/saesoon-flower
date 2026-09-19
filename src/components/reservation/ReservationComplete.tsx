@@ -9,6 +9,7 @@ import {
   describeRecipient,
   describeTopper,
   getUnitLabel,
+  needsDeliveryAddress,
   type ResolvedUnit,
 } from "@/lib/units";
 import BankAccountCard from "./BankAccountCard";
@@ -91,8 +92,12 @@ export default function ReservationComplete({
         <OrderSummary summary={summary} />
       </div>
 
+      <p className="mt-3 rounded-xl border border-line px-4 py-3 text-left text-[13px] font-bold text-ink">
+        {t.complete.receiveMethod(t.receive.methods[reservation.receiveMethod].label)}
+      </p>
+
       {orchidDelivery && (
-        <p className="mt-3 rounded-xl border border-line px-4 py-3 text-left text-[13px] text-body">
+        <p className="mt-2 rounded-xl border border-line px-4 py-3 text-left text-[13px] text-body">
           {t.complete.orchidDelivery(
             orchidDelivery.method === "restaurant"
               ? t.orchidDelivery.describeRestaurant(
@@ -111,6 +116,9 @@ export default function ReservationComplete({
               {index + 1}. {getUnitLabel(unit, t)}
             </p>
             <p className="mt-1 text-body">{t.complete.recipient(describeRecipient(recipient, t))}</p>
+            {needsDeliveryAddress(reservation.receiveMethod, unit.product.category) && (
+              <p className="text-body">{t.complete.address(recipient.address.trim())}</p>
+            )}
             {topperAvailable && <p className="text-body">{describeTopper(topper, t)}</p>}
             <p className="text-body">{t.complete.message(describeMessage(message, t))}</p>
           </li>

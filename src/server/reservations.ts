@@ -1,5 +1,6 @@
 import "server-only";
 
+import { getEventOn } from "@/data/events";
 import { isReservationStatus } from "@/data/reservationStatus";
 import type { CancelRequest, ReservationRequest, ReservationStatus, StoredReservation } from "@/types/reservation";
 import { createDatabaseClient } from "./supabase";
@@ -15,7 +16,26 @@ type ReservationRow = {
   request: ReservationRequest;
   /** 취소 요청 칸 — schema.sql 추가 SQL을 실행하기 전에는 없음 */
   cancel_request?: CancelRequest | null;
+  /** 안내 문자 보냄 표시 — schema.sql 2026-09-16 추가 SQL을 실행하기 전에는 없음 */
+  reminder_sent_at?: string | null;
 };
+
+/**
+ * 받는 방법·배송지·승진식 꽃 여부 칸이 생기기 전(2026-09-19) 기록 — 호접난 식당 배송이면 배송, 아니면 픽업으로 보고
+ * 배송지는 빈 값, 특별한 날 예약은 행사용 꽃으로 봄 (전에는 그날 예약 모두 토퍼 칸이 있었음)
+ */
+function withReceiveDefaults(request: ReservationRequest): ReservationRequest {
+  return {
+    ...request,
+    receiveMethod: request.receiveMethod ?? (request.orchidDelivery?.method === "restaurant" ? "delivery" : "pickup"),
+    forEvent: request.forEvent ?? getEventOn(request.date) !== undefined,
+    deliveries: request.deliveries.map((delivery) => ({
+      ...delivery,
+      recipientAddress: delivery.recipientAddress ?? "",
+      topperCourse: delivery.topperCourse ?? "",
+    })),
+  };
+}
 
 function fromRow(row: ReservationRow): StoredReservation {
   return {
@@ -23,9 +43,10 @@ function fromRow(row: ReservationRow): StoredReservation {
     createdAt: row.created_at,
     status: isReservationStatus(row.status) ? row.status : "received",
     adminMemo: row.admin_memo ?? "",
-    request: row.request,
+    request: withReceiveDefaults(row.request),
     // paid 칸이 생기기 전 기록은 취소 요청(입금 후)으로 봄
     cancelRequest: row.cancel_request ? { ...row.cancel_request, paid: row.cancel_request.paid ?? true } : null,
+    reminderSentAt: row.reminder_sent_at ?? null,
   };
 }
 
@@ -77,6 +98,22 @@ export async function listReservations({
   return (data as ReservationRow[]).map(fromRow);
 }
 
+/**
+ * 받는 날짜 하루치 예약 (취소 제외, 시간 순) — 전날 "내일 예약 목록" 텔레그램(server/reminders)용.
+ * 호출하는 쪽(app/cron)이 CRON_SECRET을 먼저 확인
+ */
+export async function listReservationsOnDate(dateKey: string): Promise<StoredReservation[]> {
+  const { data, error } = await createDatabaseClient()
+    .from(TABLE)
+    .select(COLUMNS)
+    .eq("reservation_date", dateKey)
+    .neq("status", "canceled")
+    .order("reservation_time", { ascending: true })
+    .limit(500);
+  if (error) throw error;
+  return (data as ReservationRow[]).map(fromRow);
+}
+
 /** 상태별 예약 수 (필터 옆 숫자). 호출 전에 requireAdmin() 필수 */
 export async function countReservationsByStatus(): Promise<Record<ReservationStatus, number>> {
   const { data, error } = await createDatabaseClient().from(TABLE).select("status").limit(10000);
@@ -105,13 +142,14 @@ export async function getReservation(id: string): Promise<StoredReservation | nu
 /** 관리자 상태·메모 수정. 호출 전에 requireAdmin() 필수 */
 export async function updateReservation(
   id: string,
-  patch: { status?: ReservationStatus; adminMemo?: string },
+  patch: { status?: ReservationStatus; adminMemo?: string; reminderSentAt?: string | null },
 ) {
   const { error } = await createDatabaseClient()
     .from(TABLE)
     .update({
       ...(patch.status ? { status: patch.status } : {}),
       ...(patch.adminMemo !== undefined ? { admin_memo: patch.adminMemo } : {}),
+      ...(patch.reminderSentAt !== undefined ? { reminder_sent_at: patch.reminderSentAt } : {}),
       updated_at: new Date().toISOString(),
     })
     .eq("id", id);

@@ -23,4 +23,11 @@ export type EventCopy = {
   shortTitle: (term: number) => string;
   title: (term: number) => string;
   highlights: string[];
+  /** 신청서 "행사 꽃인가요?"의 예 버튼 */
+  forEventYes: string;
+  /** 예를 고르면 무엇을 넣어주는지 */
+  forEventHint: string;
+  /** 상품 카드의 토퍼 칸 제목·안내 */
+  topperTitle: string;
+  topperDescription: string;
 };

@@ -208,6 +208,25 @@ export const ja: Messages = {
         "無料の昇進トッパーをお付けします。",
         "受け取り時間は午前8時・9時からお選びください。",
       ],
+      forEventYes: "はい、昇進式用です",
+      forEventHint: "昇進式用のお花には、無料の昇進トッパー（お名前・役職）をお付けします。",
+      topperTitle: "🎓 昇進トッパー（無料）",
+      topperDescription: "トッパーに入れるお名前と役職をご記入ください。空欄の場合はお店からご連絡します。",
+    },
+    instituteLongCourse: {
+      calendarLabel: "修了式",
+      shortTitle: () => "長期課程 修了式",
+      title: () => "地方自治人材開発院 長期課程 修了式",
+      highlights: [
+        "無料の修了トッパーをお付けします。",
+        "課程ごとにトッパーが異なるため、申込書に修了された課程をご記入ください。",
+        "受け取り時間は午前8時・9時からお選びください。",
+      ],
+      forEventYes: "はい、修了式用です",
+      forEventHint: "修了式用のお花には、無料の修了トッパー（お名前・修了課程）をお付けします。",
+      topperTitle: "🎓 修了トッパー（無料）",
+      topperDescription:
+        "課程ごとにトッパーが異なります。トッパーに入れるお名前と修了された課程をご記入ください。空欄の場合はお店からご連絡します。",
     },
   },
 
@@ -327,20 +346,35 @@ export const ja: Messages = {
     otherPlaceholder: "ご希望の色合いをご記入ください",
   },
 
-  orchidDelivery: {
-    title: "胡蝶蘭の受け取り方法",
+  receive: {
+    title: "受け取り方法",
     methods: {
       pickup: { label: "店舗で受け取り", description: "セスン 全州革新都市店" },
-      restaurant: { label: "顔合わせのお店へ配送", description: "全州市内は無料配送" },
+      delivery: { label: "配送", description: "ご希望の場所へお届けします" },
     },
+    feeTitle: "配送先によっては配送料が別途かかる場合があります。",
+    freeRules: {
+      institute: (price) => `イソ面・全州革新都市・マンソン洞内の機関行事用、革新大方（혁신대방）：${price}以上で配送無料`,
+      nearby: (price) => `イソ面・全州革新都市・マンソン洞：${price}以上で配送無料`,
+      jeonju: (price) => `全州市内全域：${price}以上で配送無料`,
+    },
+    feeContact: "配送料がかかる場合は、ご入力いただいた予約者の電話番号へSMSでご案内します。",
+    addressGuide: "花束・フラワーバスケットの配送先は、下の「受取人」欄にご記入ください。",
+  },
+
+  orchidDelivery: {
+    title: "胡蝶蘭の受け取り方法",
+    restaurantTitle: "胡蝶蘭の配送先のお店",
+    restaurantFree: "全州市内の顔合わせのお店は無料配送",
     restaurant: "お店",
     restaurantOther: "その他（直接入力）",
-    restaurantOtherPlaceholder: "お店の名前をご記入ください",
+    restaurantOtherPlaceholder: "お店の名前または配送先の住所",
     reservationName: "お店の予約名",
+    reservationNameOptional: "お店の予約名（お店の場合のみ）",
     reservationNamePlaceholder: "お店を予約したお名前",
     timeNote: "お選びいただいた日時にお店へ届くようにお送りします。",
     describePickup: "店舗で受け取り",
-    describeRestaurant: (restaurant, reservationName) => `${restaurant}へ配送・予約名 ${reservationName}`,
+    describeRestaurant: (restaurant, reservationName) => `${restaurant}へ配送${reservationName ? `・予約名 ${reservationName}` : ""}`,
   },
 
   restaurants: {
@@ -361,22 +395,30 @@ export const ja: Messages = {
     mixed: "一部を別々に入力中です。ボタンを押すとすべての商品にまとめて適用されます。",
     recipientTitle: "受取人",
     sameRecipient: "前の商品と同じ",
+    sameAsOrderer: "予約者と同じ",
+    ordererEmpty: "先に上の予約者のお名前・電話番号をご記入ください",
+    deliveryRequired: "配送の場合は受取人のお名前・電話番号・配送先を必ずご記入ください。",
     nameAria: "受取人のお名前",
-    namePlaceholder: "受取人のお名前（受け取る方が違う場合や配送の場合）",
+    namePlaceholder: "受取人のお名前（受け取る方が違う場合）",
+    namePlaceholderDelivery: "受取人のお名前",
     phoneAria: "受取人の電話番号",
     phonePlaceholder: "受取人の電話番号 010-0000-0000",
+    addressAria: "配送先の住所",
+    addressPlaceholder: "配送先の住所（建物名・部屋番号まで）",
     messageTitle: "メッセージ",
     sameMessage: (categoryName) => `前の${categoryName}と同じメッセージ`,
     describeEmpty: "未入力（予約者が受け取り）",
   },
 
   topper: {
-    title: "🎓 昇進トッパー（無料）",
-    description: "トッパーに入れるお名前と役職をご記入ください。空欄の場合はお店からご連絡します。",
+    forEventQuestion: (title) => `${title}用のお花ですか？`,
+    forEventNo: "いいえ、通常のご予約です",
     nameAria: "トッパーに入れるお名前",
     namePlaceholder: "お名前（例: 홍길동）",
     rankAria: "トッパーに入れる役職",
     rankPlaceholder: "役職（例: 사무관）",
+    courseAria: "トッパーに入れる修了課程",
+    coursePlaceholder: "修了された課程名",
     describe: (name, rank) => `トッパー・${[name, rank].filter(Boolean).join(" ") || "未入力（お店からご連絡）"}`,
   },
 
@@ -500,7 +542,9 @@ export const ja: Messages = {
     cardPayerSame: "予約者と同じ",
     paypal: (amount, email) => `PayPal決済金額 ${amount}・リクエスト送付先 ${email}`,
     orchidDelivery: (text) => `胡蝶蘭の受け取り・${text}`,
+    receiveMethod: (label) => `受け取り方法・${label}`,
     recipient: (text) => `受取人・${text}`,
+    address: (text) => `配送先・${text}`,
     message: (text) => `メッセージ・${text}`,
   },
 
@@ -532,7 +576,7 @@ export const ja: Messages = {
     items: [
       {
         title: "収集する項目",
-        body: "予約者のお名前・電話番号（必須）、受取人のお名前・電話番号、メッセージの文言、昇進トッパーのお名前・役職、胡蝶蘭の配送先のお店・予約名、現金領収証の番号、カード決済される方の連絡先、PayPal支払いリクエスト用メールアドレス、書類に記載する会社名・事業者登録番号、入金後にキャンセルする場合の返金先の銀行名・口座番号・口座名義（該当する場合）",
+        body: "予約者のお名前・電話番号（必須）、受取人のお名前・電話番号・配送先の住所、メッセージの文言、昇進・修了トッパーのお名前・役職・修了課程、胡蝶蘭の配送先のお店・予約名、現金領収証の番号、カード決済される方の連絡先、PayPal支払いリクエスト用メールアドレス、書類に記載する会社名・事業者登録番号、入金後にキャンセルする場合の返金先の銀行名・口座番号・口座名義（該当する場合）",
       },
       {
         title: "利用目的",
@@ -569,8 +613,10 @@ export const ja: Messages = {
     schedule: "日付と時間をお選びください。",
     scheduleClosed: "選択した時間は現在予約できません。日時を選び直してください。",
     deliveries: "受取人・メッセージの情報をご確認ください。",
+    recipientName: "配送先の受取人のお名前をご記入ください。",
     recipientPhone: "受取人の電話番号をご確認ください。",
-    orchidRestaurant: "胡蝶蘭を配送するお店の名前をご記入ください。",
+    recipientAddress: "配送先の住所をご記入ください。",
+    orchidRestaurant: "胡蝶蘭を配送するお店の名前（または住所）をご記入ください。",
     orchidReservationName: "お店の予約名をご記入ください。",
     cashReceiptPhone: "現金領収証の携帯番号をご確認ください。",
     cashReceiptBusiness: "現金領収証の事業者登録番号をご確認ください。",

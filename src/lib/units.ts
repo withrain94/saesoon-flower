@@ -1,3 +1,4 @@
+import { getEventOn, type SpecialEvent } from "@/data/events";
 import type { Product } from "@/data/products";
 import {
   BLACKBOARD_CUSTOM,
@@ -8,7 +9,18 @@ import {
 import { ko, type Messages } from "@/i18n/ko";
 import { hasFreeTopper } from "@/lib/events";
 import { getItemName, getOrderItems } from "@/lib/selection";
-import type { Recipient, Selection, Topper, UnitDetail, UnitMessage } from "@/types/reservation";
+import type {
+  ProductCategoryId,
+  ReceiveMethod,
+  Recipient,
+  Selection,
+  Topper,
+  UnitDetail,
+  UnitMessage,
+} from "@/types/reservation";
+
+/** 예약자 성함·연락처 — 받는 분 "예약자와 같음"에 씀 */
+export type OrdererContact = Pick<Recipient, "name" | "phone">;
 
 /** 담은 상품을 수량만큼 펼친 1개 단위 */
 export type OrderUnit = {
@@ -37,15 +49,25 @@ export type ResolvedUnit = {
   /** 같은 종류의 앞 상품이 있어 "메시지 같음"을 고를 수 있는지 */
   canCopyMessage: boolean;
   recipientCopied: boolean;
+  /** 받는 분 성함·연락처를 예약자에서 가져왔는지 (앞 상품과 같음이 아닐 때만) */
+  recipientFromOrderer: boolean;
   messageCopied: boolean;
   /** 받는 날이 특별한 날이라 무료 토퍼 입력칸이 있는 상품인지 */
   topperAvailable: boolean;
+  /** 토퍼 칸이 있으면 그 행사 (토퍼 제목·직급/수료 과정 칸을 정함), 없으면 null */
+  topperEvent: SpecialEvent | null;
   /** 토퍼를 앞 상품(토퍼가 있는 상품)에서 따라왔는지 — 받는 분 "같음"을 따름 */
   topperCopied: boolean;
 };
 
-export const emptyRecipient: Recipient = { name: "", phone: "" };
-export const emptyTopper: Topper = { name: "", rank: "" };
+export const emptyRecipient: Recipient = { name: "", phone: "", address: "" };
+
+/** 받는 분 칸에 배송지를 적는 상품인지 — 배송이면서 호접난이 아닐 때 (호접난은 식당 칸) */
+export function needsDeliveryAddress(receiveMethod: ReceiveMethod, category: ProductCategoryId) {
+  return receiveMethod === "delivery" && category !== "orchid";
+}
+
+export const emptyTopper: Topper = { name: "", rank: "", course: "" };
 
 export function emptyMessage(product: Product): UnitMessage {
   return {
@@ -59,11 +81,16 @@ export function emptyMessage(product: Product): UnitMessage {
 }
 
 export function isEmptyRecipient(recipient: Recipient) {
-  return !recipient.name.trim() && !recipient.phone.trim();
+  return !recipient.name.trim() && !recipient.phone.trim() && !recipient.address.trim();
 }
 
 export function isEmptyTopper(topper: Topper) {
-  return !topper.name.trim() && !topper.rank.trim();
+  return !topper.name.trim() && !topper.rank.trim() && !topper.course.trim();
+}
+
+/** 토퍼 한 줄 — "홍길동 사무관" / "홍길동 ○○과정" (행사에 따라 직급 또는 수료 과정 중 적힌 것) */
+export function joinTopper(name: string, rank: string, course: string) {
+  return [name, rank, course].map((text) => text.trim()).filter(Boolean).join(" ");
 }
 
 /** 메시지를 아직 한 번도 고르거나 적지 않은 상태(= 상품 종류의 기본값 그대로)인지 */
@@ -89,6 +116,7 @@ export function getBlackboardText(message: UnitMessage) {
 export function defaultUnitDetail(product: Product): UnitDetail {
   return {
     sameRecipient: true,
+    sameAsOrderer: false,
     recipient: emptyRecipient,
     topper: emptyTopper,
     sameMessage: true,
@@ -115,15 +143,17 @@ export function getUnitLabel(unit: OrderUnit, t: Messages = ko) {
 
 /**
  * 앞에서부터 순서대로 "같음"을 풀어 최종 값을 만든다.
- * - 받는 분: 바로 앞 상품의 최종 받는 분
+ * - 받는 분: 바로 앞 상품의 최종 받는 분 (배송지 포함)
+ *   "예약자와 같음"이면 성함·연락처는 예약자 것, 배송지는 자기 입력값
  * - 토퍼: 받는 분 "같음"이면 토퍼가 있는 가장 가까운 앞 상품의 토퍼
  * - 메시지: 같은 종류 중 가장 가까운 앞 상품의 최종 메시지
- * dateKey: 받는 날짜 — 특별한 날이면 토퍼 입력칸이 생김
+ * dateKey: 받는 날짜 — 특별한 날이면 토퍼 입력칸이 생김 (행사용 꽃이 아니라고 답했으면 null을 넘김)
  */
 export function resolveUnits(
   units: OrderUnit[],
   details: Record<string, UnitDetail>,
   dateKey: string | null,
+  orderer: OrdererContact,
 ): ResolvedUnit[] {
   const resolved: ResolvedUnit[] = [];
 
@@ -139,11 +169,15 @@ export function resolveUnits(
     const recipientCopied = previous !== undefined && own.sameRecipient;
     const messageCopied = previousSameCategory !== undefined && own.sameMessage;
     const topperCopied = topperAvailable && previousWithTopper !== undefined && own.sameRecipient;
+    const recipientFromOrderer = !recipientCopied && own.sameAsOrderer;
+    const ownRecipient = recipientFromOrderer
+      ? { ...own.recipient, name: orderer.name.trim(), phone: orderer.phone.trim() }
+      : own.recipient;
 
     resolved.push({
       unit,
       own,
-      recipient: recipientCopied && previous ? previous.recipient : own.recipient,
+      recipient: recipientCopied && previous ? previous.recipient : ownRecipient,
       topper: !topperAvailable
         ? emptyTopper
         : topperCopied && previousWithTopper
@@ -153,8 +187,10 @@ export function resolveUnits(
       canCopyRecipient: previous !== undefined,
       canCopyMessage: previousSameCategory !== undefined,
       recipientCopied,
+      recipientFromOrderer,
       messageCopied,
       topperAvailable,
+      topperEvent: topperAvailable && dateKey ? (getEventOn(dateKey) ?? null) : null,
       topperCopied,
     });
   }
@@ -162,15 +198,18 @@ export function resolveUnits(
   return resolved;
 }
 
-/** "홍길동 · 010-1234-5678" / 비었으면 안내 문구 */
-export function describeRecipient(recipient: Recipient, t: Messages = ko) {
-  const text = [recipient.name, recipient.phone].filter(Boolean).join(" · ");
+/**
+ * "홍길동 · 010-1234-5678" / 비었으면 안내 문구.
+ * withAddress: 배송지까지 붙임 — "홍길동 · 010-1234-5678 · 전주시 …"
+ */
+export function describeRecipient(recipient: Recipient, t: Messages = ko, withAddress = false) {
+  const text = [recipient.name, recipient.phone, withAddress && recipient.address.trim()].filter(Boolean).join(" · ");
   return text || t.recipient.describeEmpty;
 }
 
-/** "토퍼 · 홍길동 사무관" */
+/** "토퍼 · 홍길동 사무관" / "토퍼 · 홍길동 ○○과정" */
 export function describeTopper(topper: Topper, t: Messages = ko) {
-  return t.topper.describe(topper.name.trim(), topper.rank.trim());
+  return t.topper.describe(topper.name.trim(), joinTopper("", topper.rank, topper.course));
 }
 
 /** "메모지 · 생일 축하해" (언어별) */

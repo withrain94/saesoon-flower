@@ -38,8 +38,28 @@ export async function sendTelegramMessage(text: string): Promise<number> {
   return sent;
 }
 
+/** 텔레그램 한 메시지 최대 4096자 — 상품이 많아 길어지면 줄 단위로 여유 있게 나눔 */
+const MESSAGE_MAX = 3500;
+
+function splitByLines(text: string) {
+  const chunks: string[] = [];
+  let current = "";
+  for (const line of text.split("\n")) {
+    if (current && current.length + 1 + line.length > MESSAGE_MAX) {
+      chunks.push(current);
+      current = line;
+    } else {
+      current = current ? `${current}\n${line}` : line;
+    }
+  }
+  if (current) chunks.push(current);
+  return chunks;
+}
+
 /** 새 예약 알림 — origin: 사이트 주소 (관리자 상세 링크용, 모르면 null) */
 export async function notifyNewReservation(id: string, request: ReservationRequest, origin: string | null) {
   const adminUrl = origin ? `${origin}${ADMIN_HOME_PATH}/${id}` : null;
-  await sendTelegramMessage(buildReservationNotice(id, request, adminUrl));
+  for (const message of splitByLines(buildReservationNotice(id, request, adminUrl))) {
+    await sendTelegramMessage(message);
+  }
 }

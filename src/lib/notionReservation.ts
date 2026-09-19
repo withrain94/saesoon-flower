@@ -1,10 +1,11 @@
 import { getEventOn, type SpecialEvent } from "@/data/events";
 import { findBlackboardPreset } from "@/data/reservationOptions";
 import { ko } from "@/i18n/ko";
-import { describeColor, describeOrchidDelivery, describePayment } from "@/lib/adminFormat";
+import { describeColor, describeDeliveryAddress, describePayment, describeReceiveMethod } from "@/lib/adminFormat";
 import { parseDateKey } from "@/lib/date";
 import { formatReceiptNumber } from "@/lib/format";
 import { getSlotHour } from "@/lib/time";
+import { joinTopper } from "@/lib/units";
 import type { ReservationDelivery, ReservationRequest, ReservationStatus, StoredReservation } from "@/types/reservation";
 
 /**
@@ -23,9 +24,10 @@ export const NOTION_TABLE_HEADERS = [
   "받는분 연락처",
   "메시지",
   "예약종류",
-  "승진 토퍼",
+  "받는 방법",
+  "배송지",
+  "토퍼",
   "결제 방법",
-  "호접난 받는 방법",
   "접수번호",
   "매장 메모",
 ] as const;
@@ -44,10 +46,11 @@ const CANCELED_MARK = "[취소] ";
 /** 특별한 날 페이지 이름 앞부분 — 새 종류를 추가하면 타입 오류로 알려줌 */
 const eventPagePrefix: Record<SpecialEvent["kind"], string> = {
   institutePromotion: "인재개발원",
+  instituteLongCourse: "인재개발원",
 };
 
 /** 표 아래에 연락처 모음(중복 제외)을 붙이는 특별한 날 — 단체 문자 보내기용 */
-const contactListEventKinds: SpecialEvent["kind"][] = ["institutePromotion"];
+const contactListEventKinds: SpecialEvent["kind"][] = ["institutePromotion", "instituteLongCourse"];
 
 /** 연락처 모음 한 줄에 넣는 개수 */
 export const CONTACT_LIST_CHUNK = 20;
@@ -146,7 +149,7 @@ export function buildNotionRows({ id, status, adminMemo, request }: StoredReserv
   const color = describeColor(request) ?? "";
   const schedule = formatSchedule(request);
   const payment = describePayment(request);
-  const orchid = describeOrchidDelivery(request) ?? "";
+  const receiveMethod = describeReceiveMethod(request);
   const receipt = formatReceiptNumber(id);
   const canceled = status === "canceled" ? CANCELED_MARK : "";
 
@@ -161,9 +164,11 @@ export function buildNotionRows({ id, status, adminMemo, request }: StoredReserv
       "받는분 연락처": delivery.recipientPhone,
       메시지: formatMessage(delivery),
       예약종류: `${canceled}${ko.categories[delivery.category].name}`,
-      "승진 토퍼": [delivery.topperName, delivery.topperRank].filter(Boolean).join(" "),
+      "받는 방법": receiveMethod,
+      // 꽃다발·꽃바구니는 적은 주소, 호접난은 배송 식당
+      배송지: describeDeliveryAddress(request, delivery) ?? "",
+      토퍼: joinTopper(delivery.topperName, delivery.topperRank, delivery.topperCourse),
       "결제 방법": payment,
-      "호접난 받는 방법": delivery.category === "orchid" ? orchid : "",
       접수번호: receipt,
       "매장 메모": adminMemo,
     };

@@ -1,24 +1,35 @@
 import { useT } from "@/hooks/useLocale";
-import type { ResolvedUnit } from "@/lib/units";
+import { needsDeliveryAddress, type ResolvedUnit } from "@/lib/units";
+import type { ReceiveMethod } from "@/types/reservation";
 import UnitDetailCard from "./UnitDetailCard";
 import type { UnitActions } from "./useReservation";
 
-/** 담은 상품 1개마다 받는 분·메시지를 정하는 영역 */
+/** 담은 상품 1개마다 받는 분(+배송지)·메시지를 정하는 영역 */
 export default function RecipientMessageField({
   units,
   actions,
+  receiveMethod,
 }: {
   units: ResolvedUnit[];
   actions: UnitActions;
+  receiveMethod: ReceiveMethod;
 }) {
   const t = useT();
   const multiple = units.length > 1;
+  /** 배송지까지 꼭 적어야 하는 상품이 있으면 "(선택)" 대신 필수 안내 */
+  const required = units.some((target) => needsDeliveryAddress(receiveMethod, target.unit.product.category));
 
   return (
     <div>
       <p className="text-[15px] font-bold text-ink">
-        {t.recipient.title} <span className="text-[13px] font-normal text-sub">{t.common.optional}</span>
+        {t.recipient.title}{" "}
+        {required ? (
+          <span className="text-brand">*</span>
+        ) : (
+          <span className="text-[13px] font-normal text-sub">{t.common.optional}</span>
+        )}
       </p>
+      {required && <p className="mt-0.5 text-[13px] font-semibold text-brand-dark">{t.recipient.deliveryRequired}</p>}
       <p className="mt-0.5 text-[13px] text-sub">{t.recipient.guide}</p>
 
       {units.length === 0 ? (
@@ -36,6 +47,7 @@ export default function RecipientMessageField({
                 order={index + 1}
                 showOrder={multiple}
                 actions={actions}
+                receiveMethod={receiveMethod}
               />
             ))}
           </div>

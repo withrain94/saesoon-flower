@@ -12,15 +12,18 @@ export type MessageType = "none" | "memo" | "ribbon" | "blackboard";
  */
 export type PaymentMethod = "bank" | "card" | "paypal";
 
-/** 호접난 받는 방법 — 매장 픽업 / 상견례 식당으로 배송 */
+/** 받는 방법 — 매장 픽업 / 배송 (예약 전체에 한 번 고름) */
+export type ReceiveMethod = "pickup" | "delivery";
+
+/** 호접난 받는 방법 — 매장 픽업 / 상견례 식당으로 배송. 받는 방법(ReceiveMethod)이 배송이면 식당 배송 */
 export type OrchidDeliveryMethod = "pickup" | "restaurant";
 
 /** 호접난 받는 방법 (호접난을 담았을 때만) */
 export type OrchidDelivery = {
   method: OrchidDeliveryMethod;
-  /** 식당 이름 (한국어) — 배송이 아니면 "" */
+  /** 식당 이름 (한국어) 또는 "기타"로 직접 적은 식당 이름·주소 — 배송이 아니면 "" */
   restaurant: string;
-  /** 식당에 예약된 이름 — 배송이 아니면 "" */
+  /** 식당에 예약된 이름 — 배송이 아니면 "", "기타"면 비어 있을 수 있음 */
   reservationName: string;
 };
 
@@ -46,10 +49,12 @@ export type Selection = {
 /** 아직 선택되지 않은 항목 */
 export type SelectionIssue = "items" | "date" | "time";
 
-/** 받는 분 (비워두면 예약자가 픽업) */
+/** 받는 분 (픽업이면 비워둘 수 있음 — 예약자가 픽업) */
 export type Recipient = {
   name: string;
   phone: string;
+  /** 배송지 주소 — 배송일 때만 (호접난은 식당 칸을 씀) */
+  address: string;
 };
 
 /** 상품 1개에 들어갈 메시지 */
@@ -64,10 +69,11 @@ export type UnitMessage = {
   blackboardPreset: string;
 };
 
-/** 특별한 날(승진식) 무료 토퍼에 넣을 이름·직급 */
+/** 특별한 날 무료 토퍼에 넣을 이름 + 직급(승진식) 또는 수료 과정(장기과정 수료식) — 행사의 topperDetail */
 export type Topper = {
   name: string;
   rank: string;
+  course: string;
 };
 
 /**
@@ -77,6 +83,8 @@ export type Topper = {
 export type UnitDetail = {
   /** 받는 분이 같으면 토퍼(이름·직급)도 앞 상품을 따름 */
   sameRecipient: boolean;
+  /** 받는 분 성함·연락처를 예약자와 같게 (배송지는 따로 입력) */
+  sameAsOrderer: boolean;
   recipient: Recipient;
   topper: Topper;
   /** 같은 종류의 앞 상품 메시지를 따름 */
@@ -101,9 +109,12 @@ export type ReservationDelivery = {
   unitNo: number;
   recipientName: string;
   recipientPhone: string;
-  /** 승진식 무료 토퍼 — 토퍼가 없는 날·상품이면 "" */
+  /** 배송지 주소 — 픽업이거나 호접난이면 "" (호접난은 orchidDelivery의 식당) */
+  recipientAddress: string;
+  /** 특별한 날 무료 토퍼 — 토퍼가 없는 날·상품이면 "". 직급은 승진식, 수료 과정은 장기과정 수료식만 */
   topperName: string;
   topperRank: string;
+  topperCourse: string;
 } & Omit<UnitMessage, "type"> & { messageType: MessageType };
 
 /**
@@ -123,6 +134,10 @@ export type ReservationRequest = {
   /** 원하는 색감 선택지 id (reservationOptions의 colorOptionIds). 색감을 고르지 않는 주문이면 "" */
   color: string;
   colorOther: string;
+  /** 받는 방법 — 매장 픽업 / 배송 */
+  receiveMethod: ReceiveMethod;
+  /** 특별한 날(인재개발원 승진식) 행사용 꽃인지 — "예"일 때만 무료 토퍼. 특별한 날이 아니면 false */
+  forEvent: boolean;
   /** 호접난 받는 방법 — 호접난이 없으면 null */
   orchidDelivery: OrchidDelivery | null;
   paymentMethod: PaymentMethod;
@@ -179,6 +194,8 @@ export type StoredReservation = {
   request: ReservationRequest;
   /** 손님 취소 요청 — 없으면 null */
   cancelRequest: CancelRequest | null;
+  /** 매장이 예약 전 안내 문자를 보냈다고 표시한 시각 (ISO) — 안 보냈으면 null */
+  reminderSentAt: string | null;
 };
 
 /** 손님 예약 조회 화면에 보내는 내용 (매장 메모 등 매장 전용 정보는 뺌) */
@@ -198,7 +215,8 @@ export type ReservationFormField =
   | "ordererPhone"
   | "color"
   | "colorOther"
-  | "orchidDelivery"
+  | "receiveMethod"
+  | "forEvent"
   | "orchidRestaurant"
   | "orchidRestaurantOther"
   | "orchidReservationName"

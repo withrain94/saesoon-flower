@@ -4,7 +4,7 @@ import { addDaysToKey, formatDateLong, parseDateKey, toDateKey } from "@/lib/dat
 import { getSlotHour, hasBookableSlot, isSlotBookable, toNow, type Now } from "@/lib/time";
 import type { ProductCategoryId } from "@/types/reservation";
 
-/** 특별한 날의 화면 문구 (제목·짧은 이름·달력 표시·안내) */
+/** 특별한 날의 화면 문구 (제목·짧은 이름·달력 표시·안내·행사 꽃 질문·토퍼 칸) */
 export function getEventCopy(event: SpecialEvent, t: Messages = ko) {
   const copy = t.events[event.kind];
   return {
@@ -12,6 +12,10 @@ export function getEventCopy(event: SpecialEvent, t: Messages = ko) {
     shortTitle: copy.shortTitle(event.term),
     calendarLabel: copy.calendarLabel,
     highlights: copy.highlights,
+    forEventYes: copy.forEventYes,
+    forEventHint: copy.forEventHint,
+    topperTitle: copy.topperTitle,
+    topperDescription: copy.topperDescription,
   };
 }
 

@@ -42,3 +42,9 @@ create index if not exists reservations_receipt_idx on public.reservations (rece
 alter table public.reservations add column if not exists cancel_request jsonb;
 
 notify pgrst, 'reload schema';
+
+-- ── 2026-09-16 추가: 예약 전 안내 문자 보냄 표시 ─────────────────────────────
+-- 관리자 상세 "안내 문자 보냈어요" 버튼이 누른 시각을 저장 (안 보냈으면 null). 여러 번 실행해도 안전
+alter table public.reservations add column if not exists reminder_sent_at timestamptz;
+
+notify pgrst, 'reload schema';

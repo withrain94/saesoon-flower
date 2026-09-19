@@ -1,3 +1,4 @@
+import { getEventOn } from "@/data/events";
 import { allProducts } from "@/data/products";
 import {
   BUSINESS_NUMBER_PATTERN,
@@ -8,14 +9,16 @@ import {
   documentOptions,
   MAX_QUANTITY,
   messageOptionsByCategory,
-  orchidDeliveryMethods,
+  orchidRestaurants,
   paymentMethodOptions,
   PHONE_PATTERN,
+  receiveMethods,
 } from "@/data/reservationOptions";
 import { DEFAULT_LOCALE, isLocale, messages } from "@/i18n";
 import { hasFreeTopper } from "@/lib/events";
 import { getPaypalAmount } from "@/lib/payment";
 import { isSlotBookable, type Now } from "@/lib/time";
+import { needsDeliveryAddress } from "@/lib/units";
 import type {
   OrchidDelivery,
   ReservationDelivery,
@@ -84,6 +87,12 @@ export function validateReservationRequest(input: unknown, now: Now, submittedAt
   if (!DATE_KEY.test(date) || !SLOT.test(time)) return fail(validation.schedule);
   if (!isSlotBookable(time, date, now)) return fail(validation.scheduleClosed);
 
+  // 받는 방법 — 배송이면 꽃다발·꽃바구니는 받는 분 성함·연락처·배송지 필수 (호접난은 식당 칸)
+  const receiveMethod = oneOf(raw.receiveMethod, receiveMethods, receiveMethods[0]);
+  // 특별한 날 행사용 꽃이라고 답했을 때만 무료 토퍼 (이름 + 행사에 따라 직급 또는 수료 과정)
+  const event = getEventOn(date);
+  const forEvent = raw.forEvent === true && event !== undefined;
+
   // 상품 1개 단위 받는 분·토퍼·메시지: 담은 수량과 개수가 맞아야 함
   const rawDeliveries = Array.isArray(raw.deliveries) ? raw.deliveries : [];
   if (rawDeliveries.length !== totalQuantity) return fail(validation.deliveries);
@@ -92,20 +101,28 @@ export function validateReservationRequest(input: unknown, now: Now, submittedAt
     const d = (rawDelivery ?? {}) as Record<string, unknown>;
     const item = items.find((candidate) => candidate.productId === d.productId);
     if (!item) return fail(validation.deliveries);
+    const recipientName = str(d.recipientName, 50);
     const recipientPhone = str(d.recipientPhone, 25);
     if (recipientPhone && !PHONE.test(recipientPhone)) return fail(validation.recipientPhone);
+    const needsAddress = needsDeliveryAddress(receiveMethod, item.category);
+    const recipientAddress = needsAddress ? str(d.recipientAddress, 200) : "";
+    if (needsAddress && !recipientName) return fail(validation.recipientName);
+    if (needsAddress && !recipientPhone) return fail(validation.recipientPhone);
+    if (needsAddress && !recipientAddress) return fail(validation.recipientAddress);
     const messageTypes = messageOptionsByCategory[item.category];
     const messageType = oneOf(d.messageType, messageTypes, messageTypes[0]);
-    const topper = hasFreeTopper(date, item.category);
+    const topper = forEvent && hasFreeTopper(date, item.category);
     deliveries.push({
       productId: item.productId,
       category: item.category,
       price: item.price,
       unitNo: Number.isInteger(d.unitNo) ? (d.unitNo as number) : 1,
-      recipientName: str(d.recipientName, 50),
+      recipientName,
       recipientPhone,
+      recipientAddress,
       topperName: topper ? str(d.topperName, 30) : "",
-      topperRank: topper ? str(d.topperRank, 30) : "",
+      topperRank: topper && event?.topperDetail === "rank" ? str(d.topperRank, 30) : "",
+      topperCourse: topper && event?.topperDetail === "course" ? str(d.topperCourse, 50) : "",
       messageType,
       memo: messageType === "memo" ? str(d.memo) : "",
       ribbonLeft: messageType === "ribbon" ? str(d.ribbonLeft, 50) : "",
@@ -115,16 +132,17 @@ export function validateReservationRequest(input: unknown, now: Now, submittedAt
     });
   }
 
-  // 원하는 색감 (코드) / 호접난 받는 방법
+  // 원하는 색감 (코드) / 호접난 받는 방법 — 배송이면 식당(목록 식당은 식당 예약 이름 필수, "기타"는 이름·주소 직접 입력)
   const color = raw.color ? oneOf(raw.color, colorOptionIds, colorOptionIds[0]) : "";
   let orchidDelivery: OrchidDelivery | null = null;
   if (items.some((item) => item.category === "orchid")) {
     const rawOrchid = (raw.orchidDelivery ?? {}) as Record<string, unknown>;
-    const method = oneOf(rawOrchid.method, orchidDeliveryMethods, "pickup");
-    const restaurant = method === "restaurant" ? str(rawOrchid.restaurant, 50) : "";
+    const method = receiveMethod === "delivery" ? "restaurant" : "pickup";
+    const restaurant = method === "restaurant" ? str(rawOrchid.restaurant, 200) : "";
     const reservationName = method === "restaurant" ? str(rawOrchid.reservationName, 50) : "";
+    const listedRestaurant = orchidRestaurants.some((name) => name === restaurant);
     if (method === "restaurant" && !restaurant) return fail(validation.orchidRestaurant);
-    if (method === "restaurant" && !reservationName) return fail(validation.orchidReservationName);
+    if (listedRestaurant && !reservationName) return fail(validation.orchidReservationName);
     orchidDelivery = { method, restaurant, reservationName };
   }
 
@@ -167,6 +185,8 @@ export function validateReservationRequest(input: unknown, now: Now, submittedAt
       ordererPhone,
       color,
       colorOther: color === COLOR_OTHER ? str(raw.colorOther, 100) : "",
+      receiveMethod,
+      forEvent,
       orchidDelivery,
       paymentMethod,
       paypalEmail,

@@ -4,14 +4,14 @@ import {
   COLOR_OTHER,
   colorOptionIds,
   documentOptions,
-  orchidDeliveryMethods,
   orchidRestaurants,
   paymentMethodOptions,
+  receiveMethods,
   RESTAURANT_OTHER,
 } from "@/data/reservationOptions";
 import { getPaypalAmount } from "@/lib/payment";
 import { getOrderItems, needsColorChoice } from "@/lib/selection";
-import { getBlackboardText, type ResolvedUnit } from "@/lib/units";
+import { getBlackboardText, needsDeliveryAddress, type ResolvedUnit } from "@/lib/units";
 import type { Locale } from "@/types/i18n";
 import type {
   BusinessDocumentType,
@@ -19,6 +19,7 @@ import type {
   CashReceiptType,
   OrchidDelivery,
   PaymentMethod,
+  ReceiveMethod,
   ReservationDelivery,
   ReservationFormField,
   ReservationRequest,
@@ -49,21 +50,27 @@ function toDocuments(data: FormData): BusinessDocumentType[] {
   return documentOptions.map((option) => option.value).filter((value) => checked.includes(value));
 }
 
-/** 호접난 받는 방법 — 식당은 목록에서 고르거나(한국어 이름) 직접 입력 */
-function toOrchidDelivery(data: FormData): OrchidDelivery {
-  const method = orchidDeliveryMethods.find((item) => item === text(data, "orchidDelivery")) ?? "pickup";
-  if (method !== "restaurant") return { method, restaurant: "", reservationName: "" };
+function toReceiveMethod(value: string): ReceiveMethod {
+  return receiveMethods.find((item) => item === value) ?? receiveMethods[0];
+}
+
+/** 호접난 받는 방법 — 배송이면 식당 배송. 식당은 목록에서 고르거나(한국어 이름) 직접 입력 */
+function toOrchidDelivery(data: FormData, receiveMethod: ReceiveMethod): OrchidDelivery {
+  if (receiveMethod !== "delivery") return { method: "pickup", restaurant: "", reservationName: "" };
 
   const picked = text(data, "orchidRestaurant");
   const restaurant =
     picked === RESTAURANT_OTHER
       ? text(data, "orchidRestaurantOther")
       : (orchidRestaurants.find((name) => name === picked) ?? "");
-  return { method, restaurant, reservationName: text(data, "orchidReservationName") };
+  return { method: "restaurant", restaurant, reservationName: text(data, "orchidReservationName") };
 }
 
-/** 선택한 메시지 방식에 해당하는 문구만 남김 */
-function toDelivery({ unit, recipient, topper, topperAvailable, message }: ResolvedUnit): ReservationDelivery {
+/** 선택한 메시지 방식에 해당하는 문구만 남김. 배송지는 배송일 때만 */
+function toDelivery(
+  { unit, recipient, topper, topperAvailable, topperEvent, message }: ResolvedUnit,
+  receiveMethod: ReceiveMethod,
+): ReservationDelivery {
   return {
     productId: unit.product.id,
     category: unit.product.category,
@@ -71,8 +78,10 @@ function toDelivery({ unit, recipient, topper, topperAvailable, message }: Resol
     unitNo: unit.unitNo,
     recipientName: recipient.name.trim(),
     recipientPhone: recipient.phone.trim(),
+    recipientAddress: needsDeliveryAddress(receiveMethod, unit.product.category) ? recipient.address.trim() : "",
     topperName: topperAvailable ? topper.name.trim() : "",
-    topperRank: topperAvailable ? topper.rank.trim() : "",
+    topperRank: topperEvent?.topperDetail === "rank" ? topper.rank.trim() : "",
+    topperCourse: topperEvent?.topperDetail === "course" ? topper.course.trim() : "",
     messageType: message.type,
     memo: message.type === "memo" ? message.memo.trim() : "",
     ribbonLeft: message.type === "ribbon" ? message.ribbonLeft.trim() : "",
@@ -100,6 +109,7 @@ export function buildReservationRequest(
     ? (colorOptionIds.find((id) => id === text(data, "color")) ?? colorOptionIds[0])
     : "";
   const hasOrchid = items.some((item) => item.product.category === "orchid");
+  const receiveMethod = toReceiveMethod(text(data, "receiveMethod"));
   const paymentMethod = toPaymentMethod(text(data, "paymentMethod"));
   // 현금영수증은 계좌이체일 때만
   const cashReceiptType =
@@ -116,7 +126,7 @@ export function buildReservationRequest(
       price: product.price,
       quantity,
     })),
-    deliveries: units.map(toDelivery),
+    deliveries: units.map((unit) => toDelivery(unit, receiveMethod)),
     totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
     totalPrice,
     date: selection.date ?? "",
@@ -125,7 +135,10 @@ export function buildReservationRequest(
     ordererPhone: text(data, "ordererPhone"),
     color,
     colorOther: color === COLOR_OTHER ? text(data, "colorOther") : "",
-    orchidDelivery: hasOrchid ? toOrchidDelivery(data) : null,
+    receiveMethod,
+    // "승진식 꽃인가요?"는 특별한 날에만 나옴 — 안 나왔으면 false
+    forEvent: text(data, "forEvent") === "yes",
+    orchidDelivery: hasOrchid ? toOrchidDelivery(data, receiveMethod) : null,
     paymentMethod,
     paypalEmail: paymentMethod === "paypal" ? text(data, "paypalEmail") : "",
     paypalAmount: paymentMethod === "paypal" ? getPaypalAmount(totalPrice) : 0,

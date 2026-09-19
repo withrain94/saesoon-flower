@@ -8,6 +8,7 @@ import { useLookupT } from "@/hooks/useLookupT";
 import { useT } from "@/hooks/useLocale";
 import { parseDateKey } from "@/lib/date";
 import { getSlotHour } from "@/lib/time";
+import { joinTopper } from "@/lib/units";
 import type { CustomerReservationView, ReservationDelivery } from "@/types/reservation";
 
 /** 손님 예약 조회 결과 — 신청한 내용을 손님 언어로 (매장 메모 등은 받지 않음) */
@@ -74,8 +75,11 @@ export default function LookupReservationDetails({ reservation }: { reservation:
           <span>{l.sections.total(request.totalQuantity)}</span>
           <span>{t.format.price(request.totalPrice)}</span>
         </p>
+        <p className="mt-2 text-[13px] font-bold text-ink">
+          {t.complete.receiveMethod(t.receive.methods[request.receiveMethod].label)}
+        </p>
         {request.orchidDelivery && (
-          <p className="mt-2 text-[13px] text-body">
+          <p className="mt-1 text-[13px] text-body">
             {t.complete.orchidDelivery(
               request.orchidDelivery.method === "restaurant"
                 ? t.orchidDelivery.describeRestaurant(
@@ -101,8 +105,13 @@ export default function LookupReservationDetails({ reservation }: { reservation:
                   {quantity > 1 ? t.format.unitName(name, delivery.unitNo, quantity) : name}
                 </p>
                 <p className="mt-1 text-body">{t.complete.recipient(recipient || t.recipient.describeEmpty)}</p>
-                {(delivery.topperName || delivery.topperRank) && (
-                  <p className="text-body">{t.topper.describe(delivery.topperName, delivery.topperRank)}</p>
+                {delivery.recipientAddress && (
+                  <p className="text-body">{t.complete.address(delivery.recipientAddress)}</p>
+                )}
+                {joinTopper(delivery.topperName, delivery.topperRank, delivery.topperCourse) && (
+                  <p className="text-body">
+                    {t.topper.describe(delivery.topperName, joinTopper("", delivery.topperRank, delivery.topperCourse))}
+                  </p>
                 )}
                 <p className="text-body">{t.complete.message(describeMessage(delivery))}</p>
               </li>

@@ -1,3 +1,4 @@
+import type { EventKind } from "@/data/events";
 import type { ProductId } from "@/data/products";
 import { businessInfo } from "@/data/shop";
 import {
@@ -159,7 +160,7 @@ const products: Record<ProductId, ProductCopy> = {
   },
 };
 
-const events: Record<"institutePromotion", EventCopy> = {
+const events: Record<EventKind, EventCopy> = {
   institutePromotion: {
     calendarLabel: "승진식",
     shortTitle: (term) => `제${term}기 승진식`,
@@ -169,6 +170,24 @@ const events: Record<"institutePromotion", EventCopy> = {
       "무료 승진 토퍼를 함께 제공해 드려요.",
       "받으실 시간은 오전 8시·9시 중에서 골라주세요.",
     ],
+    forEventYes: "네, 승진식 꽃이에요",
+    forEventHint: "승진식 꽃이면 무료 승진 토퍼(이름·직급)를 넣어드려요.",
+    topperTitle: "🎓 승진 토퍼 (무료)",
+    topperDescription: "토퍼에 넣을 이름과 직급을 적어주세요. 비워두시면 매장에서 연락드려요.",
+  },
+  instituteLongCourse: {
+    calendarLabel: "수료식",
+    shortTitle: () => "장기과정 수료식",
+    title: () => "지방자치인재개발원 장기과정 수료식",
+    highlights: [
+      "무료 수료 토퍼를 함께 제공해 드려요.",
+      "과정마다 토퍼가 달라서, 신청서에 수료하신 과정을 적어주세요.",
+      "받으실 시간은 오전 8시·9시 중에서 골라주세요.",
+    ],
+    forEventYes: "네, 수료식 꽃이에요",
+    forEventHint: "수료식 꽃이면 무료 수료 토퍼(이름·수료 과정)를 넣어드려요.",
+    topperTitle: "🎓 수료 토퍼 (무료)",
+    topperDescription: "과정마다 토퍼가 달라요. 토퍼에 넣을 이름과 수료하신 과정을 적어주세요. 비워두시면 매장에서 연락드려요.",
   },
 };
 
@@ -348,21 +367,38 @@ export const ko = {
     otherPlaceholder: "원하는 색감을 적어주세요",
   },
 
-  orchidDelivery: {
-    title: "호접난 받는 방법",
+  /** 받는 방법 — 매장 픽업 / 배송 (예약 전체에 한 번) */
+  receive: {
+    title: "받는 방법",
     methods: {
       pickup: { label: "매장에서 픽업", description: "새순 전주혁신도시점" },
-      restaurant: { label: "상견례 식당으로 배송", description: "전주 상견례 식당 무료배송" },
+      delivery: { label: "배송", description: "원하시는 곳으로 보내드려요" },
     },
+    feeTitle: "배송지에 따라 배송비가 추가로 부과될 수 있습니다.",
+    /** 무료배송 기준 — 금액은 data/reservationOptions의 deliveryFreeRules */
+    freeRules: {
+      institute: (price: string) => `이서면·전주혁신도시·만성동 내 기관 행사용, 혁신대방: ${price} 이상 무료배송`,
+      nearby: (price: string) => `이서면·전주혁신도시·만성동: ${price} 이상 무료배송`,
+      jeonju: (price: string) => `전주 전 지역: ${price} 이상 무료배송`,
+    },
+    feeContact: "배송비가 부과될 경우 입력하신 예약자 연락처로 안내 문자를 드려요.",
+    addressGuide: "꽃다발·꽃바구니 배송지는 아래 '받는 분' 칸에 적어주세요.",
+  },
+
+  orchidDelivery: {
+    title: "호접난 받는 방법",
+    restaurantTitle: "호접난 배송 식당",
+    restaurantFree: "전주 상견례 식당 무료배송",
     restaurant: "식당",
     restaurantOther: "기타 (직접 입력)",
-    restaurantOtherPlaceholder: "식당 이름을 적어주세요",
+    restaurantOtherPlaceholder: "식당 이름 또는 배송지 주소",
     reservationName: "식당에 예약된 이름",
+    reservationNameOptional: "식당에 예약된 이름 (식당일 때만)",
     reservationNamePlaceholder: "식당 예약자 성함 (예: 김신랑)",
     timeNote: "선택하신 날짜·시간에 맞춰 식당에 도착하도록 보내드려요.",
     describePickup: "매장에서 픽업",
     describeRestaurant: (restaurant: string, reservationName: string) =>
-      `${restaurant}(으)로 배송 · 예약자 ${reservationName}`,
+      `${restaurant}(으)로 배송${reservationName ? ` · 예약자 ${reservationName}` : ""}`,
   },
 
   /** 호접난 배송 식당 표시 이름 (한국어 이름 → 이 언어 표기) */
@@ -384,23 +420,34 @@ export const ko = {
     mixed: "일부만 따로 입력 중이에요. 버튼을 누르면 모든 상품에 한 번에 적용돼요.",
     recipientTitle: "받는 분",
     sameRecipient: "앞 상품과 같음",
+    sameAsOrderer: "예약자와 같음",
+    ordererEmpty: "위에 예약자 성함·연락처를 먼저 적어주세요",
+    deliveryRequired: "배송은 받는 분 성함·연락처·배송지를 꼭 적어주세요.",
     nameAria: "받는 분 성함",
-    namePlaceholder: "받는 분 성함 (픽업자가 다르거나 배송일 때)",
+    namePlaceholder: "받는 분 성함 (픽업자가 다를 때)",
+    namePlaceholderDelivery: "받는 분 성함",
     phoneAria: "받는 분 연락처",
     phonePlaceholder: "받는 분 연락처 010-0000-0000",
+    addressAria: "배송지 주소",
+    addressPlaceholder: "배송지 주소 (건물명·동·호수까지)",
     messageTitle: "메시지",
     sameMessage: (categoryName: string) => `앞 ${categoryName} 메시지와 같음`,
     describeEmpty: "입력 안 함 (예약자가 픽업)",
   },
 
+  /** 특별한 날 무료 토퍼 — 제목·안내·예 버튼은 행사 종류마다 events[kind] */
   topper: {
-    title: "🎓 승진 토퍼 (무료)",
-    description: "토퍼에 넣을 이름과 직급을 적어주세요. 비워두시면 매장에서 연락드려요.",
+    /** 특별한 날 고르면 "○○ 꽃인가요?" — 예일 때만 토퍼 칸 */
+    forEventQuestion: (title: string) => `${title} 꽃인가요?`,
+    forEventNo: "아니요, 일반 예약이에요",
     nameAria: "토퍼에 넣을 이름",
     namePlaceholder: "이름 (예: 홍길동)",
     rankAria: "토퍼에 넣을 직급",
     rankPlaceholder: "직급 (예: 사무관)",
-    describe: (name: string, rank: string) => `토퍼 · ${[name, rank].filter(Boolean).join(" ") || "미입력 (매장에서 연락)"}`,
+    courseAria: "토퍼에 넣을 수료 과정",
+    coursePlaceholder: "수료하신 과정 이름",
+    /** detail: 직급 또는 수료 과정 */
+    describe: (name: string, detail: string) => `토퍼 · ${[name, detail].filter(Boolean).join(" ") || "미입력 (매장에서 연락)"}`,
   },
 
   message: {
@@ -527,7 +574,9 @@ export const ko = {
     cardPayerSame: "예약자와 동일",
     paypal: (amount: string, email: string) => `PayPal 결제 금액 ${amount} · 결제 요청 받을 이메일 ${email}`,
     orchidDelivery: (text: string) => `호접난 받는 방법 · ${text}`,
+    receiveMethod: (label: string) => `받는 방법 · ${label}`,
     recipient: (text: string) => `받는 분 · ${text}`,
+    address: (text: string) => `배송지 · ${text}`,
     message: (text: string) => `메시지 · ${text}`,
   },
 
@@ -560,7 +609,7 @@ export const ko = {
     items: [
       {
         title: "수집 항목",
-        body: "예약자 성함·연락처(필수), 받는 분 성함·연락처, 메시지 문구, 승진 토퍼 이름·직급, 호접난 배송 식당·식당 예약 이름, 현금영수증 번호, 카드 결제하실 분 연락처, PayPal 결제 요청 이메일, 서류에 적을 상호·사업자등록번호, 입금 후 예약 취소 시 환불받을 은행명·계좌번호·예금주 (해당하는 경우)",
+        body: "예약자 성함·연락처(필수), 받는 분 성함·연락처·배송지 주소, 메시지 문구, 승진·수료 토퍼 이름·직급·수료 과정, 호접난 배송 식당·식당 예약 이름, 현금영수증 번호, 카드 결제하실 분 연락처, PayPal 결제 요청 이메일, 서류에 적을 상호·사업자등록번호, 입금 후 예약 취소 시 환불받을 은행명·계좌번호·예금주 (해당하는 경우)",
       },
       {
         title: "이용 목적",
@@ -598,8 +647,10 @@ export const ko = {
     schedule: "날짜와 시간을 선택해 주세요.",
     scheduleClosed: "선택한 시간은 지금 예약할 수 없어요. 날짜·시간을 다시 골라주세요.",
     deliveries: "받는 분·메시지 정보를 다시 확인해 주세요.",
+    recipientName: "배송받으실 분 성함을 적어주세요.",
     recipientPhone: "받는 분 연락처를 다시 확인해 주세요.",
-    orchidRestaurant: "호접난을 배송할 식당 이름을 적어주세요.",
+    recipientAddress: "배송지 주소를 적어주세요.",
+    orchidRestaurant: "호접난을 배송할 식당 이름(또는 주소)을 적어주세요.",
     orchidReservationName: "식당에 예약된 이름을 적어주세요.",
     cashReceiptPhone: "현금영수증 휴대폰 번호를 확인해 주세요.",
     cashReceiptBusiness: "현금영수증 사업자등록번호를 확인해 주세요.",

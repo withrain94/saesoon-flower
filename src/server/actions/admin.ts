@@ -80,6 +80,25 @@ export async function saveAdminMemo(
   return { error: null, savedAt: Date.now(), notice };
 }
 
+/** 예약 전 안내 문자 보냄 표시 켜기·끄기 (상세 화면 버튼) */
+export async function setReminderSent(id: string, sent: boolean): Promise<AdminFormState> {
+  await requireAdmin();
+  if (!isReservationId(id)) return { error: "잘못된 요청이에요." };
+
+  try {
+    await updateReservation(id, { reminderSentAt: sent ? new Date().toISOString() : null });
+  } catch (error) {
+    // 칸이 없으면(추가 SQL 실행 전) PostgREST가 PGRST204 / Postgres가 42703
+    const code = typeof error === "object" && error !== null ? (error as { code?: unknown }).code : undefined;
+    if (code === "PGRST204" || code === "42703") {
+      return { error: "DB에 '문자 보냄' 칸이 아직 없어요. Supabase SQL Editor에서 supabase/schema.sql 맨 아래 SQL을 실행해 주세요." };
+    }
+    return { error: "저장하지 못했어요. 잠시 후 다시 시도해 주세요." };
+  }
+  refresh();
+  return { error: null, savedAt: Date.now() };
+}
+
 /** 노션에 다시 올리기 (실패했을 때 상세 화면 버튼) */
 export async function resyncReservationNotion(id: string): Promise<AdminFormState> {
   await requireAdmin();

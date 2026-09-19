@@ -1,3 +1,4 @@
+import { getEventOn } from "@/data/events";
 import { findBlackboardPreset } from "@/data/reservationOptions";
 import { localeOptions } from "@/i18n";
 import { ko } from "@/i18n/ko";
@@ -71,10 +72,35 @@ export function describeDeliveryMessage(delivery: ReservationDelivery) {
   }
 }
 
-/** 받는 분 — 비었으면 예약자 픽업 */
-export function describeDeliveryRecipient(delivery: ReservationDelivery) {
+/** 상품 1개 이름 — "꽃다발 6만원 (1/2)" (같은 상품이 1개면 번호 없이) */
+export function describeDeliveryName(request: ReservationRequest, delivery: ReservationDelivery) {
+  const name = formatAdminItemName(delivery.category, delivery.price);
+  const quantity = request.items.find((item) => item.productId === delivery.productId)?.quantity ?? 1;
+  return quantity > 1 ? ko.format.unitName(name, delivery.unitNo, quantity) : name;
+}
+
+/** 특별한 날 예약이면 행사용 꽃인지 — "예 (무료 토퍼)" / "아니요 (일반 예약)". 특별한 날이 아니면 null */
+export function describeForEvent(request: ReservationRequest) {
+  if (!getEventOn(request.date)) return null;
+  return request.forEvent ? "예 (무료 토퍼)" : "아니요 (일반 예약)";
+}
+
+/** 받는 방법 — "매장에서 픽업" / "배송" */
+export function describeReceiveMethod(request: ReservationRequest) {
+  return ko.receive.methods[request.receiveMethod].label;
+}
+
+/** 상품 1개의 배송지 — 꽃다발·꽃바구니는 적은 주소, 호접난은 배송 식당. 픽업이면 null */
+export function describeDeliveryAddress(request: ReservationRequest, delivery: ReservationDelivery) {
+  if (request.receiveMethod !== "delivery") return null;
+  if (delivery.category === "orchid") return describeOrchidDelivery(request);
+  return delivery.recipientAddress || null;
+}
+
+/** 받는 분 — 비었으면 픽업은 "예약자가 픽업", 배송(호접난 식당 등)은 "입력 안 함" */
+export function describeDeliveryRecipient(request: ReservationRequest, delivery: ReservationDelivery) {
   const text = [delivery.recipientName, delivery.recipientPhone].filter(Boolean).join(" · ");
-  return text || ko.recipient.describeEmpty;
+  return text || (request.receiveMethod === "delivery" ? "입력 안 함" : ko.recipient.describeEmpty);
 }
 
 /**

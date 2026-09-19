@@ -206,6 +206,25 @@ export const vi: Messages = {
         "Tặng kèm miễn phí thẻ cắm (topper) chúc mừng thăng chức.",
         "Vui lòng chọn giờ nhận hoa lúc 8:00 hoặc 9:00 sáng.",
       ],
+      forEventYes: "Đúng, cho lễ thăng chức",
+      forEventHint: "Hoa cho lễ thăng chức được tặng kèm thẻ cắm thăng chức miễn phí (tên · chức vụ).",
+      topperTitle: "🎓 Thẻ cắm thăng chức (miễn phí)",
+      topperDescription: "Nhập tên và chức vụ để in lên thẻ cắm. Nếu để trống, tiệm sẽ liên hệ với quý khách.",
+    },
+    instituteLongCourse: {
+      calendarLabel: "Lễ BG",
+      shortTitle: () => "Lễ bế giảng khóa dài hạn",
+      title: () => "Lễ bế giảng khóa dài hạn – Viện Phát triển Nhân lực Chính quyền Địa phương",
+      highlights: [
+        "Tặng kèm miễn phí thẻ cắm (topper) chúc mừng hoàn thành khóa học.",
+        "Mỗi khóa có thẻ cắm khác nhau, vui lòng ghi tên khóa học đã hoàn thành trong đơn.",
+        "Vui lòng chọn giờ nhận hoa lúc 8:00 hoặc 9:00 sáng.",
+      ],
+      forEventYes: "Đúng, cho lễ bế giảng",
+      forEventHint: "Hoa cho lễ bế giảng được tặng kèm thẻ cắm miễn phí (tên · khóa học).",
+      topperTitle: "🎓 Thẻ cắm bế giảng (miễn phí)",
+      topperDescription:
+        "Mỗi khóa có thẻ cắm khác nhau. Nhập tên và khóa học đã hoàn thành để in lên thẻ cắm. Nếu để trống, tiệm sẽ liên hệ với quý khách.",
     },
   },
 
@@ -325,20 +344,36 @@ export const vi: Messages = {
     otherPlaceholder: "Mô tả tông màu quý khách muốn",
   },
 
-  orchidDelivery: {
-    title: "Cách nhận lan hồ điệp",
+  receive: {
+    title: "Cách nhận hoa",
     methods: {
       pickup: { label: "Nhận tại tiệm", description: "Saesoon Jeonju Innovation City" },
-      restaurant: { label: "Giao đến nhà hàng", description: "Miễn phí trong Jeonju" },
+      delivery: { label: "Giao hàng", description: "Giao đến địa chỉ quý khách muốn" },
     },
+    feeTitle: "Tùy theo địa chỉ giao, có thể phát sinh thêm phí giao hàng.",
+    freeRules: {
+      institute: (price) =>
+        `Sự kiện của cơ quan tại Iseo-myeon, Jeonju Innovation City, Manseong-dong và Hyeoksin Daebang: miễn phí giao hàng cho đơn từ ${price}`,
+      nearby: (price) => `Iseo-myeon, Jeonju Innovation City, Manseong-dong: miễn phí giao hàng cho đơn từ ${price}`,
+      jeonju: (price) => `Toàn bộ Jeonju: miễn phí giao hàng cho đơn từ ${price}`,
+    },
+    feeContact: "Nếu phát sinh phí giao hàng, chúng tôi sẽ nhắn tin đến số điện thoại người đặt mà quý khách đã nhập.",
+    addressGuide: "Vui lòng nhập địa chỉ giao bó hoa · giỏ hoa ở mục 'Người nhận' bên dưới.",
+  },
+
+  orchidDelivery: {
+    title: "Cách nhận lan hồ điệp",
+    restaurantTitle: "Nhà hàng giao lan",
+    restaurantFree: "Miễn phí giao đến nhà hàng trong Jeonju",
     restaurant: "Nhà hàng",
     restaurantOther: "Khác (tự nhập)",
-    restaurantOtherPlaceholder: "Tên nhà hàng",
+    restaurantOtherPlaceholder: "Tên nhà hàng hoặc địa chỉ giao",
     reservationName: "Tên đặt bàn tại nhà hàng",
+    reservationNameOptional: "Tên đặt bàn tại nhà hàng (chỉ khi là nhà hàng)",
     reservationNamePlaceholder: "Tên dùng khi đặt bàn",
     timeNote: "Chúng tôi sẽ giao để lan đến nhà hàng đúng ngày giờ quý khách đã chọn.",
     describePickup: "Nhận tại tiệm",
-    describeRestaurant: (restaurant, reservationName) => `Giao đến ${restaurant} · tên đặt bàn ${reservationName}`,
+    describeRestaurant: (restaurant, reservationName) => `Giao đến ${restaurant}${reservationName ? ` · tên đặt bàn ${reservationName}` : ""}`,
   },
 
   restaurants: {
@@ -359,22 +394,30 @@ export const vi: Messages = {
     mixed: "Một số sản phẩm đang được nhập riêng. Nhấn nút để áp dụng cho tất cả.",
     recipientTitle: "Người nhận",
     sameRecipient: "Giống sản phẩm trước",
+    sameAsOrderer: "Giống người đặt",
+    ordererEmpty: "Vui lòng nhập tên và số điện thoại người đặt ở trên trước",
+    deliveryRequired: "Khi giao hàng, vui lòng nhập đủ tên, số điện thoại và địa chỉ người nhận.",
     nameAria: "Tên người nhận",
-    namePlaceholder: "Tên người nhận (nếu người khác nhận hoặc cần giao)",
+    namePlaceholder: "Tên người nhận (nếu người khác nhận)",
+    namePlaceholderDelivery: "Tên người nhận",
     phoneAria: "Số điện thoại người nhận",
     phonePlaceholder: "SĐT người nhận 010-0000-0000",
+    addressAria: "Địa chỉ giao hàng",
+    addressPlaceholder: "Địa chỉ giao hàng (ghi rõ tòa nhà, số phòng)",
     messageTitle: "Lời nhắn",
     sameMessage: (categoryName) => `Giống lời nhắn ${categoryName.toLowerCase()} trước`,
     describeEmpty: "Chưa nhập (người đặt tự nhận)",
   },
 
   topper: {
-    title: "🎓 Thẻ cắm thăng chức (miễn phí)",
-    description: "Nhập tên và chức vụ để in lên thẻ cắm. Nếu để trống, tiệm sẽ liên hệ với quý khách.",
+    forEventQuestion: (title) => `Hoa này dành cho ${title} phải không?`,
+    forEventNo: "Không, đặt hoa thông thường",
     nameAria: "Tên trên thẻ cắm",
     namePlaceholder: "Tên (VD: 홍길동)",
     rankAria: "Chức vụ trên thẻ cắm",
     rankPlaceholder: "Chức vụ (VD: 사무관)",
+    courseAria: "Khóa học trên thẻ cắm",
+    coursePlaceholder: "Tên khóa học đã hoàn thành",
     describe: (name, rank) =>
       `Thẻ cắm · ${[name, rank].filter(Boolean).join(" ") || "Chưa nhập (tiệm sẽ liên hệ)"}`,
   },
@@ -499,7 +542,9 @@ export const vi: Messages = {
     cardPayerSame: "Giống người đặt",
     paypal: (amount, email) => `Tổng PayPal ${amount} · gửi yêu cầu đến ${email}`,
     orchidDelivery: (text) => `Lan hồ điệp · ${text}`,
+    receiveMethod: (label) => `Cách nhận · ${label}`,
     recipient: (text) => `Người nhận · ${text}`,
+    address: (text) => `Địa chỉ giao · ${text}`,
     message: (text) => `Lời nhắn · ${text}`,
   },
 
@@ -531,7 +576,7 @@ export const vi: Messages = {
     items: [
       {
         title: "Thông tin thu thập",
-        body: "Tên và số điện thoại người đặt (bắt buộc); tên và số điện thoại người nhận, nội dung lời nhắn, tên và chức vụ trên thẻ cắm thăng chức, nhà hàng giao lan và tên đặt bàn, số hóa đơn tiền mặt, liên hệ người thanh toán thẻ, email nhận yêu cầu PayPal, tên công ty và mã số kinh doanh, tên ngân hàng, số tài khoản và chủ tài khoản nhận hoàn tiền khi hủy sau khi đã thanh toán (nếu có)",
+        body: "Tên và số điện thoại người đặt (bắt buộc); tên, số điện thoại và địa chỉ giao hàng của người nhận, nội dung lời nhắn, tên, chức vụ và khóa học trên thẻ cắm thăng chức · bế giảng, nhà hàng giao lan và tên đặt bàn, số hóa đơn tiền mặt, liên hệ người thanh toán thẻ, email nhận yêu cầu PayPal, tên công ty và mã số kinh doanh, tên ngân hàng, số tài khoản và chủ tài khoản nhận hoàn tiền khi hủy sau khi đã thanh toán (nếu có)",
       },
       {
         title: "Mục đích sử dụng",
@@ -568,8 +613,10 @@ export const vi: Messages = {
     schedule: "Vui lòng chọn ngày và giờ.",
     scheduleClosed: "Không thể đặt giờ đã chọn nữa. Vui lòng chọn lại ngày giờ.",
     deliveries: "Vui lòng kiểm tra thông tin người nhận · lời nhắn.",
+    recipientName: "Vui lòng nhập tên người nhận hàng.",
     recipientPhone: "Vui lòng kiểm tra số điện thoại người nhận.",
-    orchidRestaurant: "Vui lòng nhập tên nhà hàng để giao lan.",
+    recipientAddress: "Vui lòng nhập địa chỉ giao hàng.",
+    orchidRestaurant: "Vui lòng nhập tên nhà hàng (hoặc địa chỉ) để giao lan.",
     orchidReservationName: "Vui lòng nhập tên đặt bàn tại nhà hàng.",
     cashReceiptPhone: "Vui lòng kiểm tra số di động cho hóa đơn tiền mặt.",
     cashReceiptBusiness: "Vui lòng kiểm tra mã số kinh doanh cho hóa đơn tiền mặt.",

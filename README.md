@@ -15,12 +15,12 @@ npm run lint
 
 ```
 src/
-├─ app/                      페이지 진입점 (page.tsx, layout.tsx, globals.css) · privacy/ 개인정보 처리방침 · check/ 손님 예약 조회·취소 · documents/pdf/ 서류 PDF 다운로드(POST)
+├─ app/                      페이지 진입점 (page.tsx, layout.tsx, globals.css) · privacy/ 개인정보 처리방침 · check/ 손님 예약 조회·취소 · documents/pdf/ 서류 PDF 다운로드(POST) · cron/tomorrow-reminders/ 매일 저녁 내일 예약 목록(Vercel Cron, vercel.json)
 │  └─ admin/                 관리자 페이지 — login / 목록(page.tsx, ?status= 필터) / [id] 상세
 ├─ proxy.ts                  /admin 요청마다 로그인 세션 갱신 (Next 16: middleware → proxy)
 ├─ components/
 │  ├─ lookup/                손님 예약 조회·취소 — ReservationLookup(예약자 이름+연락처), LookupResultList(여러 건이면 목록), LookupReservationDetails, LookupCancelPanel(입금 전 취소 / 입금 후 환불 계좌 받고 취소 요청)
-│  ├─ admin/                 관리자 화면 — CancelRequestCard(손님 취소 요청·환불 계좌), AdminHeader, LoginForm, StatusFilterTabs, StatusBadge, ReservationListItem, ReservationDetail, StatusChanger, AdminMemoForm, AdminDocuments, NotionSyncButton
+│  ├─ admin/                 관리자 화면 — CancelRequestCard(손님 취소 요청·환불 계좌), AdminHeader, LoginForm, StatusFilterTabs, StatusBadge, ReservationListItem, ReservationDetail, StatusChanger, AdminMemoForm, AdminDocuments, NotionSyncButton, ReminderToggle(안내 문자 보냄 표시)
 │  ├─ layout/                StoreHeader(예약 조회 버튼 — /check에선 숨김 + 소개 사이트 + LanguageSwitcher 🌐), Hero, SiteFooter — 매장 공통 화면
 │  ├─ reservation/           예약 기능
 │  │  ├─ ReservationPage.tsx   섹션 조립만 담당
@@ -31,13 +31,13 @@ src/
 │  │  ├─ SpecialEventBanner / EventDayNotice   특별한 날(인재개발원 승진식 등) 첫 화면 안내 + 날짜 섹션 안내
 │  │  ├─ DateTimeSection / Calendar / TimeSlotGroup
 │  │  ├─ RecipientMessageField / UnitDetailCard / MessageEditor   상품 1개마다 받는 분·메시지 ("앞과 같음")
-│  │  └─ ReserveSection / OrdererForm / PaymentMethodField / BankAccountCard / DocumentRequestField / DocumentsPanel / BusinessDocumentView / ColorField / OrchidDeliveryField / PrivacyConsentField / OrderSummary / ReservationComplete / ShareReservationButtons(카카오톡으로 나에게 보내기·복사) / SubmitBar
+│  │  └─ ReserveSection / OrdererForm / PaymentMethodField / BankAccountCard / DocumentRequestField / DocumentsPanel / BusinessDocumentView / ColorField / ReceiveMethodField(픽업/배송 + 배송비 안내) / OrchidDeliveryField(배송이면 호접난 식당) / PrivacyConsentField / OrderSummary / ReservationComplete / ShareReservationButtons(카카오톡으로 나에게 보내기·복사) / SubmitBar
 │  └─ ui/                    Field, Checkbox, QuantityStepper, SectionHeading, ErrorText, icons … 재사용 부품
-├─ server/                   서버 전용 (브라우저로 안 감) — env(환경변수 읽기 전부), supabase(DB·로그인 클라이언트), auth(requireAdmin), reservations(저장·목록·수정), notify(새 예약 텔레그램 알림), notion(날짜별 예약 표 올리기), documentDownload(서류 PDF 받기 — 연락처 또는 관리자 확인) · documentPdf/(서류 PDF 그리기 + 한글 글꼴)
-│  └─ actions/               "use server" 함수 — reservation(고객 신청 검사·저장), lookup(손님 조회·취소 — 매번 예약자 이름+연락처 재확인), admin(로그인·로그아웃·상태·메모·노션 다시 올리기)
+├─ server/                   서버 전용 (브라우저로 안 감) — env(환경변수 읽기 전부), supabase(DB·로그인 클라이언트), auth(requireAdmin), reservations(저장·목록·수정), notify(새 예약 텔레그램 알림), notion(날짜별 예약 표 올리기), documentDownload(서류 PDF 받기 — 연락처 또는 관리자 확인), reminders(내일 예약 목록 텔레그램) · documentPdf/(서류 PDF 그리기 + 한글 글꼴)
+│  └─ actions/               "use server" 함수 — reservation(고객 신청 검사·저장), lookup(손님 조회·취소 — 매번 예약자 이름+연락처 재확인), admin(로그인·로그아웃·상태·메모·노션 다시 올리기·안내 문자 보냄 표시)
 ├─ hooks/                    useNow(한국 시각), useLocale(언어·useT), useLookupT(조회 화면 문구 — i18n/lookup/), useActiveSection, useElementWidth
 ├─ lib/                      순수 함수 (date, time, events, format, selection, units, payment, reservationRequest, reservationValidation, documents)
-│                            + 매장용 한국어 표시: adminFormat(관리자 화면 공용), reservationNotice(텔레그램 문구), notionReservation(노션 표 칸) · supabaseUrl(Supabase 공개 설정) · reservationShare(완료 화면 카카오톡 공유 글, 카카오 키)
+│                            + 매장용 한국어 표시: adminFormat(관리자 화면 공용), reservationNotice(텔레그램 문구), reminderNotice(내일 예약 목록 문구), notionReservation(노션 표 칸) · supabaseUrl(Supabase 공개 설정) · reservationShare(완료 화면 카카오톡 공유 글, 카카오 키)
 ├─ i18n/                     화면 문구 — ko(기준)·en·ja·zh·vi. 모양이 ko와 다르면 타입 오류 / index.ts: 언어 목록·messages
 ├─ data/                     정적 데이터 (products, shop, reservationOptions, events) — 금액·사진·날짜·선택지 코드만, 문구는 i18n
 └─ types/                    공용 타입 (ReservationRequest = 저장할 예약 한 건)
@@ -71,5 +71,7 @@ public/flowers/              상품 사진 ({종류}-{금액}-{번호}.jpg — b
    노션 날짜별 예약 표는 관리자 상태·메모 저장 뒤 `server/notion.ts`의 `syncReservationToNotion` 하나로만 맞춘다 (입금·결제 확인 이후 상태면 받는 날짜 페이지 표에 추가, 접수번호 칸으로 찾아 갱신, 취소면 [취소] 표시). 표 칸·페이지 이름은 `lib/notionReservation.ts`.
 8. 견적서·거래명세표 내용은 `lib/documents.ts`의 `buildBusinessDocument` 하나로만 만든다 (화면 미리보기·PDF 다운로드 공용). 공급자 정보는 `data/shop.ts`의 `businessInfo`.
    서류 PDF는 `components/ui/DocumentDownloadButton` → `app/documents/pdf/route.ts`(POST) → `server/documentDownload.ts`의 `getDocumentPdf` 한 길로만 받는다 (손님은 예약 id + 예약자 연락처, 관리자는 로그인으로 확인. 요청한 서류만). 이메일 발송은 없음(사용자 결정). PDF 모양은 `server/documentPdf/BusinessDocumentPdf.tsx` — 화면 `BusinessDocumentView`를 바꾸면 같이 바꾼다. 글꼴·직인 파일은 `next.config.ts`의 `outputFileTracingIncludes`로 배포에 포함.
-9. 특별한 날(인재개발원 승진식 등)은 `data/events.ts`의 `specialEvents`에 한 줄 추가한다. (예: `institutePromotion(10, "2026-11-20")`)
-   달력 표시·그날 고를 수 있는 시간(`slots`)·첫 화면 배너·예약 마감 안내가 자동으로 따라온다. 예약 가능 여부는 `lib/time.ts`의 `isSlotBookable` 하나로만 판단한다.
+   예약 전 안내 문자는 자동 발송하지 않는다. 매일 저녁(`vercel.json` — UTC 09시 = 한국 18시대, Hobby는 그 시간 안 아무 때나) `app/cron/tomorrow-reminders`(`CRON_SECRET` 확인) → `server/reminders.ts`의 `sendTomorrowReminderList` 가 한국 시각 기준 내일 예약(취소 제외)을 텔레그램으로 보내고, 매장은 문자를 보낸 뒤 관리자 상세 `ReminderToggle`로 표시한다(`reminder_sent_at` 칸, schema.sql 2026-09-16 추가 SQL). 문구는 `lib/reminderNotice.ts`.
+9. 특별한 날(인재개발원 승진식·장기과정 수료식)은 `data/events.ts`의 `specialEvents`에 한 줄 추가한다. (예: `institutePromotion(12, "2027-01-15")`, `instituteLongCourse("2027-02-26")`)
+   달력 표시·그날 고를 수 있는 시간(`slots`)·첫 화면 배너(마감 지나면 자동으로 다음 일정)·예약 마감 안내가 자동으로 따라온다.
+   그날 신청서에 "○○ 꽃인가요? 예/아니요"(`EventOrderField`, 저장 `forEvent`)가 나오고, 예일 때만 토퍼 칸 — 이름 + 행사의 `topperDetail`(직급 `rank` / 수료 과정 `course`). 새 행사 종류는 `EventKind` → 언어 파일 `events`(토퍼 제목·예 버튼 포함) → `notionReservation`의 `eventPagePrefix` 순서로 (타입 오류가 알려줌). 예약 가능 여부는 `lib/time.ts`의 `isSlotBookable` 하나로만 판단한다.

@@ -9,6 +9,8 @@ export default function ReservationListItem({ reservation }: { reservation: Stor
   const { request } = reservation;
   // 입금(결제)했다고 답한 취소 요청이 아직 처리 전일 때만
   const cancelRequested = reservation.cancelRequest?.paid === true && reservation.status !== "canceled";
+  // 예약 전 안내 문자 — 진행 중인 예약에만 표시
+  const reminderPending = reservation.status === "received" || reservation.status === "confirmed" || reservation.status === "made";
   const tags = [
     request.documents.length > 0 && "서류 요청",
     request.orchidDelivery?.method === "restaurant" && "식당 배송",
@@ -40,6 +42,15 @@ export default function ReservationListItem({ reservation }: { reservation: Stor
         <span className="font-semibold text-strong">{ko.format.price(request.totalPrice)}</span>
         <span>{ko.payment.methods[request.paymentMethod].label}</span>
         <span>접수 {formatAdminDateTime(reservation.createdAt)}</span>
+        {reminderPending && (
+          <span
+            className={`rounded px-1.5 py-0.5 font-semibold ${
+              reservation.reminderSentAt ? "bg-soft text-body" : "bg-brand-tint text-brand-dark"
+            }`}
+          >
+            {reservation.reminderSentAt ? "✅ 문자 보냄" : "📱 문자 전"}
+          </span>
+        )}
         {tags.map((tag) => (
           <span key={String(tag)} className="rounded bg-soft px-1.5 py-0.5 text-body">
             {tag}

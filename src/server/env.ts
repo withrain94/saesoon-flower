@@ -53,6 +53,15 @@ export function getNotionEnv() {
   return { token, parentPageId };
 }
 
+/**
+ * 전날 "내일 예약 목록" 자동 실행(Vercel Cron) 확인용 비밀 값 — Vercel이 Authorization: Bearer <값>으로 보내줌.
+ * 없으면 자동 실행 주소를 아무도 못 부르게 막음
+ */
+export function getCronSecret() {
+  const secret = process.env.CRON_SECRET?.trim();
+  return secret && secret.length >= 16 ? secret : null;
+}
+
 /** 관리자 페이지에 들어올 수 있는 이메일 (쉼표로 여러 개) */
 export function getAdminEmails() {
   return (process.env.ADMIN_EMAILS ?? "")

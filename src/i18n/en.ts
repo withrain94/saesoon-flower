@@ -214,6 +214,25 @@ export const en: Messages = {
         "A free promotion topper is included.",
         "Please choose a pickup time of 8 AM or 9 AM.",
       ],
+      forEventYes: "Yes, for the ceremony",
+      forEventHint: "For the ceremony, we add a free promotion topper (name and title).",
+      topperTitle: "🎓 Promotion topper (free)",
+      topperDescription: "Enter the name and job title for the topper. If left blank, the shop will contact you.",
+    },
+    instituteLongCourse: {
+      calendarLabel: "Grad.",
+      shortTitle: () => "Long-term course graduation",
+      title: () => "Local Government Officials Development Institute — Long-term Course Graduation Ceremony",
+      highlights: [
+        "A free graduation topper is included.",
+        "Toppers differ by course, so please enter the course you completed in the form.",
+        "Please choose a pickup time of 8 AM or 9 AM.",
+      ],
+      forEventYes: "Yes, for the graduation",
+      forEventHint: "For the graduation, we add a free graduation topper (name and course).",
+      topperTitle: "🎓 Graduation topper (free)",
+      topperDescription:
+        "Toppers differ by course. Enter the name and the course completed for the topper. If left blank, the shop will contact you.",
     },
   },
 
@@ -333,21 +352,37 @@ export const en: Messages = {
     otherPlaceholder: "Describe the colors you'd like",
   },
 
-  orchidDelivery: {
-    title: "How to receive the orchids",
+  receive: {
+    title: "How to receive",
     methods: {
       pickup: { label: "Pick up at the shop", description: "Saesoon Jeonju Innovation City" },
-      restaurant: { label: "Deliver to the restaurant", description: "Free delivery in Jeonju" },
+      delivery: { label: "Delivery", description: "We deliver to the address you choose" },
     },
+    feeTitle: "A delivery fee may be added depending on the delivery address.",
+    freeRules: {
+      institute: (price) =>
+        `Institutional events in Iseo-myeon, Jeonju Innovation City and Manseong-dong, and Hyeoksin Daebang: free delivery on orders of ${price} or more`,
+      nearby: (price) => `Iseo-myeon, Jeonju Innovation City, Manseong-dong: free delivery on orders of ${price} or more`,
+      jeonju: (price) => `All areas of Jeonju: free delivery on orders of ${price} or more`,
+    },
+    feeContact: "If a delivery fee applies, we'll text you at the phone number you entered.",
+    addressGuide: "Enter the delivery address for bouquets and baskets in the 'Recipient' section below.",
+  },
+
+  orchidDelivery: {
+    title: "How to receive the orchids",
+    restaurantTitle: "Orchid delivery restaurant",
+    restaurantFree: "Free delivery to restaurants in Jeonju",
     restaurant: "Restaurant",
     restaurantOther: "Other (type the name)",
-    restaurantOtherPlaceholder: "Restaurant name",
+    restaurantOtherPlaceholder: "Restaurant name or delivery address",
     reservationName: "Name on the restaurant reservation",
+    reservationNameOptional: "Name on the restaurant reservation (restaurants only)",
     reservationNamePlaceholder: "Name the table is booked under",
     timeNote: "We'll deliver so the orchids arrive at the restaurant at the date and time you chose.",
     describePickup: "Pick up at the shop",
     describeRestaurant: (restaurant, reservationName) =>
-      `Deliver to ${restaurant} · booked under ${reservationName}`,
+      `Deliver to ${restaurant}${reservationName ? ` · booked under ${reservationName}` : ""}`,
   },
 
   restaurants: {
@@ -368,22 +403,30 @@ export const en: Messages = {
     mixed: "Some items are set separately. Tap a button to apply to all items.",
     recipientTitle: "Recipient",
     sameRecipient: "Same as previous item",
+    sameAsOrderer: "Same as the person booking",
+    ordererEmpty: "Please enter your name and phone number above first",
+    deliveryRequired: "For delivery, please enter the recipient's name, phone number and address.",
     nameAria: "Recipient name",
-    namePlaceholder: "Recipient name (if someone else picks up or for delivery)",
+    namePlaceholder: "Recipient name (if someone else picks up)",
+    namePlaceholderDelivery: "Recipient name",
     phoneAria: "Recipient phone number",
     phonePlaceholder: "Recipient phone 010-0000-0000",
+    addressAria: "Delivery address",
+    addressPlaceholder: "Delivery address (including building and unit number)",
     messageTitle: "Message",
     sameMessage: (categoryName) => `Same message as previous ${categoryName.toLowerCase()}`,
     describeEmpty: "Not entered (you'll pick it up)",
   },
 
   topper: {
-    title: "🎓 Promotion topper (free)",
-    description: "Enter the name and job title for the topper. If left blank, the shop will contact you.",
+    forEventQuestion: (title) => `Are these flowers for the ${title}?`,
+    forEventNo: "No, a regular order",
     nameAria: "Name for the topper",
     namePlaceholder: "Name (e.g. Hong Gil-dong)",
     rankAria: "Job title for the topper",
     rankPlaceholder: "Title (e.g. 사무관)",
+    courseAria: "Course for the topper",
+    coursePlaceholder: "Course name",
     describe: (name, rank) =>
       `Topper · ${[name, rank].filter(Boolean).join(" ") || "Not entered (the shop will contact you)"}`,
   },
@@ -508,7 +551,9 @@ export const en: Messages = {
     cardPayerSame: "Same as the person reserving",
     paypal: (amount, email) => `PayPal total ${amount} · request sent to ${email}`,
     orchidDelivery: (text) => `Orchids · ${text}`,
+    receiveMethod: (label) => `How to receive · ${label}`,
     recipient: (text) => `Recipient · ${text}`,
+    address: (text) => `Delivery address · ${text}`,
     message: (text) => `Message · ${text}`,
   },
 
@@ -540,7 +585,7 @@ export const en: Messages = {
     items: [
       {
         title: "Information collected",
-        body: "Your name and phone number (required); recipient names and phone numbers, message text, promotion topper names and titles, orchid delivery restaurant and booking name, cash receipt number, card payer's contact, PayPal request email, company name and business number for documents, and your refund bank name, account number and holder if you cancel after paying (where applicable)",
+        body: "Your name and phone number (required); recipient names, phone numbers and delivery addresses, message text, promotion/graduation topper names, titles and courses, orchid delivery restaurant and booking name, cash receipt number, card payer's contact, PayPal request email, company name and business number for documents, and your refund bank name, account number and holder if you cancel after paying (where applicable)",
       },
       {
         title: "Purpose",
@@ -577,8 +622,10 @@ export const en: Messages = {
     schedule: "Please choose a date and time.",
     scheduleClosed: "The selected time can no longer be booked. Please choose another date or time.",
     deliveries: "Please check the recipient and message details.",
+    recipientName: "Please enter the recipient's name for delivery.",
     recipientPhone: "Please check the recipient's phone number.",
-    orchidRestaurant: "Please enter the restaurant name for the orchid delivery.",
+    recipientAddress: "Please enter the delivery address.",
+    orchidRestaurant: "Please enter the restaurant name (or address) for the orchid delivery.",
     orchidReservationName: "Please enter the name on the restaurant reservation.",
     cashReceiptPhone: "Please check the mobile number for the cash receipt.",
     cashReceiptBusiness: "Please check the business registration number for the cash receipt.",

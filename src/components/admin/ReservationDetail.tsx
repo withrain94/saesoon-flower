@@ -2,9 +2,13 @@ import type { ReactNode } from "react";
 import { ko } from "@/i18n/ko";
 import {
   describeColor,
+  describeDeliveryAddress,
   describeDeliveryMessage,
+  describeDeliveryName,
   describeDeliveryRecipient,
+  describeForEvent,
   describeOrchidDelivery,
+  describeReceiveMethod,
   formatAdminDate,
   formatAdminDateTime,
   formatAdminItemName,
@@ -12,12 +16,14 @@ import {
   localeNames,
 } from "@/lib/adminFormat";
 import { formatReceiptNumber } from "@/lib/format";
+import { joinTopper } from "@/lib/units";
 import { notionPageTitle } from "@/lib/notionReservation";
 import type { StoredReservation } from "@/types/reservation";
 import AdminDocuments from "./AdminDocuments";
 import CancelRequestCard from "./CancelRequestCard";
 import AdminMemoForm from "./AdminMemoForm";
 import NotionSyncButton from "./NotionSyncButton";
+import ReminderToggle from "./ReminderToggle";
 import StatusBadge from "./StatusBadge";
 import StatusChanger from "./StatusChanger";
 
@@ -27,7 +33,7 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
   const payment = ko.payment;
   const color = describeColor(request);
   const orchidDelivery = describeOrchidDelivery(request);
-  const quantities = Object.fromEntries(request.items.map((item) => [item.productId, item.quantity]));
+  const forEvent = describeForEvent(request);
 
   return (
     <div className="space-y-3">
@@ -47,6 +53,11 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
         <div className="mt-3 border-t border-line pt-3">
           <StatusChanger id={id} status={status} />
         </div>
+        {status !== "canceled" && (
+          <div className="mt-3 border-t border-line pt-3">
+            <ReminderToggle id={id} sentAt={reservation.reminderSentAt} />
+          </div>
+        )}
       </section>
 
       <CancelRequestCard reservation={reservation} />
@@ -82,29 +93,31 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
           <span>합계 {request.totalQuantity}개</span>
           <span>{ko.format.price(request.totalPrice)}</span>
         </p>
-        {(color || orchidDelivery) && (
-          <Rows className="mt-3">
-            {color && <Row label={ko.color.label}>{color}</Row>}
-            {orchidDelivery && <Row label={ko.orchidDelivery.title}>{orchidDelivery}</Row>}
-          </Rows>
-        )}
+        <Rows className="mt-3">
+          {forEvent && <Row label="행사 꽃">{forEvent}</Row>}
+          <Row label={ko.receive.title}>
+            <span className={request.receiveMethod === "delivery" ? "font-bold text-brand-dark" : ""}>
+              {describeReceiveMethod(request)}
+            </span>
+          </Row>
+          {color && <Row label={ko.color.label}>{color}</Row>}
+          {orchidDelivery && <Row label={ko.orchidDelivery.title}>{orchidDelivery}</Row>}
+        </Rows>
       </Card>
 
       <Card title="받는 분·메시지">
         <ul className="space-y-2">
           {request.deliveries.map((delivery) => {
-            const name = formatAdminItemName(delivery.category, delivery.price);
-            const quantity = quantities[delivery.productId] ?? 1;
-            const topper = [delivery.topperName, delivery.topperRank].filter(Boolean).join(" ");
+            const topper = joinTopper(delivery.topperName, delivery.topperRank, delivery.topperCourse);
+            const address = describeDeliveryAddress(request, delivery);
             return (
               <li key={`${delivery.productId}-${delivery.unitNo}`} className="rounded-xl bg-soft px-3 py-2.5">
-                <p className="text-[13px] font-bold text-strong">
-                  {quantity > 1 ? ko.format.unitName(name, delivery.unitNo, quantity) : name}
-                </p>
+                <p className="text-[13px] font-bold text-strong">{describeDeliveryName(request, delivery)}</p>
                 <Rows className="mt-1">
-                  <Row label="받는 분">{describeDeliveryRecipient(delivery)}</Row>
+                  <Row label="받는 분">{describeDeliveryRecipient(request, delivery)}</Row>
+                  {address && <Row label="배송지">{address}</Row>}
                   <Row label="메시지">{describeDeliveryMessage(delivery)}</Row>
-                  {topper && <Row label="승진 토퍼">{topper}</Row>}
+                  {topper && <Row label="토퍼">{topper}</Row>}
                 </Rows>
               </li>
             );

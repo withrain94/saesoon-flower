@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import SectionDivider from "@/components/ui/SectionDivider";
-import type { SpecialEvent } from "@/data/events";
+import { getEventOn, type SpecialEvent } from "@/data/events";
 import { productCategories } from "@/data/products";
 import { isSlotBookable } from "@/lib/time";
 import type { ProductCategoryId } from "@/types/reservation";
@@ -26,6 +26,12 @@ export default function ReservationPage() {
     setSchedule,
     units,
     unitActions,
+    orderer,
+    setOrderer,
+    receiveMethod,
+    setReceiveMethod,
+    forEvent,
+    setForEvent,
     visibleIssue,
     summary,
     reservation,
@@ -78,6 +84,13 @@ export default function ReservationPage() {
         summary={summary}
         units={units}
         unitActions={unitActions}
+        orderer={orderer}
+        onOrdererChange={setOrderer}
+        receiveMethod={receiveMethod}
+        onReceiveMethodChange={setReceiveMethod}
+        event={selection.date ? (getEventOn(selection.date) ?? null) : null}
+        forEvent={forEvent}
+        onForEventChange={setForEvent}
         onSubmit={submit}
       />
       {reservation === null && <SubmitBar summary={summary} submitting={submitting} error={submitError} />}

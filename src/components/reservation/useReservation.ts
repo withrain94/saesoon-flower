@@ -9,6 +9,7 @@ import {
   summarizeSelection,
   withQuantity,
 } from "@/lib/selection";
+import { receiveMethods } from "@/data/reservationOptions";
 import { hasBookableSlot, toNowInTimeZone } from "@/lib/time";
 import { submitReservation } from "@/server/actions/reservation";
 import {
@@ -18,9 +19,11 @@ import {
   isEmptyRecipient,
   isEmptyTopper,
   resolveUnits,
+  type OrdererContact,
   type ResolvedUnit,
 } from "@/lib/units";
 import type {
+  ReceiveMethod,
   Recipient,
   ReservationRequest,
   Selection,
@@ -39,6 +42,8 @@ export type SubmittedReservation = {
 /** 상품 1개 칸에서 할 수 있는 동작 */
 export type UnitActions = {
   setSameRecipient: (unit: ResolvedUnit, same: boolean) => void;
+  /** 받는 분 성함·연락처를 예약자와 같게 */
+  setSameAsOrderer: (unit: ResolvedUnit, same: boolean) => void;
   setRecipient: (unit: ResolvedUnit, patch: Partial<Recipient>) => void;
   setTopper: (unit: ResolvedUnit, patch: Partial<Topper>) => void;
   setSameMessage: (unit: ResolvedUnit, same: boolean) => void;
@@ -55,6 +60,12 @@ export function useReservation() {
   const [selection, setSelection] = useState<Selection>(emptySelection);
   /** 상품 1개 단위(OrderUnit.key)별 받는 분·메시지 */
   const [unitDetails, setUnitDetails] = useState<Record<string, UnitDetail>>({});
+  /** 예약자 성함·연락처 — 받는 분 "예약자와 같음"에 바로 반영되도록 상태로 둠 */
+  const [orderer, setOrdererState] = useState<OrdererContact>({ name: "", phone: "" });
+  /** 받는 방법 — 매장 픽업 / 배송 */
+  const [receiveMethod, setReceiveMethod] = useState<ReceiveMethod>(receiveMethods[0]);
+  /** 특별한 날 고른 경우 "승진식 꽃인가요?" 답 (null = 아직 안 고름) — true일 때만 토퍼 칸 */
+  const [forEvent, setForEvent] = useState<boolean | null>(null);
   const [showErrors, setShowErrors] = useState(false);
   /** 저장 완료된 예약 한 건 (null = 아직 제출 전) */
   const [reservation, setReservation] = useState<SubmittedReservation | null>(null);
@@ -63,7 +74,12 @@ export function useReservation() {
   /** 저장 실패 안내 (고객 언어) */
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const units = resolveUnits(getOrderUnits(selection), unitDetails, selection.date);
+  // 토퍼 칸은 특별한 날 + "승진식 꽃이에요"를 골랐을 때만
+  const units = resolveUnits(getOrderUnits(selection), unitDetails, forEvent ? selection.date : null, orderer);
+
+  function setOrderer(patch: Partial<OrdererContact>) {
+    setOrdererState((current) => ({ ...current, ...patch }));
+  }
 
   function setQuantity(productId: string, quantity: number) {
     setSelection((current) => ({
@@ -100,6 +116,7 @@ export function useReservation() {
         const { recipient, topper } = separateValues(target, detail);
         return { sameRecipient: false, recipient, topper };
       }),
+    setSameAsOrderer: (target, same) => updateUnit(target, () => ({ sameAsOrderer: same })),
     setRecipient: (target, patch) =>
       updateUnit(target, (detail) => ({ recipient: { ...detail.recipient, ...patch } })),
     setTopper: (target, patch) => updateUnit(target, (detail) => ({ topper: { ...detail.topper, ...patch } })),
@@ -171,6 +188,12 @@ export function useReservation() {
     setSchedule,
     units,
     unitActions,
+    orderer,
+    setOrderer,
+    receiveMethod,
+    setReceiveMethod,
+    forEvent,
+    setForEvent,
     /** 제출을 시도한 뒤에만 보여줄 미선택 항목 */
     visibleIssue: showErrors ? issue : null,
     summary: summarizeSelection(selection, t),
