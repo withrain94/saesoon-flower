@@ -90,7 +90,7 @@
 | 코드 정리 | ✅ 2026-09-15 점검(03:30, 06:50) + 21:00 사용자 요청 점검(부족한 점 12개 보고 → 1번·8번 처리) |
 
 환경변수 (값은 `.env.local`·Vercel Production에만, 이름은 `.env.example` 참고):
-`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`(Config) · `SUPABASE_SECRET_KEY`(Secret) · `ADMIN_EMAILS`(Config) · `TELEGRAM_BOT_TOKEN`(Secret) · `TELEGRAM_CHAT_ID`(Config) · `NOTION_TOKEN`(Secret) · `NOTION_PARENT_PAGE_ID`(Config) · `NEXT_PUBLIC_KAKAO_JS_KEY`(Config, 카카오 버튼용 공개 키) · `CRON_SECRET`(Secret, 내일 예약 목록 자동 실행 확인용 — `.env.local`에 Claude가 무작위 32자 생성, 2026-09-16). `.env.local`에는 10개 모두 있음. Vercel은 앞의 9개 있음(노션 2개는 직접 못 봄), **CRON_SECRET은 사용자가 넣기 전**.
+`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`(Config) · `SUPABASE_SECRET_KEY`(Secret) · `ADMIN_EMAILS`(Config) · `TELEGRAM_BOT_TOKEN`(Secret) · `TELEGRAM_CHAT_ID`(Config) · `NOTION_TOKEN`(Secret) · `NOTION_PARENT_PAGE_ID`(Config) · `NEXT_PUBLIC_KAKAO_JS_KEY`(Config, 카카오 버튼용 공개 키) · `CRON_SECRET`(Secret, 내일 예약 목록 자동 실행 확인용 — `.env.local`에 Claude가 무작위 32자 생성 — 2026-09-23 **영문·숫자만 32자로 새로 만들어 교체**, 특수문자가 섞인 첫 값은 Vercel과 달라 계속 401이었음). `.env.local`에는 10개 모두 있음. Vercel도 10개 모두 있음(노션 2개는 직접 못 봄, CRON_SECRET은 2026-09-23 실제 사이트 실행 200으로 확인).
 카카오 개발자 앱 "새순": JavaScript SDK 도메인(배포 주소·localhost:3000) + [제품 링크 관리]>[웹 도메인](배포 주소) 등록됨. **사이트 주소가 바뀌면 두 곳 모두 추가.**
 Vercel: 기록 파일만 바꾼 커밋(deb2fa3)은 배포가 안 만들어진 적 있음(원인 모름) → 반영 안 되면 대시보드 Deployments > 맨 위 ⋯ > Redeploy(Build Cache 끔).
 
@@ -98,7 +98,7 @@ Vercel: 기록 파일만 바꾼 커밋(deb2fa3)은 배포가 안 만들어진 �
 
 00. **받는 방법(픽업/배송)·배송지·예약자와 같음·텔레그램 전체 내용 + 승진식 꽃 예/아니요(토퍼는 예일 때만) — 2026-09-19 배포 완료(7ab58b8, 0번 안내 문자 작업과 함께).** 실제 사이트 새 코드 반영·주요 페이지 200·cron 비밀 값 없이 401 확인. 실제 사이트에서 신청은 아직 안 넣어 봄. 승진식 꽃 질문도 Node로 확인(예=토퍼 저장 / 아니요·일반 날=토퍼 버림, 억지로 보내도 서버에서 버림). 11/27 장기과정 수료식·12/4·12/18 승진식 추가 + 안내가 전날 17시에 다음 일정으로 넘어가는 것·수료 과정 저장·텔레그램·노션 확인. 관리자·텔레그램·노션의 "승진 토퍼" 이름은 "토퍼"로 바꿈. tsc·lint 통과, 로직 6가지 경우(배송+예약자와 같음+앞과 같음+호접난 식당 / 배송지 없음 거절 / 연락처 없음 거절 / 픽업이면 주소 버림 / 호접난 기타 주소 / 목록 식당 예약 이름 없음 거절) Node로 확인. **브라우저에서 직접 눌러보지 못함**(이 세션의 Chrome이 localhost에 접속 못 함). 추가 SQL 없음(예약 내용 jsonb). 예전 예약은 서버에서 받는 방법을 채워 읽음(`withReceiveDefaults`). 노션 표 칸이 14→15개로 바뀜 — 이미 만들어진 날짜 페이지 표가 있으면 그 표에는 줄 추가가 실패할 수 있음(지금까지 실제로 올린 적 없어서 문제없을 것으로 봄). 다른 세션의 0번(안내 문자) 작업과 같은 파일(`types/reservation.ts`, `server/reservations.ts`, `ReservationDetail.tsx`)을 함께 고침 → 배포할 때 두 작업이 같이 올라감.
 
-0. **안내 문자 챙기기(A 내일 예약 목록 + B 문자 보냄 표시) — 2026-09-16 만듦, 2026-09-19 배포됨(7ab58b8). 사용자 ①②를 해야 동작.** 로컬 확인: 비밀 값 없거나 틀리면 401, 맞으면 실행(9/17 예약 0건 → 사장님 텔레그램 2곳에 "내일 예약은 아직 없어요" 도착 여부는 사용자 확인 전), 문구 미리보기·60건 2개로 나눔 확인, 칸 없을 때 저장하면 PGRST204 → 안내 문구. ⏳ 사용자: ① Supabase SQL Editor에서 schema.sql 맨 아래 `reminder_sent_at` SQL 실행 ② Vercel에 `CRON_SECRET`(Secret, `.env.local` 값과 같게) ③ 배포 → Vercel Settings > Cron Jobs에 보이는지, 저녁 6시대 목록 도착 확인. 관리자 버튼은 로그인 필요라 Claude가 못 눌러봄.
+0. **안내 문자 챙기기(A 내일 예약 목록 + B 문자 보냄 표시) — 2026-09-16 만듦, 2026-09-19 배포(7ab58b8), 2026-09-23 설정 완료.** ✅ 사용자가 Vercel `CRON_SECRET` 넣고 재배포 → 실제 사이트 자동 실행 주소 200(`{reservations:0, sent:2}`), 사장님 텔레그램 2곳 도착. ✅ 사용자가 Supabase에서 `reminder_sent_at` SQL 실행 → Claude가 DB에서 칸 확인. ⏳ 남은 확인: 저녁 6시대에 **자동으로** 오는지(첫 자동 실행), 관리자 상세 [안내 문자 보냈어요] 버튼 실제로 눌러보기(로그인 필요라 Claude가 못 함).
 1. **해외 번호 조회 수정** — 2026-09-15 배포. 실제 해외 번호 예약으로는 아직 조회해 본 적 없음.
 2. **사용자 확인 대기**: 휴대폰(아이폰 Safari·카톡 안 브라우저)과 관리자 상세에서 PDF 다운로드 눌러보기
 3. **점검에서 나온 것 (사용자 미결정, 2026-09-15 21:00)**:
