@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --import ./scripts/alias-hook.mjs --experimental-strip-types --no-warnings --test tests/*.test.ts"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.9.0",

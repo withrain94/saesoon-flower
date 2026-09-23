@@ -9,6 +9,7 @@ Next.js (App Router) + Tailwind CSS. 배포: https://saesoon-flower.vercel.app (
 npm run dev    # http://localhost:3000
 npm run build
 npm run lint
+npm test       # 핵심 규칙 자동 검사 (tests/ — 예약 가능 시간·받는 분 같음·서버 검사·조회 규칙·백업 파일)
 ```
 
 ## 폴더 구조

@@ -40,6 +40,18 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
       <main className="mx-auto max-w-3xl px-4 py-4">
         <StatusFilterTabs activeId={filter.id} counts={result?.[1] ?? null} />
 
+        {/* 백업 — 가끔 눌러서 예약 전체를 PC에 저장해 두면 DB에 문제가 생겨도 내용이 남음 */}
+        <div className="mt-3 flex items-center justify-between gap-2 rounded-xl bg-white px-3 py-2.5">
+          <p className="text-[12.5px] text-sub">예약 자료를 PC에 저장해 두세요 (엑셀 파일)</p>
+          <a
+            href="/admin/export"
+            download
+            className="shrink-0 rounded-lg border border-field bg-white px-3 py-1.5 text-[13px] font-semibold text-brand-dark transition hover:border-brand"
+          >
+            ⬇ 예약 전체 내려받기
+          </a>
+        </div>
+
         {!result ? (
           <p className="mt-6 rounded-xl bg-white px-4 py-5 text-[14px] text-danger">
             예약을 불러오지 못했어요. Supabase에 reservations 표가 만들어졌는지 확인하고 새로고침해 주세요.

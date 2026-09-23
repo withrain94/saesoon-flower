@@ -26,6 +26,8 @@ export const lookupEn: LookupMessages = {
     unavailable: `Online check is not available right now. Please call us (+82 ${businessInfo.phone.slice(1)}).`,
     notCancelable: `This reservation can't be canceled online at this stage. Please call us (+82 ${businessInfo.phone.slice(1)}).`,
     invalidRefund: "Please enter the bank name, account number and account holder for your refund.",
+    receiptMismatch: "That receipt number doesn't match. Check the 8-character number on your confirmation screen or the message you saved.",
+    tooMany: "Too many failed attempts, so this is paused for a moment. Please try again in 10 minutes or call the shop.",
     failed: `Something went wrong. Please try again shortly or call us (+82 ${businessInfo.phone.slice(1)}).`,
   },
 
@@ -49,6 +51,9 @@ export const lookupEn: LookupMessages = {
   cancel: {
     title: "Cancel reservation",
     open: "Cancel this reservation",
+    receiptLabel: "8-character receipt number",
+    receiptHint: "Needed to confirm it's you. It's on your confirmation screen and the message you saved.",
+    receiptPlaceholder: "e.g. 5D7BBC7E",
     close: "Keep my reservation",
     /** 결제 방법별로 묻기 (입금 전 예약) */
     paidQuestion: { bank: "Have you made the bank transfer?", card: "Have you paid by card?", paypal: "Have you paid with PayPal?" },

@@ -26,6 +26,8 @@ export const lookupVi: LookupMessages = {
     unavailable: `Hiện không thể tra cứu trực tuyến. Vui lòng gọi điện (+82 ${businessInfo.phone.slice(1)}).`,
     notCancelable: `Ở trạng thái hiện tại không thể hủy trực tuyến. Vui lòng gọi điện (+82 ${businessInfo.phone.slice(1)}).`,
     invalidRefund: "Vui lòng nhập đầy đủ và chính xác tên ngân hàng, số tài khoản và chủ tài khoản nhận hoàn tiền.",
+    receiptMismatch: "Mã tiếp nhận không khớp. Vui lòng kiểm tra mã 8 ký tự trên màn hình hoàn tất đặt hoa hoặc tin nhắn đã lưu.",
+    tooMany: "Đã nhập sai nhiều lần nên tạm khóa. Vui lòng thử lại sau 10 phút hoặc gọi cho tiệm.",
     failed: `Không xử lý được. Vui lòng thử lại sau hoặc gọi điện (+82 ${businessInfo.phone.slice(1)}).`,
   },
 
@@ -49,6 +51,9 @@ export const lookupVi: LookupMessages = {
   cancel: {
     title: "Hủy đặt hàng",
     open: "Hủy đơn này",
+    receiptLabel: "Mã tiếp nhận (8 ký tự)",
+    receiptHint: "Cần để xác nhận đúng người đặt. Mã có trên màn hình hoàn tất và tin nhắn đã lưu.",
+    receiptPlaceholder: "VD: 5D7BBC7E",
     close: "Không hủy",
     /** 결제 방법별로 묻기 (입금 전 예약) */
     paidQuestion: { bank: "Bạn đã chuyển khoản chưa?", card: "Bạn đã thanh toán bằng thẻ chưa?", paypal: "Bạn đã thanh toán bằng PayPal chưa?" },

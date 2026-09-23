@@ -30,6 +30,8 @@ export const lookupKo = {
     unavailable: `지금은 온라인 조회를 할 수 없어요. 전화(${businessInfo.phone})로 문의해 주세요.`,
     notCancelable: `지금 상태에서는 온라인으로 취소할 수 없어요. 전화(${businessInfo.phone})로 문의해 주세요.`,
     invalidRefund: "환불받을 은행명·계좌번호·예금주를 모두 정확히 적어주세요.",
+    receiptMismatch: "접수번호가 맞지 않아요. 예약 완료 화면이나 카카오톡으로 받은 메시지에서 8자리 접수번호를 확인해 주세요.",
+    tooMany: "여러 번 틀려서 잠시 막았어요. 10분 뒤에 다시 시도하거나 전화로 문의해 주세요.",
     failed: `처리하지 못했어요. 잠시 후 다시 시도하거나 전화(${businessInfo.phone})로 문의해 주세요.`,
   },
 
@@ -53,6 +55,9 @@ export const lookupKo = {
   cancel: {
     title: "예약 취소",
     open: "예약 취소하기",
+    receiptLabel: "접수번호 8자리",
+    receiptHint: "본인 확인을 위해 필요해요. 예약 완료 화면·카카오톡 메시지에 적혀 있어요.",
+    receiptPlaceholder: "예: 5D7BBC7E",
     close: "취소하지 않기",
     /** 결제 방법별로 묻기 (입금 전 예약) */
     paidQuestion: { bank: "입금하셨나요?", card: "카드 결제를 하셨나요?", paypal: "PayPal 결제를 하셨나요?" },

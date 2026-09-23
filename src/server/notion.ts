@@ -30,6 +30,7 @@ type NotionBlock = {
   id: string;
   type: string;
   child_page?: { title: string };
+  table?: { table_width: number };
   table_row?: { cells: { plain_text: string }[][] };
   heading_3?: { rich_text: { plain_text: string }[] };
   paragraph?: { rich_text: { plain_text: string }[] };
@@ -176,7 +177,9 @@ export async function syncReservationToNotion(reservation: StoredReservation): P
 
   const { token } = env;
   try {
-    const { kind, pageId } = await syncRows(env, reservation);
+    const result = await syncRows(env, reservation);
+    if (result.kind === "failed") return result;
+    const { kind, pageId } = result;
     const title = notionPageTitle(reservation.request.date);
     if (kind === "skipped" || !pageId) return { kind: "skipped" };
     if (hasContactLists(reservation.request.date)) await refreshContactLists(token, pageId);
@@ -193,7 +196,7 @@ export async function syncReservationToNotion(reservation: StoredReservation): P
 async function syncRows(
   { token, parentPageId }: { token: string; parentPageId: string },
   reservation: StoredReservation,
-): Promise<{ kind: "added" | "updated" | "skipped"; pageId?: string }> {
+): Promise<{ kind: "added" | "updated" | "skipped"; pageId?: string } | { kind: "failed"; reason: string }> {
   const shouldList = NOTION_SYNC_STATUSES.includes(reservation.status);
   const title = notionPageTitle(reservation.request.date);
   const rows = buildNotionRows(reservation);
@@ -216,6 +219,15 @@ async function syncRows(
     if (!shouldList) return { kind: "skipped" };
     await notionFetch(token, `/blocks/${dayPage.id}/children`, "PATCH", { children: [tableBlock(rows)] });
     return { kind: "added", pageId: dayPage.id };
+  }
+
+  // 예전에 만들어진 표는 칸 수가 다를 수 있음 — 그대로 넣으면 칸이 밀리므로 올리지 않고 알려준다
+  const width = table.table?.table_width;
+  if (typeof width === "number" && width !== NOTION_TABLE_HEADERS.length) {
+    return {
+      kind: "failed",
+      reason: `노션 "${title}" 페이지의 표 칸이 ${width}개라서 올릴 수 없어요 (지금은 ${NOTION_TABLE_HEADERS.length}개). 그 표를 지우면 새 표로 다시 만들어요.`,
+    };
   }
 
   const receipt = formatReceiptNumber(reservation.id);

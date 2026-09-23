@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import BankAccountCard from "@/components/reservation/BankAccountCard";
 import DocumentsPanel from "@/components/reservation/DocumentsPanel";
 import { findBlackboardPreset } from "@/data/reservationOptions";
+import { maskReceiptNumber } from "@/lib/customerLookup";
 import { useLookupT } from "@/hooks/useLookupT";
 import { useT } from "@/hooks/useLocale";
 import { parseDateKey } from "@/lib/date";
@@ -46,7 +47,8 @@ export default function LookupReservationDetails({ reservation }: { reservation:
         className={`rounded-2xl px-4 py-4 ${canceled ? "bg-soft" : cancelRequestedAt ? "border border-danger/40 bg-white" : "bg-panel"}`}
       >
         <p className="text-[13px] text-sub">
-          {l.receiptLabel} <span className="font-bold text-ink">{reservation.receiptNumber}</span>
+          {l.receiptLabel}{" "}
+          <span className="font-mono font-bold text-ink">{maskReceiptNumber(reservation.receiptNumber)}</span>
         </p>
         <p className={`mt-1 text-[17px] font-extrabold ${canceled ? "text-sub" : cancelRequestedAt ? "text-danger" : "text-brand-dark"}`}>
           {statusText}

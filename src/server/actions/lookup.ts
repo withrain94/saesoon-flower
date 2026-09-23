@@ -27,7 +27,14 @@ import {
  * 화면 문구는 손님 언어로 화면에서 고르도록 오류 종류(code)만 돌려줌.
  */
 
-export type LookupErrorCode = "notFound" | "unavailable" | "notCancelable" | "invalidRefund" | "failed";
+export type LookupErrorCode =
+  | "notFound"
+  | "unavailable"
+  | "notCancelable"
+  | "invalidRefund"
+  | "receiptMismatch"
+  | "tooMany"
+  | "failed";
 type LookupFailure = { ok: false; code: LookupErrorCode };
 export type LookupResult = { ok: true; reservation: CustomerReservationView } | LookupFailure;
 export type LookupListResult = { ok: true; reservations: CustomerReservationView[] } | LookupFailure;
@@ -40,6 +47,50 @@ const FAIL_DELAY_MS = 800;
 const slowFail = async (code: LookupErrorCode): Promise<LookupFailure> => {
   await new Promise((resolve) => setTimeout(resolve, FAIL_DELAY_MS));
   return { ok: false, code };
+};
+
+/**
+ * 같은 연락처로 틀린 조회·취소를 반복하면 잠시 막음 (남의 예약을 찍어보는 것 방지).
+ * 서버가 여러 대로 나뉘면 대수만큼 늘어나지만, 한 번에 수백 번 넣어보는 것은 막힌다.
+ */
+const FAIL_WINDOW_MS = 10 * 60 * 1000;
+const MAX_FAILS = 10;
+const fails = new Map<string, { count: number; first: number }>();
+
+function throttleKey(phone: unknown) {
+  return (typeof phone === "string" ? phoneLastDigits(phone) : "") ?? "";
+}
+
+/** 지금 막혀 있는지 (막혀 있으면 true) */
+function isBlocked(key: string) {
+  if (!key) return false;
+  const record = fails.get(key);
+  if (!record) return false;
+  if (Date.now() - record.first > FAIL_WINDOW_MS) {
+    fails.delete(key);
+    return false;
+  }
+  return record.count >= MAX_FAILS;
+}
+
+function countFail(key: string) {
+  if (!key) return;
+  const record = fails.get(key);
+  if (!record || Date.now() - record.first > FAIL_WINDOW_MS) {
+    fails.set(key, { count: 1, first: Date.now() });
+    return;
+  }
+  record.count += 1;
+  // 오래된 기록이 쌓이지 않게 정리
+  if (fails.size > 500) {
+    for (const [otherKey, other] of fails) {
+      if (Date.now() - other.first > FAIL_WINDOW_MS) fails.delete(otherKey);
+    }
+  }
+}
+
+const clearFails = (key: string) => {
+  if (key) fails.delete(key);
 };
 
 /** DB에 조회용 칸(receipt_number·cancel_request)을 추가하는 SQL을 아직 실행하지 않았을 때의 오류 */
@@ -87,9 +138,16 @@ async function findOwnReservation(receipt: unknown, name: unknown, phone: unknow
 
 export async function lookupReservations(name: string, phone: string): Promise<LookupListResult> {
   if (!getSupabaseEnv()) return { ok: false, code: "unavailable" };
+  const key = throttleKey(phone);
+  if (isBlocked(key)) return slowFail("tooMany");
   try {
     const reservations = await findOwnReservations(name, phone);
-    return reservations.length > 0 ? { ok: true, reservations: reservations.map(toView) } : slowFail("notFound");
+    if (reservations.length === 0) {
+      countFail(key);
+      return slowFail("notFound");
+    }
+    clearFails(key);
+    return { ok: true, reservations: reservations.map(toView) };
   } catch (error) {
     return failure(error, "조회");
   }
@@ -98,6 +156,8 @@ export async function lookupReservations(name: string, phone: string): Promise<L
 export type CancelInput = {
   /** 조회 결과에서 고른 예약의 접수번호 */
   receipt: string;
+  /** 손님이 직접 적은 접수번호 — 고른 예약의 접수번호와 같아야 취소됨 */
+  typedReceipt: string;
   name: string;
   phone: string;
   /** 입금 전 예약에서 "이미 입금(결제)했어요"를 골랐는지 */
@@ -110,12 +170,23 @@ export type CancelInput = {
  * - 입금 전 + "아직 입금 안 했어요" → 바로 취소
  * - 입금 전 + "이미 입금했어요" / 입금·결제 확인 → 취소 요청 (계좌이체면 환불 계좌 필수)
  * - 제작 완료 이후·이미 요청함·취소됨 → 거절 (전화 안내)
+ * 이름·연락처에 더해 손님이 접수번호를 직접 적어야 한다 (이름·번호만 아는 사람이 취소하지 못하도록).
  */
 export async function cancelReservationByCustomer(input: CancelInput): Promise<LookupResult> {
   if (!getSupabaseEnv()) return { ok: false, code: "unavailable" };
+  const key = throttleKey(input?.phone);
+  if (isBlocked(key)) return slowFail("tooMany");
   try {
     const reservation = await findOwnReservation(input?.receipt, input?.name, input?.phone);
-    if (!reservation) return slowFail("notFound");
+    if (!reservation) {
+      countFail(key);
+      return slowFail("notFound");
+    }
+    if (normalizeReceiptNumber(String(input?.typedReceipt ?? "")) !== formatReceiptNumber(reservation.id)) {
+      countFail(key);
+      return slowFail("receiptMismatch");
+    }
+    clearFails(key);
 
     const option = getCustomerCancelOption(reservation.status, reservation.cancelRequest !== null);
     const adminUrl = (() => {

@@ -30,6 +30,8 @@ export default function LookupCancelPanel({
   const [open, setOpen] = useState(false);
   const [paid, setPaid] = useState<boolean | null>(option === "request" ? true : null);
   const [refund, setRefund] = useState({ bank: "", account: "", holder: "" });
+  /** 손님이 직접 적는 접수번호 — 남이 이름·연락처만 알고 취소하지 못하도록 */
+  const [typedReceipt, setTypedReceipt] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -64,6 +66,7 @@ export default function LookupCancelPanel({
     startTransition(async () => {
       const result = await cancelReservationByCustomer({
         receipt: reservation.receiptNumber,
+        typedReceipt,
         name,
         phone,
         alreadyPaid: paid,
@@ -161,6 +164,23 @@ export default function LookupCancelPanel({
           {sendsRequest && method === "card" && <p className="text-[13px] text-body">{l.cancel.cardRefund}</p>}
           {sendsRequest && method === "paypal" && <p className="text-[13px] text-body">{l.cancel.paypalRefund}</p>}
 
+          <label className="block rounded-xl bg-soft p-3">
+            <span className="text-[14px] font-bold text-ink">
+              {l.cancel.receiptLabel} <span className="text-brand">*</span>
+            </span>
+            <span className="mt-0.5 block text-[12.5px] text-sub">{l.cancel.receiptHint}</span>
+            <input
+              value={typedReceipt}
+              onChange={(event) => setTypedReceipt(event.target.value.toUpperCase())}
+              required
+              maxLength={8}
+              autoComplete="off"
+              spellCheck={false}
+              placeholder={l.cancel.receiptPlaceholder}
+              className={`${inputClassName} mt-2 font-mono tracking-widest`}
+            />
+          </label>
+
           {error && <ErrorText>{error}</ErrorText>}
 
           <div className="grid grid-cols-2 gap-2">
@@ -176,7 +196,7 @@ export default function LookupCancelPanel({
             </button>
             <button
               type="submit"
-              disabled={paid === null || isPending}
+              disabled={paid === null || typedReceipt.trim().length < 8 || isPending}
               className="rounded-lg bg-danger py-3 text-[14px] font-bold text-white disabled:bg-disabled"
             >
               {isPending ? l.cancel.sending : sendsRequest ? l.cancel.submitRequest : l.cancel.submitCancel}

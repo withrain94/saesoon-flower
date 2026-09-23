@@ -53,6 +53,15 @@ export function getCustomerCancelOption(status: ReservationStatus, cancelRequest
   return "call";
 }
 
+/**
+ * 조회 화면에 보여줄 접수번호 — 앞 2자리만 (5D7BBC7E → 5D••••••).
+ * 취소할 때 손님이 접수번호를 직접 적어야 하므로, 조회 화면에는 전부 보여주지 않는다
+ * (이름·연락처만 아는 사람이 화면을 보고 그대로 옮겨 적지 못하도록). 전체 번호는 완료 화면·카톡 메시지에 있다.
+ */
+export function maskReceiptNumber(receiptNumber: string) {
+  return receiptNumber.slice(0, 2) + "•".repeat(Math.max(0, receiptNumber.length - 2));
+}
+
 export const REFUND_TEXT_MAX = 40;
 const ACCOUNT_NUMBER = /^[\d-]{6,30}$/;
 

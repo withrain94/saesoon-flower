@@ -26,6 +26,8 @@ export const lookupZh: LookupMessages = {
     unavailable: `目前无法在线查询，请致电（+82 ${businessInfo.phone.slice(1)}）咨询。`,
     notCancelable: `当前状态无法在线取消，请致电（+82 ${businessInfo.phone.slice(1)}）咨询。`,
     invalidRefund: "请准确填写退款银行名称、账号和户名。",
+    receiptMismatch: "受理编号不正确。请在预约完成页面或已保存的消息中确认8位受理编号。",
+    tooMany: "连续输入错误，已暂时限制。请10分钟后再试，或致电店家。",
     failed: `处理失败。请稍后再试，或致电（+82 ${businessInfo.phone.slice(1)}）咨询。`,
   },
 
@@ -49,6 +51,9 @@ export const lookupZh: LookupMessages = {
   cancel: {
     title: "取消预约",
     open: "取消预约",
+    receiptLabel: "受理编号（8位）",
+    receiptHint: "用于确认本人。预约完成页面和已保存的消息中都有。",
+    receiptPlaceholder: "例：5D7BBC7E",
     close: "不取消",
     /** 결제 방법별로 묻기 (입금 전 예약) */
     paidQuestion: { bank: "您已经转账了吗？", card: "您已经刷卡付款了吗？", paypal: "您已经用 PayPal 付款了吗？" },

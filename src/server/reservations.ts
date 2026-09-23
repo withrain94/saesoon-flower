@@ -98,6 +98,17 @@ export async function listReservations({
   return (data as ReservationRow[]).map(fromRow);
 }
 
+/** 예약 전체 (접수 순) — 관리자 "예약 전체 내려받기"(백업)용. 호출 전에 requireAdmin() 필수 */
+export async function listAllReservations(): Promise<StoredReservation[]> {
+  const { data, error } = await createDatabaseClient()
+    .from(TABLE)
+    .select(COLUMNS)
+    .order("created_at", { ascending: true })
+    .limit(10000);
+  if (error) throw error;
+  return (data as ReservationRow[]).map(fromRow);
+}
+
 /**
  * 받는 날짜 하루치 예약 (취소 제외, 시간 순) — 전날 "내일 예약 목록" 텔레그램(server/reminders)용.
  * 호출하는 쪽(app/cron)이 CRON_SECRET을 먼저 확인

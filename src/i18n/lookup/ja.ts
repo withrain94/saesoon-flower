@@ -26,6 +26,8 @@ export const lookupJa: LookupMessages = {
     unavailable: `現在オンラインで確認できません。お電話（+82 ${businessInfo.phone.slice(1)}）でお問い合わせください。`,
     notCancelable: `現在の状態ではオンラインでキャンセルできません。お電話（+82 ${businessInfo.phone.slice(1)}）でお問い合わせください。`,
     invalidRefund: "返金先の銀行名・口座番号・口座名義をすべて正しく入力してください。",
+    receiptMismatch: "受付番号が一致しません。ご予約完了画面やカカオトークで保存したメッセージの8桁の番号をご確認ください。",
+    tooMany: "続けて間違えたため、一時的に制限しています。10分後にもう一度お試しいただくか、お電話ください。",
     failed: `処理できませんでした。しばらくしてから再度お試しいただくか、お電話（+82 ${businessInfo.phone.slice(1)}）でお問い合わせください。`,
   },
 
@@ -49,6 +51,9 @@ export const lookupJa: LookupMessages = {
   cancel: {
     title: "予約のキャンセル",
     open: "予約をキャンセルする",
+    receiptLabel: "受付番号（8桁）",
+    receiptHint: "ご本人確認のために必要です。ご予約完了画面・保存したメッセージに記載されています。",
+    receiptPlaceholder: "例: 5D7BBC7E",
     close: "キャンセルしない",
     /** 결제 방법별로 묻기 (입금 전 예약) */
     paidQuestion: { bank: "お振込みはお済みですか？", card: "カード決済はお済みですか？", paypal: "PayPal決済はお済みですか？" },

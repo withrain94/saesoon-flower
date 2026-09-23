@@ -26,11 +26,14 @@ export async function getDocumentPdf(id: string, type: string, phone: string): P
 
   try {
     const reservation = await getReservation(id);
+    const isAdmin = (await getAdminEmail()) !== null;
     const allowed =
       reservation !== null &&
-      ((phone !== "" && isSamePhone(reservation.request.ordererPhone, phone)) || (await getAdminEmail()) !== null);
+      ((phone !== "" && isSamePhone(reservation.request.ordererPhone, phone)) || isAdmin);
     if (!reservation || !allowed) return { ok: false, status: 404 };
     if (!reservation.request.documents.includes(type)) return { ok: false, status: 404 };
+    // 취소된 예약의 서류는 손님에게 주지 않음 (매장은 기록용으로 필요할 수 있어 관리자만 가능)
+    if (reservation.status === "canceled" && !isAdmin) return { ok: false, status: 404 };
 
     const document = buildBusinessDocument(type, reservation.request);
     return { ok: true, fileName: documentFileName(document), pdf: await renderDocumentPdf(document) };
