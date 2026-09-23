@@ -534,6 +534,7 @@ export const vi: Messages = {
   complete: {
     title: "Đã gửi đơn thành công! 🎉",
     receiptNumber: (no) => `Mã đơn ${no}`,
+    receiptNote: "Cần mã này khi tra cứu hoặc hủy. Hãy lưu lại bằng nút bên dưới.",
     orderer: (name, phone) => `Người đặt ${name} · ${phone}`,
     reminder: "Trước giờ hẹn, chúng tôi sẽ gửi tin nhắn nhắc lịch đến số điện thoại của người đặt.",
     paymentMethod: (label) => `Thanh toán · ${label}`,
@@ -556,6 +557,7 @@ export const vi: Messages = {
     failed: "Không gửi được. Vui lòng chụp màn hình trang này.",
     title: (shopName) => `[${shopName}] Đã tiếp nhận đặt hàng`,
     receipt: (no) => `Mã tiếp nhận ${no}`,
+    receiptNote: "* Giữ mã này để hủy.",
     items: (first, others) => (others > 0 ? `${first} và ${others} sản phẩm khác` : first),
     total: (price) => `Tổng ${price}`,
     bank: (bank, number, holder) => `Chuyển khoản: ${bank} ${number} (${holder})`,

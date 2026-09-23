@@ -566,6 +566,7 @@ export const ko = {
   complete: {
     title: "작성이 완료되었습니다! 🎉",
     receiptNumber: (no: string) => `접수번호 ${no}`,
+    receiptNote: "예약 조회·취소할 때 필요한 번호예요. 아래 버튼으로 보관해 두세요.",
     orderer: (name: string, phone: string) => `예약자 ${name} · ${phone}`,
     reminder: "예약 시간이 되기 전에 예약자 연락처로 안내 문자를 보내드려요.",
     paymentMethod: (label: string) => `결제 방법 · ${label}`,
@@ -589,6 +590,8 @@ export const ko = {
     failed: "보내지 못했어요. 이 화면을 캡처해 두세요.",
     title: (shopName: string) => `[${shopName}] 예약 접수 완료`,
     receipt: (no: string) => `접수번호 ${no}`,
+    /** 카톡·복사 글 맨 아래 — 취소할 때 접수번호를 직접 넣어야 함 */
+    receiptNote: "※ 예약 조회·취소할 때 접수번호가 필요해요. 이 메시지를 보관해 주세요.",
     items: (first: string, others: number) => (others > 0 ? `${first} 외 ${others}건` : first),
     total: (price: string) => `합계 ${price}`,
     bank: (bank: string, number: string, holder: string) => `입금 계좌: ${bank} ${number} (${holder})`,

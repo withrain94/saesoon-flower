@@ -39,9 +39,10 @@ export default function ReservationComplete({
         ✓
       </span>
       <p className="mt-4 text-lg font-bold text-ink">{t.complete.title}</p>
-      <p className="mt-1 text-[14px] font-bold text-brand-dark">
+      <p className="mt-1 text-[16px] font-extrabold tracking-wide text-brand-dark">
         {t.complete.receiptNumber(formatReceiptNumber(submitted.id))}
       </p>
+      <p className="mt-0.5 text-[12.5px] text-sub">{t.complete.receiptNote}</p>
       <p className="mt-1.5 text-[15px] text-body">{payment.complete}</p>
       <p className="mt-3 text-sm text-sub">{t.complete.orderer(reservation.ordererName, reservation.ordererPhone)}</p>
       <p className="mx-auto mt-2 max-w-sm rounded-xl bg-brand-tint px-4 py-2.5 text-[13px] font-bold text-brand-dark">

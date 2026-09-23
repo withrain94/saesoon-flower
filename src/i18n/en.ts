@@ -543,6 +543,7 @@ export const en: Messages = {
   complete: {
     title: "Your request has been submitted! 🎉",
     receiptNumber: (no) => `Request no. ${no}`,
+    receiptNote: "You'll need this number to look up or cancel. Save it with the buttons below.",
     orderer: (name, phone) => `Reserved by ${name} · ${phone}`,
     reminder: "We will text a reminder to the contact number above before your reservation time.",
     paymentMethod: (label) => `Payment · ${label}`,
@@ -565,6 +566,7 @@ export const en: Messages = {
     failed: "Couldn't share. Please take a screenshot of this screen.",
     title: (shopName) => `[${shopName}] Reservation received`,
     receipt: (no) => `Reservation no. ${no}`,
+    receiptNote: "* Keep this number to cancel.",
     items: (first, others) => (others > 0 ? `${first} and ${others} more` : first),
     total: (price) => `Total ${price}`,
     bank: (bank, number, holder) => `Bank transfer: ${bank} ${number} (${holder})`,

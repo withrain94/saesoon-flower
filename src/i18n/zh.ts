@@ -494,6 +494,7 @@ export const zh: Messages = {
   complete: {
     title: "申请已提交！🎉",
     receiptNumber: (no) => `受理编号 ${no}`,
+    receiptNote: "查询或取消预约时需要此编号。请用下面的按钮保存。",
     orderer: (name, phone) => `预约人 ${name} · ${phone}`,
     reminder: "在预约时间之前，我们会向预约人的联系电话发送提醒短信。",
     paymentMethod: (label) => `付款方式 · ${label}`,
@@ -516,6 +517,7 @@ export const zh: Messages = {
     failed: "发送失败，请截图保存此页面。",
     title: (shopName) => `[${shopName}] 预约已受理`,
     receipt: (no) => `受理编号 ${no}`,
+    receiptNote: "※ 查询或取消预约时需要受理编号，请保存此消息。",
     items: (first, others) => (others > 0 ? `${first} 等${others + 1}项` : first),
     total: (price) => `合计 ${price}`,
     bank: (bank, number, holder) => `汇款账户：${bank} ${number}（${holder}）`,

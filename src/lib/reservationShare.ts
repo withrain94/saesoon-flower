@@ -29,12 +29,22 @@ export function buildReservationShareText(
   request: ReservationRequest,
   maxLength = Number.POSITIVE_INFINITY,
 ) {
-  const full = buildLines(t, t.shop.name, id, request);
-  if (full.length <= maxLength) return full;
-  return buildLines(t, t.shop.name.split(" ")[0], id, request).slice(0, maxLength);
+  // 접수번호 안내를 되도록 남기고, 길면 가게 이름을 앞 단어로 줄이고, 그래도 길면 안내를 뺌
+  const shortName = t.shop.name.split(" ")[0];
+  const tries: [string, boolean][] = [
+    [t.shop.name, true],
+    [shortName, true],
+    [t.shop.name, false],
+    [shortName, false],
+  ];
+  for (const [shopName, withNote] of tries) {
+    const text = buildLines(t, shopName, id, request, withNote);
+    if (text.length <= maxLength) return text;
+  }
+  return buildLines(t, t.shop.name.split(" ")[0], id, request, false).slice(0, maxLength);
 }
 
-function buildLines(t: Messages, shopName: string, id: string, request: ReservationRequest) {
+function buildLines(t: Messages, shopName: string, id: string, request: ReservationRequest, withNote: boolean) {
   const date = parseDateKey(request.date);
   const [first, ...rest] = request.items;
   const firstName = first
@@ -50,5 +60,9 @@ function buildLines(t: Messages, shopName: string, id: string, request: Reservat
     request.paymentMethod === "bank"
       ? t.share.bank(t.bankCard.bank, bankAccount.number, bankAccount.holder)
       : t.share.payment(t.payment.methods[request.paymentMethod].label),
-  ].join("\n");
+    // 취소할 때 접수번호를 직접 넣어야 하므로 왜 필요한지 알려줌 (맨 뒤 — 카톡 200자를 넘으면 이 줄부터 뺌)
+    withNote ? t.share.receiptNote : "",
+  ]
+    .filter(Boolean)
+    .join("\n");
 }
