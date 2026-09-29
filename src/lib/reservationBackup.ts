@@ -15,7 +15,6 @@ import {
   summarizeItems,
 } from "@/lib/adminFormat";
 import { formatReceiptNumber } from "@/lib/format";
-import { joinTopper } from "@/lib/units";
 import type { StoredReservation } from "@/types/reservation";
 
 /**
@@ -53,11 +52,11 @@ function describeDeliveries({ request }: StoredReservation) {
   return request.deliveries
     .map((delivery) => {
       const address = describeDeliveryAddress(request, delivery);
-      const topper = joinTopper(delivery.topperName, delivery.topperRank, delivery.topperCourse);
+      const topper = delivery.topperSender;
       const parts = [
         `받는 분 ${describeDeliveryRecipient(request, delivery)}`,
         address && `배송지 ${address}`,
-        topper && `토퍼 ${topper}`,
+        topper && `토퍼(보내는 분) ${topper}`,
         `메시지 ${describeDeliveryMessage(delivery)}`,
       ].filter(Boolean);
       return `${describeDeliveryName(request, delivery)}: ${parts.join(" | ")}`;

@@ -142,42 +142,18 @@ export default function UnitDetailCard({
             <div className="mt-3 rounded-lg bg-brand-tint px-3 py-3">
               <p className="text-[14px] font-bold text-brand-dark">{getEventCopy(topperEvent, t).topperTitle}</p>
               <p className="mt-0.5 text-[12.5px] text-sub">{getEventCopy(topperEvent, t).topperDescription}</p>
-              {/* 승진식: 이름·직급 한 줄 / 수료식: 과정 이름이 길 수 있어 이름·수료 과정을 두 줄로 */}
-              <div className={`mt-2 grid gap-2 ${topperEvent.topperDetail === "rank" ? "grid-cols-2" : ""}`}>
-                <input
-                  id={`${idPrefix}-topper-name`}
-                  type="text"
-                  maxLength={30}
-                  value={own.topper.name}
-                  onChange={(event) => actions.setTopper(target, { name: event.target.value })}
-                  aria-label={t.topper.nameAria}
-                  placeholder={t.topper.namePlaceholder}
-                  className={inputClassName}
-                />
-                {topperEvent.topperDetail === "rank" ? (
-                  <input
-                    id={`${idPrefix}-topper-rank`}
-                    type="text"
-                    maxLength={30}
-                    value={own.topper.rank}
-                    onChange={(event) => actions.setTopper(target, { rank: event.target.value })}
-                    aria-label={t.topper.rankAria}
-                    placeholder={t.topper.rankPlaceholder}
-                    className={inputClassName}
-                  />
-                ) : (
-                  <input
-                    id={`${idPrefix}-topper-course`}
-                    type="text"
-                    maxLength={50}
-                    value={own.topper.course}
-                    onChange={(event) => actions.setTopper(target, { course: event.target.value })}
-                    aria-label={t.topper.courseAria}
-                    placeholder={t.topper.coursePlaceholder}
-                    className={inputClassName}
-                  />
-                )}
-              </div>
+              {/* 받는 분 이름·직급을 적는 분이 많아서 한 칸(보내는 분 이름 또는 팀)으로 합치고 크게 알림 (2026-09-29) */}
+              <p className="mt-1 text-[12.5px] font-bold text-danger">{t.topper.senderWarning}</p>
+              <input
+                id={`${idPrefix}-topper-sender`}
+                type="text"
+                maxLength={40}
+                value={own.topper.sender}
+                onChange={(event) => actions.setTopper(target, { sender: event.target.value })}
+                aria-label={t.topper.senderAria}
+                placeholder={t.topper.senderPlaceholder}
+                className={`mt-2 ${inputClassName}`}
+              />
             </div>
           ))}
       </div>

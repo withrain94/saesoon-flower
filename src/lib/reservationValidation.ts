@@ -89,7 +89,7 @@ export function validateReservationRequest(input: unknown, now: Now, submittedAt
 
   // 받는 방법 — 배송이면 꽃다발·꽃바구니는 받는 분 성함·연락처·배송지 필수 (호접난은 식당 칸)
   const receiveMethod = oneOf(raw.receiveMethod, receiveMethods, receiveMethods[0]);
-  // 특별한 날 행사용 꽃이라고 답했을 때만 무료 토퍼 (이름 + 행사에 따라 직급 또는 수료 과정)
+  // 특별한 날 행사용 꽃이라고 답했을 때만 무료 토퍼 (보내는 분 이름 또는 팀 이름 한 칸)
   const event = getEventOn(date);
   const forEvent = raw.forEvent === true && event !== undefined;
 
@@ -120,9 +120,7 @@ export function validateReservationRequest(input: unknown, now: Now, submittedAt
       recipientName,
       recipientPhone,
       recipientAddress,
-      topperName: topper ? str(d.topperName, 30) : "",
-      topperRank: topper && event?.topperDetail === "rank" ? str(d.topperRank, 30) : "",
-      topperCourse: topper && event?.topperDetail === "course" ? str(d.topperCourse, 50) : "",
+      topperSender: topper ? str(d.topperSender, 40) : "",
       messageType,
       memo: messageType === "memo" ? str(d.memo) : "",
       ribbonLeft: messageType === "ribbon" ? str(d.ribbonLeft, 50) : "",

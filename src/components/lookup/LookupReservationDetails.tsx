@@ -9,7 +9,6 @@ import { useLookupT } from "@/hooks/useLookupT";
 import { useT } from "@/hooks/useLocale";
 import { parseDateKey } from "@/lib/date";
 import { getSlotHour } from "@/lib/time";
-import { joinTopper } from "@/lib/units";
 import type { CustomerReservationView, ReservationDelivery } from "@/types/reservation";
 
 /** 손님 예약 조회 결과 — 신청한 내용을 손님 언어로 (매장 메모 등은 받지 않음) */
@@ -110,11 +109,7 @@ export default function LookupReservationDetails({ reservation }: { reservation:
                 {delivery.recipientAddress && (
                   <p className="text-body">{t.complete.address(delivery.recipientAddress)}</p>
                 )}
-                {joinTopper(delivery.topperName, delivery.topperRank, delivery.topperCourse) && (
-                  <p className="text-body">
-                    {t.topper.describe(delivery.topperName, joinTopper("", delivery.topperRank, delivery.topperCourse))}
-                  </p>
-                )}
+                {delivery.topperSender && <p className="text-body">{t.topper.describe(delivery.topperSender)}</p>}
                 <p className="text-body">{t.complete.message(describeMessage(delivery))}</p>
               </li>
             );

@@ -215,9 +215,10 @@ export const en: Messages = {
         "Please choose a pickup time of 8 AM or 9 AM.",
       ],
       forEventYes: "Yes, for the ceremony",
-      forEventHint: "For the ceremony, we add a free promotion topper (name and title).",
+      forEventHint: "For the ceremony, we add a free promotion topper.",
       topperTitle: "🎓 Promotion topper (free)",
-      topperDescription: "Enter the name and job title for the topper. If left blank, the shop will contact you.",
+      topperDescription:
+        "Enter the name or team name of the sender (the person giving the flowers) for the topper. If left blank, the shop will contact you.",
     },
     instituteLongCourse: {
       calendarLabel: "Grad.",
@@ -225,14 +226,14 @@ export const en: Messages = {
       title: () => "Local Government Officials Development Institute — Long-term Course Graduation Ceremony",
       highlights: [
         "A free graduation topper is included.",
-        "Toppers differ by course, so please enter the course you completed in the form.",
+        "Toppers differ by course, so the shop may contact you to confirm which course you completed.",
         "Please choose a pickup time of 8 AM or 9 AM.",
       ],
       forEventYes: "Yes, for the graduation",
-      forEventHint: "For the graduation, we add a free graduation topper (name and course).",
+      forEventHint: "For the graduation, we add a free graduation topper.",
       topperTitle: "🎓 Graduation topper (free)",
       topperDescription:
-        "Toppers differ by course. Enter the name and the course completed for the topper. If left blank, the shop will contact you.",
+        "Enter the name or team name of the sender (the person giving the flowers) for the topper. Toppers differ by course, so the shop will contact you to confirm the course completed.",
     },
   },
 
@@ -421,14 +422,10 @@ export const en: Messages = {
   topper: {
     forEventQuestion: (title) => `Are these flowers for the ${title}?`,
     forEventNo: "No, a regular order",
-    nameAria: "Name for the topper",
-    namePlaceholder: "Name (e.g. Hong Gil-dong)",
-    rankAria: "Job title for the topper",
-    rankPlaceholder: "Title (e.g. 사무관)",
-    courseAria: "Course for the topper",
-    coursePlaceholder: "Course name",
-    describe: (name, rank) =>
-      `Topper · ${[name, rank].filter(Boolean).join(" ") || "Not entered (the shop will contact you)"}`,
+    senderAria: "Sender name or team name for the topper",
+    senderPlaceholder: "Sender's name or team (e.g. General Affairs Team)",
+    senderWarning: "⚠️ Not the recipient's name or job title!",
+    describe: (sender) => `Topper · ${sender || "Not entered (the shop will contact you)"}`,
   },
 
   message: {
@@ -587,7 +584,7 @@ export const en: Messages = {
     items: [
       {
         title: "Information collected",
-        body: "Your name and phone number (required); recipient names, phone numbers and delivery addresses, message text, promotion/graduation topper names, titles and courses, orchid delivery restaurant and booking name, cash receipt number, card payer's contact, PayPal request email, company name and business number for documents, and your refund bank name, account number and holder if you cancel after paying (where applicable)",
+        body: "Your name and phone number (required); recipient names, phone numbers and delivery addresses, message text, the sender's name or team name for a promotion/graduation topper, orchid delivery restaurant and booking name, cash receipt number, card payer's contact, PayPal request email, company name and business number for documents, and your refund bank name, account number and holder if you cancel after paying (where applicable)",
       },
       {
         title: "Purpose",

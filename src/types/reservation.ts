@@ -69,11 +69,12 @@ export type UnitMessage = {
   blackboardPreset: string;
 };
 
-/** 특별한 날 무료 토퍼에 넣을 이름 + 직급(승진식) 또는 수료 과정(장기과정 수료식) — 행사의 topperDetail */
+/**
+ * 특별한 날 무료 토퍼에 넣을 한 칸 — **보내는 분(주시는 분) 이름 또는 팀 이름**.
+ * 예전에는 이름·직급(수료식은 수료 과정) 두 칸이었는데, 받는 분 이름·직급을 적는 분이 많아 한 칸으로 합쳤다(2026-09-29).
+ */
 export type Topper = {
-  name: string;
-  rank: string;
-  course: string;
+  sender: string;
 };
 
 /**
@@ -81,7 +82,7 @@ export type Topper = {
  * same* 가 true면 자기 값 대신 앞 상품의 값을 쓴다.
  */
 export type UnitDetail = {
-  /** 받는 분이 같으면 토퍼(이름·직급)도 앞 상품을 따름 */
+  /** 받는 분이 같으면 토퍼(보내는 분 이름·팀)도 앞 상품을 따름 */
   sameRecipient: boolean;
   /** 받는 분 성함·연락처를 예약자와 같게 (배송지는 따로 입력) */
   sameAsOrderer: boolean;
@@ -111,10 +112,8 @@ export type ReservationDelivery = {
   recipientPhone: string;
   /** 배송지 주소 — 픽업이거나 호접난이면 "" (호접난은 orchidDelivery의 식당) */
   recipientAddress: string;
-  /** 특별한 날 무료 토퍼 — 토퍼가 없는 날·상품이면 "". 직급은 승진식, 수료 과정은 장기과정 수료식만 */
-  topperName: string;
-  topperRank: string;
-  topperCourse: string;
+  /** 특별한 날 무료 토퍼에 넣을 보내는 분 이름 또는 팀 이름 — 토퍼가 없는 날·상품이면 "" */
+  topperSender: string;
 } & Omit<UnitMessage, "type"> & { messageType: MessageType };
 
 /**

@@ -19,7 +19,7 @@ export function getEventCopy(event: SpecialEvent, t: Messages = ko) {
   };
 }
 
-/** 그 날짜에 이 종류 상품을 담으면 무료 토퍼(이름·직급) 입력칸이 생기는지 */
+/** 그 날짜에 이 종류 상품을 담으면 무료 토퍼(보내는 분 이름·팀) 입력칸이 생기는지 */
 export function hasFreeTopper(dateKey: string | null, category: ProductCategoryId) {
   if (!dateKey) return false;
   return getEventOn(dateKey)?.topperCategories.includes(category) ?? false;

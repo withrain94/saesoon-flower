@@ -170,9 +170,9 @@ export const zh: Messages = {
         "取花时间请在上午8点、9点中选择。",
       ],
       forEventYes: "是，晋升仪式用",
-      forEventHint: "晋升仪式用花可免费附赠晋升插牌（姓名·职级）。",
+      forEventHint: "晋升仪式用花可免费附赠晋升插牌。",
       topperTitle: "🎓 晋升插牌（免费）",
-      topperDescription: "请填写插牌上的姓名和职级。留空的话，店家会联系您。",
+      topperDescription: "请填写插牌上送花人（赠送方）的姓名或团队名称。留空的话，店家会联系您。",
     },
     instituteLongCourse: {
       calendarLabel: "结业式",
@@ -180,13 +180,14 @@ export const zh: Messages = {
       title: () => "地方自治人才开发院 长期课程结业式",
       highlights: [
         "免费赠送结业插牌。",
-        "每个课程的插牌不同，请在申请表中填写您结业的课程。",
+        "每个课程的插牌不同，预约后店家可能会联系您确认结业课程。",
         "取花时间请在上午8点、9点中选择。",
       ],
       forEventYes: "是，结业式用",
-      forEventHint: "结业式用花可免费附赠结业插牌（姓名·结业课程）。",
+      forEventHint: "结业式用花可免费附赠结业插牌。",
       topperTitle: "🎓 结业插牌（免费）",
-      topperDescription: "每个课程的插牌不同。请填写插牌上的姓名和结业课程。留空的话，店家会联系您。",
+      topperDescription:
+        "请填写插牌上送花人（赠送方）的姓名或团队名称。每个课程的插牌不同，结业课程由店家另行联系确认。",
     },
   },
 
@@ -373,13 +374,10 @@ export const zh: Messages = {
   topper: {
     forEventQuestion: (title) => `是${title}用的花吗？`,
     forEventNo: "不是，普通预约",
-    nameAria: "插牌上的姓名",
-    namePlaceholder: "姓名（例：홍길동）",
-    rankAria: "插牌上的职级",
-    rankPlaceholder: "职级（例：사무관）",
-    courseAria: "插牌上的结业课程",
-    coursePlaceholder: "结业课程名称",
-    describe: (name, rank) => `插牌 · ${[name, rank].filter(Boolean).join(" ") || "未填写（店家会联系您）"}`,
+    senderAria: "插牌上送花人的姓名或团队名称",
+    senderPlaceholder: "送花人姓名或团队名称（例：총무과 일동）",
+    senderWarning: "⚠️ 不是收花人的姓名·职级！",
+    describe: (sender) => `插牌 · ${sender || "未填写（店家会联系您）"}`,
   },
 
   message: {
@@ -538,7 +536,7 @@ export const zh: Messages = {
     items: [
       {
         title: "收集项目",
-        body: "预约人姓名·电话（必填），收花人姓名·电话·配送地址、留言内容、晋升·结业插牌姓名·职级·结业课程、蝴蝶兰配送餐厅·餐厅预约人姓名、现金收据号码、刷卡付款人联系方式、PayPal 付款请求邮箱、文件上填写的公司名称·营业执照号、付款后取消预约时的退款银行名称·账号·户名（如适用）",
+        body: "预约人姓名·电话（必填），收花人姓名·电话·配送地址、留言内容、晋升·结业插牌上送花人的姓名或团队名称、蝴蝶兰配送餐厅·餐厅预约人姓名、现金收据号码、刷卡付款人联系方式、PayPal 付款请求邮箱、文件上填写的公司名称·营业执照号、付款后取消预约时的退款银行名称·账号·户名（如适用）",
       },
       {
         title: "使用目的",

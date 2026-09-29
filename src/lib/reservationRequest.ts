@@ -68,7 +68,7 @@ function toOrchidDelivery(data: FormData, receiveMethod: ReceiveMethod): OrchidD
 
 /** 선택한 메시지 방식에 해당하는 문구만 남김. 배송지는 배송일 때만 */
 function toDelivery(
-  { unit, recipient, topper, topperAvailable, topperEvent, message }: ResolvedUnit,
+  { unit, recipient, topper, topperAvailable, message }: ResolvedUnit,
   receiveMethod: ReceiveMethod,
 ): ReservationDelivery {
   return {
@@ -79,9 +79,7 @@ function toDelivery(
     recipientName: recipient.name.trim(),
     recipientPhone: recipient.phone.trim(),
     recipientAddress: needsDeliveryAddress(receiveMethod, unit.product.category) ? recipient.address.trim() : "",
-    topperName: topperAvailable ? topper.name.trim() : "",
-    topperRank: topperEvent?.topperDetail === "rank" ? topper.rank.trim() : "",
-    topperCourse: topperEvent?.topperDetail === "course" ? topper.course.trim() : "",
+    topperSender: topperAvailable ? topper.sender.trim() : "",
     messageType: message.type,
     memo: message.type === "memo" ? message.memo.trim() : "",
     ribbonLeft: message.type === "ribbon" ? message.ribbonLeft.trim() : "",

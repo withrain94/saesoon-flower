@@ -61,15 +61,16 @@ describe("받는 분·메시지 같음 (lib/units)", () => {
     assert.equal(orchidUnit.message.type, "blackboard");
   });
 
-  it("토퍼 칸은 특별한 날에만, 그 행사에 맞는 칸으로", () => {
+  it("토퍼 칸(보내는 분 이름·팀)은 특별한 날에만", () => {
     const normal = resolve({ [bouquet.id]: 1 }, {}, "2026-11-10");
     assert.equal(normal[0].topperAvailable, false);
+    assert.equal(normal[0].topperEvent, null);
 
     const promotion = resolve({ [bouquet.id]: 1 }, {}, "2026-10-30");
-    assert.equal(promotion[0].topperEvent?.topperDetail, "rank");
+    assert.equal(promotion[0].topperEvent?.kind, "institutePromotion");
 
     const graduation = resolve({ [bouquet.id]: 1 }, {}, "2026-11-27");
-    assert.equal(graduation[0].topperEvent?.topperDetail, "course");
+    assert.equal(graduation[0].topperEvent?.kind, "instituteLongCourse");
 
     // 호접난은 토퍼를 넣지 않음
     const orchidOnEventDay = resolve({ [orchid.id]: 1 }, {}, "2026-10-30");

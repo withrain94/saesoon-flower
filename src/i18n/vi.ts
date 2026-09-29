@@ -207,9 +207,10 @@ export const vi: Messages = {
         "Vui lòng chọn giờ nhận hoa lúc 8:00 hoặc 9:00 sáng.",
       ],
       forEventYes: "Đúng, cho lễ thăng chức",
-      forEventHint: "Hoa cho lễ thăng chức được tặng kèm thẻ cắm thăng chức miễn phí (tên · chức vụ).",
+      forEventHint: "Hoa cho lễ thăng chức được tặng kèm thẻ cắm thăng chức miễn phí.",
       topperTitle: "🎓 Thẻ cắm thăng chức (miễn phí)",
-      topperDescription: "Nhập tên và chức vụ để in lên thẻ cắm. Nếu để trống, tiệm sẽ liên hệ với quý khách.",
+      topperDescription:
+        "Nhập tên hoặc tên nhóm của người tặng hoa để in lên thẻ cắm. Nếu để trống, tiệm sẽ liên hệ với quý khách.",
     },
     instituteLongCourse: {
       calendarLabel: "Lễ BG",
@@ -217,14 +218,14 @@ export const vi: Messages = {
       title: () => "Lễ bế giảng khóa dài hạn – Viện Phát triển Nhân lực Chính quyền Địa phương",
       highlights: [
         "Tặng kèm miễn phí thẻ cắm (topper) chúc mừng hoàn thành khóa học.",
-        "Mỗi khóa có thẻ cắm khác nhau, vui lòng ghi tên khóa học đã hoàn thành trong đơn.",
+        "Mỗi khóa có thẻ cắm khác nhau, nên tiệm có thể liên hệ để xác nhận khóa học quý khách đã hoàn thành.",
         "Vui lòng chọn giờ nhận hoa lúc 8:00 hoặc 9:00 sáng.",
       ],
       forEventYes: "Đúng, cho lễ bế giảng",
-      forEventHint: "Hoa cho lễ bế giảng được tặng kèm thẻ cắm miễn phí (tên · khóa học).",
+      forEventHint: "Hoa cho lễ bế giảng được tặng kèm thẻ cắm miễn phí.",
       topperTitle: "🎓 Thẻ cắm bế giảng (miễn phí)",
       topperDescription:
-        "Mỗi khóa có thẻ cắm khác nhau. Nhập tên và khóa học đã hoàn thành để in lên thẻ cắm. Nếu để trống, tiệm sẽ liên hệ với quý khách.",
+        "Nhập tên hoặc tên nhóm của người tặng hoa để in lên thẻ cắm. Mỗi khóa có thẻ cắm khác nhau nên tiệm sẽ liên hệ để xác nhận khóa học đã hoàn thành.",
     },
   },
 
@@ -412,14 +413,10 @@ export const vi: Messages = {
   topper: {
     forEventQuestion: (title) => `Hoa này dành cho ${title} phải không?`,
     forEventNo: "Không, đặt hoa thông thường",
-    nameAria: "Tên trên thẻ cắm",
-    namePlaceholder: "Tên (VD: 홍길동)",
-    rankAria: "Chức vụ trên thẻ cắm",
-    rankPlaceholder: "Chức vụ (VD: 사무관)",
-    courseAria: "Khóa học trên thẻ cắm",
-    coursePlaceholder: "Tên khóa học đã hoàn thành",
-    describe: (name, rank) =>
-      `Thẻ cắm · ${[name, rank].filter(Boolean).join(" ") || "Chưa nhập (tiệm sẽ liên hệ)"}`,
+    senderAria: "Tên hoặc tên nhóm của người tặng trên thẻ cắm",
+    senderPlaceholder: "Tên hoặc nhóm người tặng (VD: 총무과 일동)",
+    senderWarning: "⚠️ Không phải tên · chức vụ của người nhận hoa!",
+    describe: (sender) => `Thẻ cắm · ${sender || "Chưa nhập (tiệm sẽ liên hệ)"}`,
   },
 
   message: {
@@ -578,7 +575,7 @@ export const vi: Messages = {
     items: [
       {
         title: "Thông tin thu thập",
-        body: "Tên và số điện thoại người đặt (bắt buộc); tên, số điện thoại và địa chỉ giao hàng của người nhận, nội dung lời nhắn, tên, chức vụ và khóa học trên thẻ cắm thăng chức · bế giảng, nhà hàng giao lan và tên đặt bàn, số hóa đơn tiền mặt, liên hệ người thanh toán thẻ, email nhận yêu cầu PayPal, tên công ty và mã số kinh doanh, tên ngân hàng, số tài khoản và chủ tài khoản nhận hoàn tiền khi hủy sau khi đã thanh toán (nếu có)",
+        body: "Tên và số điện thoại người đặt (bắt buộc); tên, số điện thoại và địa chỉ giao hàng của người nhận, nội dung lời nhắn, tên hoặc tên nhóm của người tặng trên thẻ cắm thăng chức · bế giảng, nhà hàng giao lan và tên đặt bàn, số hóa đơn tiền mặt, liên hệ người thanh toán thẻ, email nhận yêu cầu PayPal, tên công ty và mã số kinh doanh, tên ngân hàng, số tài khoản và chủ tài khoản nhận hoàn tiền khi hủy sau khi đã thanh toán (nếu có)",
       },
       {
         title: "Mục đích sử dụng",

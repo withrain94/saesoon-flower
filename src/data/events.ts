@@ -3,9 +3,6 @@ import type { ProductCategoryId } from "@/types/reservation";
 /** 특별한 날 종류 — 언어 파일 events의 키 */
 export type EventKind = "institutePromotion" | "instituteLongCourse";
 
-/** 토퍼에 이름과 함께 넣는 칸 — 직급(승진식) / 수료 과정(장기과정 수료식) */
-export type TopperDetail = "rank" | "course";
-
 /**
  * 특별한 날 — 달력 표시, 그날 고를 수 있는 시간, 첫 화면 안내에 쓰임.
  * 첫 화면 안내는 예약 마감(전날 오후 5시)이 지나면 자동으로 빠지고 다음 일정이 나옴 (lib/events의 getOpenEvents).
@@ -24,11 +21,9 @@ export type SpecialEvent = {
   recommendedCategory: ProductCategoryId;
   /** 무료 토퍼를 넣어주는 상품 종류 — "행사 꽃이에요"를 고르면 상품 칸에 토퍼 입력칸이 생김 */
   topperCategories: ProductCategoryId[];
-  /** 토퍼에 이름과 함께 받는 칸 */
-  topperDetail: TopperDetail;
 };
 
-/** 지방자치인재개발원 승진식 — 토퍼: 이름·직급 */
+/** 지방자치인재개발원 승진식 — 토퍼: 보내는 분 이름 또는 팀 이름 한 칸 */
 function institutePromotion(term: number, date: string): SpecialEvent {
   return {
     id: `institute-promotion-${term}`,
@@ -38,11 +33,10 @@ function institutePromotion(term: number, date: string): SpecialEvent {
     slots: ["08:00", "09:00"],
     recommendedCategory: "basket",
     topperCategories: ["bouquet", "basket"],
-    topperDetail: "rank",
   };
 }
 
-/** 지방자치인재개발원 장기과정 수료식 — 토퍼: 이름·수료 과정 (과정마다 토퍼가 다름) */
+/** 지방자치인재개발원 장기과정 수료식 — 토퍼: 보내는 분 이름 또는 팀 이름 (수료 과정은 매장에서 확인) */
 function instituteLongCourse(date: string): SpecialEvent {
   return {
     id: `institute-long-course-${date}`,
@@ -52,7 +46,6 @@ function instituteLongCourse(date: string): SpecialEvent {
     slots: ["08:00", "09:00"],
     recommendedCategory: "basket",
     topperCategories: ["bouquet", "basket"],
-    topperDetail: "course",
   };
 }
 

@@ -171,9 +171,10 @@ const events: Record<EventKind, EventCopy> = {
       "받으실 시간은 오전 8시·9시 중에서 골라주세요.",
     ],
     forEventYes: "네, 승진식 꽃이에요",
-    forEventHint: "승진식 꽃이면 무료 승진 토퍼(이름·직급)를 넣어드려요.",
+    forEventHint: "승진식 꽃이면 무료 승진 토퍼를 넣어드려요.",
     topperTitle: "🎓 승진 토퍼 (무료)",
-    topperDescription: "토퍼에 넣을 이름과 직급을 적어주세요. 비워두시면 매장에서 연락드려요.",
+    topperDescription:
+      "토퍼에 들어갈 보내는 분(주시는 분) 이름 또는 팀 이름을 적어주세요. 비워두시면 매장에서 연락드려요.",
   },
   instituteLongCourse: {
     calendarLabel: "수료식",
@@ -181,13 +182,14 @@ const events: Record<EventKind, EventCopy> = {
     title: () => "지방자치인재개발원 장기과정 수료식",
     highlights: [
       "무료 수료 토퍼를 함께 제공해 드려요.",
-      "과정마다 토퍼가 달라서, 신청서에 수료하신 과정을 적어주세요.",
+      "과정마다 토퍼가 달라서, 예약 후 매장에서 수료하신 과정을 확인하는 연락을 드릴 수 있어요.",
       "받으실 시간은 오전 8시·9시 중에서 골라주세요.",
     ],
     forEventYes: "네, 수료식 꽃이에요",
-    forEventHint: "수료식 꽃이면 무료 수료 토퍼(이름·수료 과정)를 넣어드려요.",
+    forEventHint: "수료식 꽃이면 무료 수료 토퍼를 넣어드려요.",
     topperTitle: "🎓 수료 토퍼 (무료)",
-    topperDescription: "과정마다 토퍼가 달라요. 토퍼에 넣을 이름과 수료하신 과정을 적어주세요. 비워두시면 매장에서 연락드려요.",
+    topperDescription:
+      "토퍼에 들어갈 보내는 분(주시는 분) 이름 또는 팀 이름을 적어주세요. 과정마다 토퍼가 달라서 수료하신 과정은 매장에서 확인 연락을 드려요.",
   },
 };
 
@@ -440,14 +442,11 @@ export const ko = {
     /** 특별한 날 고르면 "○○ 꽃인가요?" — 예일 때만 토퍼 칸 */
     forEventQuestion: (title: string) => `${title} 꽃인가요?`,
     forEventNo: "아니요, 일반 예약이에요",
-    nameAria: "토퍼에 넣을 이름",
-    namePlaceholder: "이름 (예: 홍길동)",
-    rankAria: "토퍼에 넣을 직급",
-    rankPlaceholder: "직급 (예: 사무관)",
-    courseAria: "토퍼에 넣을 수료 과정",
-    coursePlaceholder: "수료하신 과정 이름",
-    /** detail: 직급 또는 수료 과정 */
-    describe: (name: string, detail: string) => `토퍼 · ${[name, detail].filter(Boolean).join(" ") || "미입력 (매장에서 연락)"}`,
+    /** 받는 분 이름·직급을 적는 분이 많아서 한 칸(보내는 분 이름 또는 팀)으로 합치고 경고를 붙임 (2026-09-29) */
+    senderAria: "토퍼에 넣을 보내는 분 이름 또는 팀 이름",
+    senderPlaceholder: "보내는 분 이름 또는 팀 (예: 총무과 일동)",
+    senderWarning: "⚠️ 받는 분(축하받는 분) 이름·직급이 아니에요!",
+    describe: (sender: string) => `토퍼 · ${sender || "미입력 (매장에서 연락)"}`,
   },
 
   message: {
@@ -612,7 +611,7 @@ export const ko = {
     items: [
       {
         title: "수집 항목",
-        body: "예약자 성함·연락처(필수), 받는 분 성함·연락처·배송지 주소, 메시지 문구, 승진·수료 토퍼 이름·직급·수료 과정, 호접난 배송 식당·식당 예약 이름, 현금영수증 번호, 카드 결제하실 분 연락처, PayPal 결제 요청 이메일, 서류에 적을 상호·사업자등록번호, 입금 후 예약 취소 시 환불받을 은행명·계좌번호·예금주 (해당하는 경우)",
+        body: "예약자 성함·연락처(필수), 받는 분 성함·연락처·배송지 주소, 메시지 문구, 승진·수료 토퍼에 넣을 보내는 분 이름 또는 팀 이름, 호접난 배송 식당·식당 예약 이름, 현금영수증 번호, 카드 결제하실 분 연락처, PayPal 결제 요청 이메일, 서류에 적을 상호·사업자등록번호, 입금 후 예약 취소 시 환불받을 은행명·계좌번호·예금주 (해당하는 경우)",
       },
       {
         title: "이용 목적",

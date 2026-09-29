@@ -17,9 +17,7 @@ const delivery = (extra: Partial<ReservationRequest["deliveries"][number]> = {})
   recipientName: "",
   recipientPhone: "",
   recipientAddress: "",
-  topperName: "",
-  topperRank: "",
-  topperCourse: "",
+  topperSender: "",
   messageType: "none" as const,
   memo: "",
   ribbonLeft: "",
@@ -105,37 +103,34 @@ describe("서버에서 다시 검사 (lib/reservationValidation)", () => {
     const eventNow = toNowInTimeZone(new Date("2026-10-20T10:00+09:00"));
     const withTopper = (forEvent: boolean) =>
       validateReservationRequest(
-        request({ ...eventDay, forEvent, deliveries: [delivery({ topperName: "김철수", topperRank: "사무관" })] }),
+        request({ ...eventDay, forEvent, deliveries: [delivery({ topperSender: "총무과 일동" })] }),
         eventNow,
         submittedAt,
       );
 
     const yes = withTopper(true);
     assert.equal(yes.ok, true);
-    if (yes.ok) assert.equal(yes.request.deliveries[0].topperName, "김철수");
+    if (yes.ok) assert.equal(yes.request.deliveries[0].topperSender, "총무과 일동");
 
     const no = withTopper(false);
     assert.equal(no.ok, true);
-    if (no.ok) assert.equal(no.request.deliveries[0].topperName, "");
+    if (no.ok) assert.equal(no.request.deliveries[0].topperSender, "");
   });
 
-  it("수료식 날에는 직급 대신 수료 과정을 저장", () => {
+  it("수료식 날에도 토퍼는 보내는 분 이름·팀 한 칸", () => {
     const graduationNow = toNowInTimeZone(new Date("2026-11-20T10:00+09:00"));
     const result = validateReservationRequest(
       request({
         date: "2026-11-27",
         time: "09:00",
         forEvent: true,
-        deliveries: [delivery({ topperName: "김철수", topperRank: "사무관", topperCourse: "고위정책과정" })],
+        deliveries: [delivery({ topperSender: "고위정책과정 동기 일동" })],
       }),
       graduationNow,
       submittedAt,
     );
     assert.equal(result.ok, true);
-    if (result.ok) {
-      assert.equal(result.request.deliveries[0].topperCourse, "고위정책과정");
-      assert.equal(result.request.deliveries[0].topperRank, "");
-    }
+    if (result.ok) assert.equal(result.request.deliveries[0].topperSender, "고위정책과정 동기 일동");
   });
 
   it("지난 시간·마감된 시간은 거절", () => {

@@ -54,7 +54,7 @@ export type ResolvedUnit = {
   messageCopied: boolean;
   /** 받는 날이 특별한 날이라 무료 토퍼 입력칸이 있는 상품인지 */
   topperAvailable: boolean;
-  /** 토퍼 칸이 있으면 그 행사 (토퍼 제목·직급/수료 과정 칸을 정함), 없으면 null */
+  /** 토퍼 칸이 있으면 그 행사 (토퍼 제목·안내 문구를 정함), 없으면 null */
   topperEvent: SpecialEvent | null;
   /** 토퍼를 앞 상품(토퍼가 있는 상품)에서 따라왔는지 — 받는 분 "같음"을 따름 */
   topperCopied: boolean;
@@ -67,7 +67,7 @@ export function needsDeliveryAddress(receiveMethod: ReceiveMethod, category: Pro
   return receiveMethod === "delivery" && category !== "orchid";
 }
 
-export const emptyTopper: Topper = { name: "", rank: "", course: "" };
+export const emptyTopper: Topper = { sender: "" };
 
 export function emptyMessage(product: Product): UnitMessage {
   return {
@@ -85,12 +85,7 @@ export function isEmptyRecipient(recipient: Recipient) {
 }
 
 export function isEmptyTopper(topper: Topper) {
-  return !topper.name.trim() && !topper.rank.trim() && !topper.course.trim();
-}
-
-/** 토퍼 한 줄 — "홍길동 사무관" / "홍길동 ○○과정" (행사에 따라 직급 또는 수료 과정 중 적힌 것) */
-export function joinTopper(name: string, rank: string, course: string) {
-  return [name, rank, course].map((text) => text.trim()).filter(Boolean).join(" ");
+  return !topper.sender.trim();
 }
 
 /** 메시지를 아직 한 번도 고르거나 적지 않은 상태(= 상품 종류의 기본값 그대로)인지 */
@@ -207,9 +202,9 @@ export function describeRecipient(recipient: Recipient, t: Messages = ko, withAd
   return text || t.recipient.describeEmpty;
 }
 
-/** "토퍼 · 홍길동 사무관" / "토퍼 · 홍길동 ○○과정" */
+/** "토퍼 · 총무과 일동" (보내는 분 이름 또는 팀) */
 export function describeTopper(topper: Topper, t: Messages = ko) {
-  return t.topper.describe(topper.name.trim(), joinTopper("", topper.rank, topper.course));
+  return t.topper.describe(topper.sender.trim());
 }
 
 /** "메모지 · 생일 축하해" (언어별) */

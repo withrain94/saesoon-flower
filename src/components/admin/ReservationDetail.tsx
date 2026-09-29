@@ -16,7 +16,6 @@ import {
   localeNames,
 } from "@/lib/adminFormat";
 import { formatReceiptNumber } from "@/lib/format";
-import { joinTopper } from "@/lib/units";
 import { notionPageTitle } from "@/lib/notionReservation";
 import type { StoredReservation } from "@/types/reservation";
 import AdminDocuments from "./AdminDocuments";
@@ -108,7 +107,7 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
       <Card title="받는 분·메시지">
         <ul className="space-y-2">
           {request.deliveries.map((delivery) => {
-            const topper = joinTopper(delivery.topperName, delivery.topperRank, delivery.topperCourse);
+            const topper = delivery.topperSender;
             const address = describeDeliveryAddress(request, delivery);
             return (
               <li key={`${delivery.productId}-${delivery.unitNo}`} className="rounded-xl bg-soft px-3 py-2.5">
@@ -117,7 +116,7 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
                   <Row label="받는 분">{describeDeliveryRecipient(request, delivery)}</Row>
                   {address && <Row label="배송지">{address}</Row>}
                   <Row label="메시지">{describeDeliveryMessage(delivery)}</Row>
-                  {topper && <Row label="토퍼">{topper}</Row>}
+                  {topper && <Row label="토퍼(보내는 분)">{topper}</Row>}
                 </Rows>
               </li>
             );

@@ -2,7 +2,13 @@ import "server-only";
 
 import { getEventOn } from "@/data/events";
 import { isReservationStatus } from "@/data/reservationStatus";
-import type { CancelRequest, ReservationRequest, ReservationStatus, StoredReservation } from "@/types/reservation";
+import type {
+  CancelRequest,
+  ReservationDelivery,
+  ReservationRequest,
+  ReservationStatus,
+  StoredReservation,
+} from "@/types/reservation";
 import { createDatabaseClient } from "./supabase";
 
 /** supabase/schema.sql 의 reservations 테이블 */
@@ -20,9 +26,19 @@ type ReservationRow = {
   reminder_sent_at?: string | null;
 };
 
+/** 토퍼가 이름·직급(수료 과정) 두 칸이던 예전 기록에서 적혀 있던 값 한 줄 */
+function oldTopperText(delivery: ReservationDelivery) {
+  const old = delivery as ReservationDelivery & { topperName?: string; topperRank?: string; topperCourse?: string };
+  return [old.topperName, old.topperRank, old.topperCourse]
+    .map((text) => (text ?? "").trim())
+    .filter(Boolean)
+    .join(" ");
+}
+
 /**
  * 받는 방법·배송지·승진식 꽃 여부 칸이 생기기 전(2026-09-19) 기록 — 호접난 식당 배송이면 배송, 아니면 픽업으로 보고
- * 배송지는 빈 값, 특별한 날 예약은 행사용 꽃으로 봄 (전에는 그날 예약 모두 토퍼 칸이 있었음)
+ * 배송지는 빈 값, 특별한 날 예약은 행사용 꽃으로 봄 (전에는 그날 예약 모두 토퍼 칸이 있었음).
+ * 토퍼가 이름·직급(수료 과정) 두 칸이던 기록(2026-09-29 전)은 적힌 값을 이어 붙여 한 칸으로 읽는다.
  */
 function withReceiveDefaults(request: ReservationRequest): ReservationRequest {
   return {
@@ -32,7 +48,7 @@ function withReceiveDefaults(request: ReservationRequest): ReservationRequest {
     deliveries: request.deliveries.map((delivery) => ({
       ...delivery,
       recipientAddress: delivery.recipientAddress ?? "",
-      topperCourse: delivery.topperCourse ?? "",
+      topperSender: delivery.topperSender ?? oldTopperText(delivery),
     })),
   };
 }

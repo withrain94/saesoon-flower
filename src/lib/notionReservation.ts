@@ -5,7 +5,6 @@ import { describeColor, describeDeliveryAddress, describePayment, describeReceiv
 import { parseDateKey } from "@/lib/date";
 import { formatReceiptNumber } from "@/lib/format";
 import { getSlotHour } from "@/lib/time";
-import { joinTopper } from "@/lib/units";
 import type { ReservationDelivery, ReservationRequest, ReservationStatus, StoredReservation } from "@/types/reservation";
 
 /**
@@ -167,7 +166,7 @@ export function buildNotionRows({ id, status, adminMemo, request }: StoredReserv
       "받는 방법": receiveMethod,
       // 꽃다발·꽃바구니는 적은 주소, 호접난은 배송 식당
       배송지: describeDeliveryAddress(request, delivery) ?? "",
-      토퍼: joinTopper(delivery.topperName, delivery.topperRank, delivery.topperCourse),
+      토퍼: delivery.topperSender,
       "결제 방법": payment,
       접수번호: receipt,
       "매장 메모": adminMemo,
