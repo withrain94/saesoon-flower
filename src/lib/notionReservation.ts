@@ -151,6 +151,8 @@ export function buildNotionRows({ id, status, adminMemo, request }: StoredReserv
   const receiveMethod = describeReceiveMethod(request);
   const receipt = formatReceiptNumber(id);
   const canceled = status === "canceled" ? CANCELED_MARK : "";
+  // 입금 여부 — 표 칸 수를 바꾸면 이미 만든 날짜 표에 못 올리므로 결제 방법 칸 앞에 붙임 (취소는 예약종류에 [취소])
+  const paidMark = status === "received" ? "[입금 전] " : status === "canceled" ? "" : "[입금 확인] ";
 
   return request.deliveries.map((delivery) => {
     const row: Record<(typeof NOTION_TABLE_HEADERS)[number], string> = {
@@ -167,7 +169,7 @@ export function buildNotionRows({ id, status, adminMemo, request }: StoredReserv
       // 꽃다발·꽃바구니는 적은 주소, 호접난은 배송 식당
       배송지: describeDeliveryAddress(request, delivery) ?? "",
       토퍼: delivery.topperSender,
-      "결제 방법": payment,
+      "결제 방법": `${paidMark}${payment}`,
       접수번호: receipt,
       "매장 메모": adminMemo,
     };
