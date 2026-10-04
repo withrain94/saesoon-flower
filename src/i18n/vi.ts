@@ -446,8 +446,9 @@ export const vi: Messages = {
 
   blackboardPresets: {
     auto: "Để tiệm viết giúp",
-    thanks: "“Cảm ơn bố mẹ đã nuôi dạy chúng con. Chúng con sẽ sống thật tốt.”",
-    luck: "“Như ý nghĩa của hoa lan hồ điệp, mong may mắn bay đến — chúng con sẽ sống thật hạnh phúc.”",
+    love: "“Cảm ơn bố mẹ đã nuôi dạy chúng con bằng tình yêu thương. Chúng con sẽ xây dựng gia đình hạnh phúc bằng niềm tin và sự quan tâm.”",
+    devotion: "“Cảm ơn bố mẹ vì tình yêu và sự hy sinh bấy lâu nay. Chúng con sẽ sống tốt, luôn sẻ chia cho nhau.”",
+    happiness: "“Như ý nghĩa của hoa lan hồ điệp, chúng con sẽ xây dựng gia đình luôn tràn đầy yêu thương và hạnh phúc.”",
   },
 
   payment: {

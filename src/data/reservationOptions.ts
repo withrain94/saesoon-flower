@@ -35,7 +35,7 @@ export const BLACKBOARD_CUSTOM = "custom";
 
 export type BlackboardPreset = {
   /** 언어 파일 blackboardPresets의 키 */
-  id: "auto" | "thanks" | "luck";
+  id: "auto" | "love" | "devotion" | "happiness";
   /** 블랙보드에 실제로 쓸 문구 (한국어). 빈 문자열이면 매장에서 알아서 작성 */
   text: string;
 };
@@ -47,8 +47,9 @@ export type BlackboardPreset = {
 export const blackboardPresetsByCategory: Partial<Record<ProductCategoryId, BlackboardPreset[]>> = {
   orchid: [
     { id: "auto", text: "" },
-    { id: "thanks", text: "키워주셔서 감사합니다 앞으로 잘 살겠습니다." },
-    { id: "luck", text: "호접난의 꽃말처럼 행운이 날아오길 바라며 행복하게 잘 살겠습니다." },
+    { id: "love", text: "사랑으로 키워주셔서 감사합니다. 믿음과 배려로 행복한 가정을 이루겠습니다." },
+    { id: "devotion", text: "지금까지의 사랑과 헌신에 감사드립니다. 서로 베풀며 잘 살겠습니다." },
+    { id: "happiness", text: "호접난의 꽃말처럼 늘 사랑과 행복이 가득한 가정을 이루겠습니다." },
   ],
 };
 

@@ -455,8 +455,9 @@ export const en: Messages = {
 
   blackboardPresets: {
     auto: "Leave it to the shop",
-    thanks: "“Thank you for raising us. We will live well.”",
-    luck: "“Like the orchid's flower language, may good fortune fly to you — we will live happily.”",
+    love: "“Thank you for raising us with love. We will build a happy family with trust and care.”",
+    devotion: "“Thank you for all your love and devotion. We will live well, giving to each other.”",
+    happiness: "“Like the orchid's flower language, we will build a family always full of love and happiness.”",
   },
 
   payment: {
