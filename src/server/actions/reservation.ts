@@ -6,6 +6,7 @@ import { validateReservationRequest } from "@/lib/reservationValidation";
 import { toNowInTimeZone } from "@/lib/time";
 import type { ReservationRequest } from "@/types/reservation";
 import { getSiteOrigin, getSupabaseEnv } from "../env";
+import { syncReservationToNotionById } from "../notion";
 import { notifyNewReservation } from "../notify";
 import { insertReservation } from "../reservations";
 
@@ -31,8 +32,9 @@ export async function submitReservation(input: unknown): Promise<SubmitReservati
 
   try {
     const id = await insertReservation(result.request);
-    // 매장 알림은 손님 완료 화면을 기다리게 하지 않도록 응답 뒤에 보냄 (실패해도 예약은 그대로)
+    // 매장 알림·노션 표는 손님 완료 화면을 기다리게 하지 않도록 응답 뒤에 보냄 (실패해도 예약은 그대로)
     after(() => notifyNewReservation(id, result.request, getSiteOrigin()));
+    after(() => syncReservationToNotionById(id));
     return { ok: true, id, request: result.request };
   } catch (error) {
     // 고객 정보는 남기지 않고 오류 종류만 서버 로그에

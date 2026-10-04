@@ -14,6 +14,7 @@ import { formatReceiptNumber } from "@/lib/format";
 import type { CustomerReservationView, StoredReservation } from "@/types/reservation";
 import { ADMIN_HOME_PATH } from "../auth";
 import { getSiteOrigin, getSupabaseEnv } from "../env";
+import { syncReservationToNotionById } from "../notion";
 import { sendTelegramMessage } from "../notify";
 import {
   cancelUnpaidReservation,
@@ -201,6 +202,8 @@ export async function cancelReservationByCustomer(input: CancelInput): Promise<L
       const record = { requestedAt, paid: false, ...noRefund };
       if (!(await cancelUnpaidReservation(reservation.id, record))) return { ok: false, code: "notCancelable" };
       after(() => sendTelegramMessage(buildCancelNotice("canceled", reservation.id, reservation.request, adminUrl)));
+      // 접수 때 노션에 올라간 줄에 [취소] 표시
+      after(() => syncReservationToNotionById(reservation.id));
       return { ok: true, reservation: { ...toView(reservation), status: "canceled" } };
     }
 

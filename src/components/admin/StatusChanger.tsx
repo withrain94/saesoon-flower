@@ -53,7 +53,7 @@ export default function StatusChanger({ id, status }: { id: string; status: Rese
         })}
       </div>
       <p aria-live="polite" className="mt-1.5 text-[12px] text-sub">
-        {isPending ? "저장 중…" : "버튼을 누르면 바로 저장돼요. 입금·결제 확인부터는 노션 표에도 올라가요."}
+        {isPending ? "저장 중…" : "버튼을 누르면 바로 저장돼요. 노션 표도 같이 고쳐져요."}
       </p>
       {notice && <p className="mt-1 text-[13px] font-semibold text-brand-dark">{notice}</p>}
       {error && <ErrorText>{error}</ErrorText>}

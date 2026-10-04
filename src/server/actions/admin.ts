@@ -129,7 +129,7 @@ function describeNotionResult(result: NotionSyncResult, trigger: "status" | "mem
     case "updated":
       return trigger === "memo" ? "노션 표의 매장 메모도 고쳤어요." : `노션 ‘${result.title}’ 표도 고쳤어요.`;
     case "skipped":
-      return trigger === "manual" ? "입금·결제 확인 이후 상태가 되면 노션에 올라가요." : undefined;
+      return trigger === "manual" ? "취소된 예약은 노션에 새로 올리지 않아요." : undefined;
     case "not-configured":
       return trigger === "memo" ? undefined : "노션 연결 설정이 아직 없어서 노션에는 올리지 않았어요.";
     case "failed":

@@ -13,6 +13,7 @@ import {
 import { formatReceiptNumber } from "@/lib/format";
 import type { StoredReservation } from "@/types/reservation";
 import { getNotionEnv } from "./env";
+import { getReservation } from "./reservations";
 
 /**
  * 노션 날짜별 예약 표 올리기.
@@ -166,8 +167,8 @@ async function refreshContactLists(token: string, pageId: string) {
 
 /**
  * 예약 한 건을 노션 표에 맞춤 — 여러 번 불러도 줄이 겹치지 않음 (접수번호 칸으로 찾음).
- * - 입금·결제 확인 이후 상태: 받는 날짜 페이지(없으면 만듦)의 표에 줄 추가, 이미 있으면 내용 갱신
- * - 그 밖의 상태(접수·취소): 이미 올라간 줄만 갱신 (취소면 예약종류 앞에 [취소])
+ * - 접수 이후 상태: 받는 날짜 페이지(없으면 만듦)의 표에 줄 추가, 이미 있으면 내용 갱신
+ * - 취소: 이미 올라간 줄만 갱신 (예약종류 앞에 [취소])
  * - 인재개발원 날짜 페이지는 표가 바뀔 때마다 표 아래 연락처 모음도 새로 씀
  * 실패해도 예외를 던지지 않음 — 노션 문제로 관리자 상태 저장이 막히면 안 되므로
  */
@@ -189,6 +190,19 @@ export async function syncReservationToNotion(reservation: StoredReservation): P
     const reason = error instanceof NotionError ? `${error.status} ${error.code}` : error instanceof Error ? error.name : "unknown";
     console.error("[notion] 올리기 실패", reason);
     return { kind: "failed", reason };
+  }
+}
+
+/**
+ * 손님 신청·취소 뒤 `after()`에서 부름 — 저장된 예약을 다시 읽어 노션 표에 맞춤.
+ * 예외를 던지지 않음 (실패하면 관리자 상세 "노션에 다시 올리기"로 다시 올림)
+ */
+export async function syncReservationToNotionById(id: string): Promise<void> {
+  try {
+    const reservation = await getReservation(id);
+    if (reservation) await syncReservationToNotion(reservation);
+  } catch (error) {
+    console.error("[notion] 예약 불러오기 실패", error instanceof Error ? error.name : "unknown");
   }
 }
 

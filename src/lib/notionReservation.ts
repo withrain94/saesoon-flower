@@ -37,8 +37,8 @@ const ORDERER_PHONE_COLUMN = NOTION_TABLE_HEADERS.indexOf("보내는분 연락�
 const RECIPIENT_PHONE_COLUMN = NOTION_TABLE_HEADERS.indexOf("받는분 연락처");
 const KIND_COLUMN = NOTION_TABLE_HEADERS.indexOf("예약종류");
 
-/** 이 상태가 되면 노션 표에 올림 (입금·결제 확인 이후) */
-export const NOTION_SYNC_STATUSES: ReservationStatus[] = ["confirmed", "made", "delivered"];
+/** 이 상태면 노션 표에 올림 (접수되자마자 — 취소만 새로 올리지 않음) */
+export const NOTION_SYNC_STATUSES: ReservationStatus[] = ["received", "confirmed", "made", "delivered"];
 
 const CANCELED_MARK = "[취소] ";
 
