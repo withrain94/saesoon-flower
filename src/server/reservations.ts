@@ -24,6 +24,8 @@ type ReservationRow = {
   cancel_request?: CancelRequest | null;
   /** 안내 문자 보냄 표시 — schema.sql 2026-09-16 추가 SQL을 실행하기 전에는 없음 */
   reminder_sent_at?: string | null;
+  /** 현금영수증 발급 표시 — schema.sql 2026-10-09 추가 SQL을 실행하기 전에는 없음 */
+  cash_receipt_issued_at?: string | null;
 };
 
 /** 토퍼가 이름·직급(수료 과정) 두 칸이던 예전 기록에서 적혀 있던 값 한 줄 */
@@ -63,6 +65,7 @@ function fromRow(row: ReservationRow): StoredReservation {
     // paid 칸이 생기기 전 기록은 취소 요청(입금 후)으로 봄
     cancelRequest: row.cancel_request ? { ...row.cancel_request, paid: row.cancel_request.paid ?? true } : null,
     reminderSentAt: row.reminder_sent_at ?? null,
+    cashReceiptIssuedAt: row.cash_receipt_issued_at ?? null,
   };
 }
 
@@ -125,6 +128,18 @@ export async function listAllReservations(): Promise<StoredReservation[]> {
   return (data as ReservationRow[]).map(fromRow);
 }
 
+/** 현금영수증을 신청한 예약 전체 (접수 늦은 순, 취소 포함) — 관리자 "현금영수증" 화면용. 호출 전에 requireAdmin() 필수 */
+export async function listCashReceiptReservations(): Promise<StoredReservation[]> {
+  const { data, error } = await createDatabaseClient()
+    .from(TABLE)
+    .select(COLUMNS)
+    .in("request->>cashReceiptType", ["income", "expense"])
+    .order("created_at", { ascending: false })
+    .limit(10000);
+  if (error) throw error;
+  return (data as ReservationRow[]).map(fromRow);
+}
+
 /**
  * 받는 날짜 하루치 예약 (취소 제외, 시간 순) — 전날 "내일 예약 목록" 텔레그램(server/reminders)용.
  * 호출하는 쪽(app/cron)이 CRON_SECRET을 먼저 확인
@@ -169,7 +184,7 @@ export async function getReservation(id: string): Promise<StoredReservation | nu
 /** 관리자 상태·메모 수정. 호출 전에 requireAdmin() 필수 */
 export async function updateReservation(
   id: string,
-  patch: { status?: ReservationStatus; adminMemo?: string; reminderSentAt?: string | null },
+  patch: { status?: ReservationStatus; adminMemo?: string; reminderSentAt?: string | null; cashReceiptIssuedAt?: string | null },
 ) {
   const { error } = await createDatabaseClient()
     .from(TABLE)
@@ -177,6 +192,7 @@ export async function updateReservation(
       ...(patch.status ? { status: patch.status } : {}),
       ...(patch.adminMemo !== undefined ? { admin_memo: patch.adminMemo } : {}),
       ...(patch.reminderSentAt !== undefined ? { reminder_sent_at: patch.reminderSentAt } : {}),
+      ...(patch.cashReceiptIssuedAt !== undefined ? { cash_receipt_issued_at: patch.cashReceiptIssuedAt } : {}),
       updated_at: new Date().toISOString(),
     })
     .eq("id", id);

@@ -63,7 +63,7 @@
 | 예약 조회 버튼 | 헤더 맨 오른쪽 묶음 첫 칸 "예약 조회"(5개 언어, /check에선 숨김) + 푸터 링크 + 완료 화면. 헤더 공간 때문에 소개 사이트 버튼 글자를 "소개 ›"로 줄임(2026-09-15 사용자 선택) | `StoreHeader`, 언어 파일 `header.lookupLink` |
 | 소개 사이트 연결 | 헤더 버튼 + 상품 탭별 "사진·설명 더 보기" + 사진 목록 끝 칸. 꽃다발 `#product-01`, 꽃바구니 `#product-02`, 호접난 `#meeting` | `siteUrl`, `siteLinksByCategory` |
 | 결제 방법 | 신청서에서는 **계좌이체 / 카드 결제 / PayPal** 3개. PayPal = 상품 금액 + 수수료 10% 자동 계산 + **"PayPal 결제 요청 받을 이메일"(필수)**, 외국어 화면은 결제 칸 위에 "해외에서 결제하시나요?" 크게. 카드 결제 = 매장 연락 후 전화로 카드번호 전달(신청서에 적지 말라고 안내) + "카드 결제하실 분 연락처: 1.예약자와 동일 / 2.다름(자유 입력)" | `paymentMethodOptions`, `PAYPAL_FEE_RATE`, `PaymentMethodField` |
-| 현금영수증 | 계좌이체일 때만: 신청 안 함 / 소득공제(휴대폰) / 지출증빙(사업자번호) | `cashReceiptOptions` |
+| 현금영수증 | 계좌이체일 때만: 신청 안 함 / 소득공제(휴대폰) / 지출증빙(사업자번호). 관리자 목록 위 **🧾 현금영수증 신청 내역** → `/admin/cash-receipts`: **예약 접수한 달(한국 시각)별**(2026-10-09 사용자 선택), 건수·합계(취소 제외)·발급 대기, 예약마다 **[발급 완료] 체크**(관리자 상세 결제 칸에도). 손님 화면엔 안 보임. 저장 칸 `cash_receipt_issued_at`(schema.sql 2026-10-09 추가 SQL) | `cashReceiptOptions`, `lib/cashReceipts.ts`, `app/admin/cash-receipts`, `CashReceiptIssuedCheckbox` |
 | 네이버 예약 | **첫 화면에서 먼저 나눈다** (신청서 작성 후 네이버로 가면 이중 작성이 되므로). 결제 방법에는 넣지 않고 작은 "네이버 예약 바로가기" 안내만 | `NaverBookingBanner`, 언어 파일 `naverBanner` |
 | 화분 | 개업·승진·축하 화분은 **네이버 예약으로만** (첫 화면 버튼) | `naverOnlyBookings` |
 | 받는 분·메시지 | 상품 1개마다 카드, 2번째부터 "앞과 같음" 기본 체크, "모두 같음/모두 따로" 버튼. 메시지 "같음"은 같은 종류끼리만. **"예약자와 같음" 체크** = 받는 분 성함·연락처를 예약자 것으로(배송지는 따로) | `lib/units.ts` |
@@ -97,6 +97,8 @@
 Vercel: 기록 파일만 바꾼 커밋(deb2fa3)은 배포가 안 만들어진 적 있음(원인 모름) → 반영 안 되면 대시보드 Deployments > 맨 위 ⋯ > Redeploy(Build Cache 끔).
 
 ## 6. 남은 일·확인 대기
+
+0000000. **현금영수증 신청 내역(달별) + 발급 완료 체크 — 2026-10-09 배포.** ⏳ 사용자가 Supabase SQL Editor에서 `alter table public.reservations add column if not exists cash_receipt_issued_at timestamptz; notify pgrst, 'reload schema';` 실행해야 체크 저장됨(실행 전에는 화면은 보이고 체크하면 "칸이 아직 없어요" 안내). 실제 DB 조회 확인: 예약 32건 중 현금영수증 신청 13건이 걸러짐. tsc·lint·`npm test` 40개 통과. 로그인 필요라 화면을 직접 눌러보지 못함. 예약 백업 CSV에는 발급 칸 아직 없음.
 
 000000. **노션 표에 입금 여부 — 2026-10-04 배포.** 사용자 선택: 새 칸 대신 **"결제 방법" 칸 앞에** `[입금 전]`(접수) / `[입금 확인]`(입금·결제 확인·제작 완료·전달 완료), 취소는 표시 없음(예약종류에 [취소]). 표 칸 수 15개 그대로라 기존 날짜 표에도 올라감. 관리자 상태를 바꾸면 자동으로 바뀜. `tests/notion.test.ts` 추가 → `npm test` 38개·tsc·lint 통과.
 

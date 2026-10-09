@@ -17,7 +17,7 @@ npm test       # 핵심 규칙 자동 검사 (tests/ — 예약 가능 시간·�
 ```
 src/
 ├─ app/                      페이지 진입점 (page.tsx, layout.tsx, globals.css) · privacy/ 개인정보 처리방침 · check/ 손님 예약 조회·취소 · documents/pdf/ 서류 PDF 다운로드(POST) · cron/tomorrow-reminders/ 매일 저녁 내일 예약 목록(Vercel Cron, vercel.json)
-│  └─ admin/                 관리자 페이지 — login / 목록(page.tsx, ?status= 필터) / [id] 상세
+│  └─ admin/                 관리자 페이지 — login / 목록(page.tsx, ?status= 필터) / [id] 상세 / cash-receipts 현금영수증 신청 내역(접수 달별, ?month=, 발급 완료 체크 — lib/cashReceipts)
 ├─ proxy.ts                  /admin 요청마다 로그인 세션 갱신 (Next 16: middleware → proxy)
 ├─ components/
 │  ├─ lookup/                손님 예약 조회·취소 — ReservationLookup(예약자 이름+연락처), LookupResultList(여러 건이면 목록), LookupReservationDetails, LookupCancelPanel(입금 전 취소 / 입금 후 환불 계좌 받고 취소 요청)

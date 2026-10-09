@@ -13,6 +13,7 @@ const reservation: StoredReservation = {
   adminMemo: '메모에 "따옴표"와, 쉼표',
   cancelRequest: null,
   reminderSentAt: null,
+  cashReceiptIssuedAt: null,
   request: {
     items: [{ productId: bouquet.id, category: bouquet.category, price: bouquet.price, quantity: 1 }],
     deliveries: [

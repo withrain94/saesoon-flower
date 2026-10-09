@@ -99,6 +99,24 @@ export async function setReminderSent(id: string, sent: boolean): Promise<AdminF
   return { error: null, savedAt: Date.now() };
 }
 
+/** 현금영수증 발급 완료 표시 켜기·끄기 (현금영수증 화면·상세 화면 체크박스) */
+export async function setCashReceiptIssued(id: string, issued: boolean): Promise<AdminFormState> {
+  await requireAdmin();
+  if (!isReservationId(id)) return { error: "잘못된 요청이에요." };
+
+  try {
+    await updateReservation(id, { cashReceiptIssuedAt: issued ? new Date().toISOString() : null });
+  } catch (error) {
+    const code = typeof error === "object" && error !== null ? (error as { code?: unknown }).code : undefined;
+    if (code === "PGRST204" || code === "42703") {
+      return { error: "DB에 '현금영수증 발급' 칸이 아직 없어요. Supabase SQL Editor에서 supabase/schema.sql 맨 아래 SQL을 실행해 주세요." };
+    }
+    return { error: "저장하지 못했어요. 잠시 후 다시 시도해 주세요." };
+  }
+  refresh();
+  return { error: null, savedAt: Date.now() };
+}
+
 /** 노션에 다시 올리기 (실패했을 때 상세 화면 버튼) */
 export async function resyncReservationNotion(id: string): Promise<AdminFormState> {
   await requireAdmin();

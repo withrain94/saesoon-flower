@@ -22,6 +22,7 @@ import AdminDocuments from "./AdminDocuments";
 import CancelRequestCard from "./CancelRequestCard";
 import AdminMemoForm from "./AdminMemoForm";
 import NotionSyncButton from "./NotionSyncButton";
+import CashReceiptIssuedCheckbox from "./CashReceiptIssuedCheckbox";
 import ReminderToggle from "./ReminderToggle";
 import StatusBadge from "./StatusBadge";
 import StatusChanger from "./StatusChanger";
@@ -133,6 +134,11 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
             <Row label={payment.cashReceiptTitle}>
               {payment.cashReceiptOptions[request.cashReceiptType]}
               {request.cashReceiptNumber && ` · ${request.cashReceiptNumber}`}
+            </Row>
+          )}
+          {request.paymentMethod === "bank" && request.cashReceiptType !== "none" && (
+            <Row label="발급">
+              <CashReceiptIssuedCheckbox id={id} issuedAt={reservation.cashReceiptIssuedAt} />
             </Row>
           )}
           {request.paymentMethod === "card" && (

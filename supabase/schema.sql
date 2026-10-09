@@ -48,3 +48,9 @@ notify pgrst, 'reload schema';
 alter table public.reservations add column if not exists reminder_sent_at timestamptz;
 
 notify pgrst, 'reload schema';
+
+-- ── 2026-10-09 추가: 현금영수증 발급 완료 표시 ───────────────────────────────
+-- 관리자 "현금영수증" 화면의 발급 완료 체크 시각 (안 했으면 null). 손님 화면에는 안 보임. 여러 번 실행해도 안전
+alter table public.reservations add column if not exists cash_receipt_issued_at timestamptz;
+
+notify pgrst, 'reload schema';

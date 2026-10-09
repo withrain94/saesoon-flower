@@ -195,6 +195,8 @@ export type StoredReservation = {
   cancelRequest: CancelRequest | null;
   /** 매장이 예약 전 안내 문자를 보냈다고 표시한 시각 (ISO) — 안 보냈으면 null */
   reminderSentAt: string | null;
+  /** 매장이 현금영수증을 발급했다고 표시한 시각 (ISO) — 안 했으면 null. 관리자 전용 */
+  cashReceiptIssuedAt: string | null;
 };
 
 /** 손님 예약 조회 화면에 보내는 내용 (매장 메모 등 매장 전용 정보는 뺌) */

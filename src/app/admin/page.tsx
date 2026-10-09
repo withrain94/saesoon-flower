@@ -1,3 +1,4 @@
+import Link from "next/link";
 import AdminHeader from "@/components/admin/AdminHeader";
 import ReservationListItem from "@/components/admin/ReservationListItem";
 import StatusFilterTabs from "@/components/admin/StatusFilterTabs";
@@ -51,6 +52,13 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
             ⬇ 예약 전체 내려받기
           </a>
         </div>
+        <Link
+          href="/admin/cash-receipts"
+          className="mt-2 flex items-center justify-between gap-2 rounded-xl bg-white px-3 py-2.5 text-[13.5px] font-semibold text-ink transition hover:text-brand-dark"
+        >
+          🧾 현금영수증 신청 내역 (달별 · 발급 체크)
+          <span className="text-sub">›</span>
+        </Link>
 
         {!result ? (
           <p className="mt-6 rounded-xl bg-white px-4 py-5 text-[14px] text-danger">
