@@ -204,7 +204,7 @@ export const vi: Messages = {
       highlights: [
         "Cán bộ từ khắp cả nước tập trung về Wanju, nhiều người đến từ xa nên giỏ hoa đặc biệt được ưa chuộng.",
         "Tặng kèm miễn phí thẻ cắm (topper) chúc mừng thăng chức.",
-        "Vui lòng chọn giờ nhận hoa lúc 8:00 hoặc 9:00 sáng.",
+        "Giờ nhận hoa là 8:00 sáng.",
       ],
       forEventYes: "Đúng, cho lễ thăng chức",
       forEventHint: "Hoa cho lễ thăng chức được tặng kèm thẻ cắm thăng chức miễn phí.",
@@ -219,7 +219,7 @@ export const vi: Messages = {
       highlights: [
         "Tặng kèm miễn phí thẻ cắm (topper) chúc mừng hoàn thành khóa học.",
         "Mỗi khóa có thẻ cắm khác nhau, nên tiệm có thể liên hệ để xác nhận khóa học quý khách đã hoàn thành.",
-        "Vui lòng chọn giờ nhận hoa lúc 8:00 hoặc 9:00 sáng.",
+        "Giờ nhận hoa là 8:00 sáng.",
       ],
       forEventYes: "Đúng, cho lễ bế giảng",
       forEventHint: "Hoa cho lễ bế giảng được tặng kèm thẻ cắm miễn phí.",

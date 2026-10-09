@@ -27,11 +27,12 @@ describe("예약 가능한 시간 (lib/time)", () => {
     assert.equal(isSlotBookable("08:00", "2026-11-11", afternoon), true);
   });
 
-  it("특별한 날은 그 날 정해진 시간만 (승진식·수료식 오전 8·9시)", () => {
+  it("특별한 날은 그 날 정해진 시간만 (승진식·수료식 오전 8시)", () => {
     const event = specialEvents[0];
     const week = at("2026-09-30T10:00");
-    assert.deepEqual(event.slots, ["08:00", "09:00"]);
-    assert.equal(isSlotBookable("09:00", event.date, week), true);
+    assert.deepEqual(event.slots, ["08:00"]);
+    assert.equal(isSlotBookable("08:00", event.date, week), true);
+    assert.equal(isSlotBookable("09:00", event.date, week), false);
     assert.equal(isSlotBookable("14:00", event.date, week), false);
   });
 

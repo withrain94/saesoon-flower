@@ -30,7 +30,7 @@ function institutePromotion(term: number, date: string): SpecialEvent {
     kind: "institutePromotion",
     term,
     date,
-    slots: ["08:00", "09:00"],
+    slots: ["08:00"],
     recommendedCategory: "basket",
     topperCategories: ["bouquet", "basket"],
   };
@@ -43,7 +43,7 @@ function instituteLongCourse(date: string): SpecialEvent {
     kind: "instituteLongCourse",
     term: 0,
     date,
-    slots: ["08:00", "09:00"],
+    slots: ["08:00"],
     recommendedCategory: "basket",
     topperCategories: ["bouquet", "basket"],
   };

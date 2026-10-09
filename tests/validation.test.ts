@@ -99,7 +99,7 @@ describe("서버에서 다시 검사 (lib/reservationValidation)", () => {
   });
 
   it("행사 꽃이 아니면 토퍼를 저장하지 않음", () => {
-    const eventDay = { date: "2026-10-30", time: "09:00" };
+    const eventDay = { date: "2026-10-30", time: "08:00" };
     const eventNow = toNowInTimeZone(new Date("2026-10-20T10:00+09:00"));
     const withTopper = (forEvent: boolean) =>
       validateReservationRequest(
@@ -122,7 +122,7 @@ describe("서버에서 다시 검사 (lib/reservationValidation)", () => {
     const result = validateReservationRequest(
       request({
         date: "2026-11-27",
-        time: "09:00",
+        time: "08:00",
         forEvent: true,
         deliveries: [delivery({ topperSender: "고위정책과정 동기 일동" })],
       }),

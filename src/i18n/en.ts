@@ -212,7 +212,7 @@ export const en: Messages = {
       highlights: [
         "Officials gather in Wanju from all over the country and many travel far, so flower baskets are especially popular.",
         "A free promotion topper is included.",
-        "Please choose a pickup time of 8 AM or 9 AM.",
+        "The pickup time is 8 AM.",
       ],
       forEventYes: "Yes, for the ceremony",
       forEventHint: "For the ceremony, we add a free promotion topper.",
@@ -227,7 +227,7 @@ export const en: Messages = {
       highlights: [
         "A free graduation topper is included.",
         "Toppers differ by course, so the shop may contact you to confirm which course you completed.",
-        "Please choose a pickup time of 8 AM or 9 AM.",
+        "The pickup time is 8 AM.",
       ],
       forEventYes: "Yes, for the graduation",
       forEventHint: "For the graduation, we add a free graduation topper.",
