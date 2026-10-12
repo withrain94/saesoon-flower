@@ -67,7 +67,6 @@ const bouquet = defineCategory(
   [
     {
       price: 50000,
-      rank: 3,
       cover: 0,
       images: photos([
         "bouquet-50000-15.jpg",
@@ -82,7 +81,7 @@ const bouquet = defineCategory(
     },
     {
       price: 60000,
-      rank: 1,
+      rank: 2,
       cover: 0,
       images: photos([
         "bouquet-60000-18.jpg",
@@ -97,6 +96,7 @@ const bouquet = defineCategory(
     },
     {
       price: 70000,
+      rank: 5,
       cover: 1,
       images: photos([
         "bouquet-70000-01.jpg",
@@ -111,7 +111,7 @@ const bouquet = defineCategory(
     },
     {
       price: 80000,
-      rank: 5,
+      rank: 1,
       cover: 2,
       images: photos([
         "bouquet-80000-01.jpg",
@@ -140,7 +140,7 @@ const bouquet = defineCategory(
     },
     {
       price: 100000,
-      rank: 2,
+      rank: 3,
       cover: 0,
       images: photos([
         "bouquet-100000-01.jpg",

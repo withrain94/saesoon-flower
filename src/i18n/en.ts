@@ -90,7 +90,7 @@ export const en: Messages = {
 
   products: {
     "bouquet-50000": {
-      title: "TOP 3) Small but pretty",
+      title: "[Easy gift] Small but pretty",
       points: [
         "Small is fine, as long as it's mostly pretty main flowers.",
         "I want to give a gift in a size that isn't overwhelming.",
@@ -98,27 +98,27 @@ export const en: Messages = {
       ],
     },
     "bouquet-60000": {
-      title: "BEST) A proper bouquet",
+      title: "TOP 2) A proper bouquet",
       points: [
         "It doesn't need to be huge, but I want a bouquet that makes them happy.",
         "I want to remember our anniversary beautifully.",
-        "Please make it in the best-selling size.",
+        "Please make it in the most standard size.",
       ],
     },
     "bouquet-70000": {
-      title: "[Quality first] Quality over size",
+      title: "TOP 5) Quality over size",
       points: [
-        "The best-selling size with extra pretty flowers, please.",
+        "The standard size with extra pretty flowers, please.",
         "Quality matters more than size.",
         "I'd rather it not be too small.",
       ],
     },
     "bouquet-80000": {
-      title: "TOP 5) A little fuller",
+      title: "BEST) A little fuller",
       points: [
         "I'd like it to look full and lush.",
         "I want them to feel good when they receive it.",
-        "I want to put in more thought than last time.",
+        "I want to put in more thought than usual.",
       ],
     },
     "bouquet-90000": {
@@ -130,7 +130,7 @@ export const en: Messages = {
       ],
     },
     "bouquet-100000": {
-      title: "TOP 2) It's an important day",
+      title: "TOP 3) It's an important day",
       points: [
         "I want to truly move them on our anniversary.",
         "It's for a proposal.",

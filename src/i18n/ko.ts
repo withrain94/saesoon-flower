@@ -49,7 +49,7 @@ const categories: Record<ProductCategoryId, CategoryCopy> = {
 
 const products: Record<ProductId, ProductCopy> = {
   "bouquet-50000": {
-    title: "TOP3) 작지만 예쁜꽃으로",
+    title: "[부담없이] 작지만 예쁜꽃으로",
     points: [
       "작아도 괜찮은데, 예쁜 메인 꽃이 주로 들어가면 좋겠어요.",
       "부담스럽지 않은 사이즈로 선물하고 싶어요.",
@@ -57,27 +57,27 @@ const products: Record<ProductId, ProductCopy> = {
     ],
   },
   "bouquet-60000": {
-    title: "BEST) 꽃다발다운 꽃다발",
+    title: "TOP2) 꽃다발다운 꽃다발",
     points: [
       "너무 크지는 않아도 되는데 받았을 때 기분 좋은 꽃다발을 선물하고 싶어요.",
       "기념일을 예쁘게 기억하고 싶어요.",
-      "가장 잘나가는 사이즈로 해주세요.",
+      "가장 무난한 사이즈로 해주세요.",
     ],
   },
   "bouquet-70000": {
-    title: "[퀄리티중심] 사이즈보다 퀄리티",
+    title: "TOP5) 사이즈보다 퀄리티",
     points: [
-      "가장 잘나가는 사이즈에 예쁜 꽃 더 추가해주세요.",
+      "기본 사이즈에 예쁜 꽃을 더 추가해주세요.",
       "사이즈보다 퀄리티가 중요해요.",
       "너무 작지 않았으면 좋겠어요.",
     ],
   },
   "bouquet-80000": {
-    title: "TOP5) 조금 더 풍성하게",
+    title: "BEST) 조금 더 풍성하게",
     points: [
       "풍성한 느낌으로 하고 싶어요.",
       "받았을 때 기분좋은 느낌을 주고 싶어요.",
-      "저번보다 더 신경쓰고 싶어요.",
+      "평소보다 더 신경 쓰고 싶어요.",
     ],
   },
   "bouquet-90000": {
@@ -89,10 +89,10 @@ const products: Record<ProductId, ProductCopy> = {
     ],
   },
   "bouquet-100000": {
-    title: "TOP2) 중요한 날이에요",
+    title: "TOP3) 중요한 날이에요",
     points: [
       "기념일에 감동 주고 싶어요.",
-      "프로포즈에 쓰려고해요.",
+      "프로포즈에 쓰려고 해요.",
       "사이즈보다 퀄리티에 신경써주세요.",
     ],
   },

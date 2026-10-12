@@ -82,7 +82,7 @@ export const vi: Messages = {
 
   products: {
     "bouquet-50000": {
-      title: "TOP3) Nhỏ nhưng xinh",
+      title: "[Nhẹ nhàng] Nhỏ nhưng xinh",
       points: [
         "Nhỏ cũng được, miễn là chủ yếu dùng hoa chính thật đẹp.",
         "Tôi muốn tặng bó hoa kích thước vừa phải, không gây áp lực.",
@@ -90,27 +90,27 @@ export const vi: Messages = {
       ],
     },
     "bouquet-60000": {
-      title: "BEST) Bó hoa đúng chất bó hoa",
+      title: "TOP2) Bó hoa đúng chất bó hoa",
       points: [
         "Không cần quá to, nhưng muốn người nhận thấy vui khi cầm.",
         "Tôi muốn lưu giữ ngày kỷ niệm thật đẹp.",
-        "Hãy làm theo kích thước bán chạy nhất.",
+        "Hãy làm theo kích thước phổ thông nhất.",
       ],
     },
     "bouquet-70000": {
-      title: "[Chất lượng] Chất lượng hơn kích thước",
+      title: "TOP5) Chất lượng hơn kích thước",
       points: [
-        "Kích thước bán chạy nhất, thêm nhiều hoa đẹp hơn.",
+        "Kích thước cơ bản, thêm nhiều hoa đẹp hơn.",
         "Chất lượng quan trọng hơn kích thước.",
         "Mong là không quá nhỏ.",
       ],
     },
     "bouquet-80000": {
-      title: "TOP5) Đầy đặn hơn một chút",
+      title: "BEST) Đầy đặn hơn một chút",
       points: [
         "Tôi muốn bó hoa trông đầy đặn.",
         "Tôi muốn người nhận thấy vui khi nhận.",
-        "Tôi muốn chu đáo hơn lần trước.",
+        "Tôi muốn chu đáo hơn thường lệ.",
       ],
     },
     "bouquet-90000": {
@@ -122,7 +122,7 @@ export const vi: Messages = {
       ],
     },
     "bouquet-100000": {
-      title: "TOP2) Đây là ngày quan trọng",
+      title: "TOP3) Đây là ngày quan trọng",
       points: [
         "Tôi muốn khiến người ấy xúc động vào ngày kỷ niệm.",
         "Tôi định dùng để cầu hôn.",
