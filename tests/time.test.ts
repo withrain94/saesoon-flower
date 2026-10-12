@@ -37,9 +37,9 @@ describe("예약 가능한 시간 (lib/time)", () => {
   });
 
   it("특별한 날은 전날 오후 5시에 마감", () => {
-    const event = specialEvents.find((candidate) => candidate.date === "2026-10-30");
+    const event = specialEvents.find((candidate) => candidate.date === "2026-10-23");
     assert.ok(event);
-    assert.equal(isSlotBookable("08:00", event.date, at("2026-10-29T16:59")), true);
-    assert.equal(isSlotBookable("08:00", event.date, at("2026-10-29T17:00")), false);
+    assert.equal(isSlotBookable("08:00", event.date, at("2026-10-22T16:59")), true);
+    assert.equal(isSlotBookable("08:00", event.date, at("2026-10-22T17:00")), false);
   });
 });

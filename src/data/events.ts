@@ -52,7 +52,7 @@ function instituteLongCourse(date: string): SpecialEvent {
 /** 날짜순. 새 일정이 잡히면 한 줄 추가 */
 export const specialEvents: SpecialEvent[] = [
   institutePromotion(8, "2026-10-08"),
-  institutePromotion(9, "2026-10-30"),
+  institutePromotion(9, "2026-10-23"),
   instituteLongCourse("2026-11-27"),
   institutePromotion(10, "2026-12-04"),
   institutePromotion(11, "2026-12-18"),
