@@ -129,7 +129,7 @@ export const zh: Messages = {
       points: ["适合轻松送出的漂亮尺寸", "适合乔迁、小礼物和祝贺"],
     },
     "basket-80000": {
-      title: "TOP2) 更丰盈的基础款花篮",
+      title: "TOP3) 更丰盈的基础款花篮",
       points: ["把基础款花篮做得更丰盈，或换成特别的色调"],
     },
     "basket-100000": {
@@ -137,7 +137,7 @@ export const zh: Messages = {
       points: ["纪念日礼物、活动用的人气尺寸", "生日、恋人、父母礼物中最受欢迎的尺寸", "收到的人拍照也好看的比例"],
     },
     "basket-150000": {
-      title: "TOP3) 更丰盈的活动款花篮",
+      title: "TOP2) 更丰盈的活动款花篮",
       points: ["把活动款花篮做得更丰盈，或换成特别的色调", "最适合活动、展览、祝贺的丰盈度"],
     },
     "basket-200000": {
@@ -298,12 +298,28 @@ export const zh: Messages = {
     title: "加购巧克力",
     description: "与鲜花一起送出的甜蜜 — 想要几个就加几个。",
     photoAlt: (name) => `${name}照片`,
+    prompt: {
+      title: "要一起送巧克力吗？",
+      description: "1,500韩元起。会和鲜花一起包装好。",
+      submitWithout: "不用了，直接预约",
+      submitWith: (count) => `加${count}个巧克力并预约`,
+      close: "关闭",
+    },
     items: {
       "happyhippo-1": { name: "快乐河马 1个", note: "好吃又受欢迎的健达快乐河马。" },
       "ferrero-1": { name: "费列罗 1个", note: "插在花束上的棒棒包装。" },
       "kinderjoy-1": { name: "健达奇趣蛋 1个", note: "内含玩具，适合送给小朋友。" },
       "happyhippo-10": { name: "快乐河马 10个", note: "纪念日推荐 — 一次插上10个。" },
       "ferrero-10": { name: "费列罗 10个", note: "纪念日推荐 — 一次插上10个。" },
+      shoppingbag: { name: "花束手提袋", note: "方便携带，也可以立着放。" },
+    },
+    bag: {
+      badge: "一起加购",
+      points: [
+        "刚好能装下花束的透明手提袋",
+        "方便携带和存放 — 花不会被压到",
+        "可以立着放，在车里或餐厅也很方便",
+      ],
     },
   },
 

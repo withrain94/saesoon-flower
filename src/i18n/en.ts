@@ -163,7 +163,7 @@ export const en: Messages = {
       points: ["A nice size for a pretty, casual gift", "Great for housewarmings, small gifts and congratulations"],
     },
     "basket-80000": {
-      title: "TOP 2) Fuller basic basket",
+      title: "TOP 3) Fuller basic basket",
       points: ["A basic basket made fuller, or in a special color palette"],
     },
     "basket-100000": {
@@ -175,7 +175,7 @@ export const en: Messages = {
       ],
     },
     "basket-150000": {
-      title: "TOP 3) Fuller event basket",
+      title: "TOP 2) Fuller event basket",
       points: [
         "An event basket made fuller, or in a special color palette",
         "The ideal fullness for events, exhibitions and celebrations",
@@ -344,12 +344,28 @@ export const en: Messages = {
     title: "Add chocolates",
     description: "A sweet touch to go with the flowers — add as many as you like.",
     photoAlt: (name) => `${name} photo`,
+    prompt: {
+      title: "Would you like to add chocolates?",
+      description: "From 1,500 KRW. We wrap them together with the flowers.",
+      submitWithout: "No thanks, reserve as is",
+      submitWith: (count) => `Reserve with ${count} chocolate${count === 1 ? "" : "s"}`,
+      close: "Close",
+    },
     items: {
       "happyhippo-1": { name: "Happy Hippo × 1", note: "A popular Kinder Happy Hippo on a stick." },
       "ferrero-1": { name: "Ferrero Rocher × 1", note: "Wrapped on a stick to sit in the bouquet." },
       "kinderjoy-1": { name: "Kinder Joy × 1", note: "Comes with a toy — lovely for children." },
       "happyhippo-10": { name: "Happy Hippo × 10", note: "For special days — 10 pieces arranged together." },
       "ferrero-10": { name: "Ferrero Rocher × 10", note: "For special days — 10 pieces arranged together." },
+      shoppingbag: { name: "Bouquet carrier bag", note: "Easy to carry and to stand upright." },
+    },
+    bag: {
+      badge: "Add-on",
+      points: [
+        "A clear carrier bag that fits the bouquet",
+        "Easy to carry and store — keeps the flowers from being crushed",
+        "Stands upright, handy in a car or at a restaurant",
+      ],
     },
   },
 

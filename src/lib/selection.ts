@@ -80,6 +80,11 @@ export function getChocolateItems(selection: Selection): ChocolateItem[] {
     .filter((item) => item.quantity > 0);
 }
 
+/** 초콜릿을 하나라도 담았는지 — 쇼핑백만 담은 건 세지 않음 ("초콜릿도 함께?" 창을 띄울지) */
+export function hasChocolate(selection: Selection) {
+  return getChocolateItems(selection).some((item) => item.chocolate.kind !== "bag");
+}
+
 /** 초콜릿 이름 (언어별) — "해피히포 1개" */
 export function getChocolateName(chocolate: Chocolate, t: Messages = ko) {
   return t.chocolate.items[chocolate.id].name;

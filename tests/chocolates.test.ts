@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { chocolates, MAX_CHOCOLATE_QUANTITY } from "@/data/chocolates";
+import { chocolateChoices, chocolates, MAX_CHOCOLATE_QUANTITY, shoppingBag } from "@/data/chocolates";
 import { allProducts } from "@/data/products";
 import { buildBusinessDocument } from "@/lib/documents";
 import { validateReservationRequest } from "@/lib/reservationValidation";
-import { summarizeSelection, withChocolateQuantity } from "@/lib/selection";
+import { hasChocolate, summarizeSelection, withChocolateQuantity } from "@/lib/selection";
 import { toNowInTimeZone } from "@/lib/time";
 import type { ReservationRequest, Selection } from "@/types/reservation";
 
@@ -77,6 +77,19 @@ describe("초콜릿 추가 (data/chocolates · lib/selection · 서버 검사)",
     assert.equal(summary.totalPrice, bouquet.price + ferrero.price * 2);
     // 꽃 개수(받는 분 칸 수)에는 초콜릿을 세지 않음
     assert.equal(summary.totalQuantity, 1);
+  });
+
+  it("쇼핑백 2,000원은 합계에 더해지지만 초콜릿으로 세지 않음", () => {
+    const summary = summarizeSelection(selection({ [shoppingBag.id]: 1 }));
+    assert.equal(shoppingBag.price, 2000);
+    assert.equal(summary.totalPrice, bouquet.price + 2000);
+    assert.equal(summary.totalQuantity, 1);
+    // 쇼핑백만 담았으면 "초콜릿도 함께?" 창은 그대로 뜸
+    assert.equal(hasChocolate(selection({ [shoppingBag.id]: 1 })), false);
+    assert.equal(hasChocolate(selection({ [shoppingBag.id]: 1, "ferrero-1": 1 })), true);
+    // 초콜릿 칸에는 쇼핑백이 안 보임
+    assert.equal(chocolateChoices.some((chocolate) => chocolate.id === shoppingBag.id), false);
+    assert.equal(chocolateChoices.length, chocolates.length - 1);
   });
 
   it("수량을 0으로 만들면 목록에서 빠지고, 최대 수량을 넘지 않음", () => {

@@ -215,7 +215,7 @@ const basket = defineCategory(
     },
     {
       price: 80000,
-      rank: 2,
+      rank: 3,
       cover: 0,
       images: photos([
         "basket-80000-19.jpg",
@@ -245,7 +245,7 @@ const basket = defineCategory(
     },
     {
       price: 150000,
-      rank: 3,
+      rank: 2,
       cover: 0,
       images: photos([
         "basket-150000-01.jpg",

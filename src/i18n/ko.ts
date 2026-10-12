@@ -122,7 +122,7 @@ const products: Record<ProductId, ProductCopy> = {
     points: ["부담 없이 예쁘게 선물하기 좋은 사이즈", "집들이, 작은 선물, 축하에 잘 어울려요"],
   },
   "basket-80000": {
-    title: "TOP2) 베이직 꽃바구니를 풍성하게",
+    title: "TOP3) 베이직 꽃바구니를 풍성하게",
     points: ["베이직 꽃바구니를 풍성하게 또는 특별한 색감으로"],
   },
   "basket-100000": {
@@ -134,7 +134,7 @@ const products: Record<ProductId, ProductCopy> = {
     ],
   },
   "basket-150000": {
-    title: "TOP3) 이벤트형 꽃바구니를 풍성하게",
+    title: "TOP2) 이벤트형 꽃바구니를 풍성하게",
     points: ["이벤트 꽃바구니를 풍성하게 또는 특별한 색감으로", "행사·전시·축하에 가장 적합한 풍성도"],
   },
   "basket-200000": {
@@ -361,12 +361,30 @@ export const ko = {
     title: "초콜릿 추가",
     description: "꽃과 함께 선물하는 달콤함 — 원하는 만큼 담아주세요.",
     photoAlt: (name: string) => `${name} 사진`,
+    /** 초콜릿을 안 담고 예약하기를 눌렀을 때 한 번 뜨는 창 */
+    prompt: {
+      title: "초콜릿도 함께 보내시겠어요?",
+      description: "1,500원부터 더하실 수 있어요. 꽃과 함께 예쁘게 포장해 드려요.",
+      submitWithout: "괜찮아요, 이대로 예약",
+      submitWith: (count: number) => `초콜릿 ${count}개 담고 예약하기`,
+      close: "닫기",
+    },
     items: {
       "happyhippo-1": { name: "해피히포 1개", note: "맛도 있고 인기 있는 킨더 해피히포예요." },
       "ferrero-1": { name: "페레로로쉐 1개", note: "꽃다발에 꽂아 드리는 막대 포장이에요." },
       "kinderjoy-1": { name: "킨더조이 1개", note: "장난감이 들어 있어 아이 선물로 좋아요." },
       "happyhippo-10": { name: "해피히포 10개", note: "기념일 추천 — 10개를 함께 꽂아 드려요." },
       "ferrero-10": { name: "페레로로쉐 10개", note: "신경 쓴 기념일 추천 — 10개를 함께 꽂아 드려요." },
+      shoppingbag: { name: "꽃다발 쇼핑백", note: "들고 다니거나 잠시 세워 두기 편해요." },
+    },
+    /** 꽃다발 목록 맨 위 쇼핑백 칸 (이름은 items.shoppingbag, 금액·사진은 data/chocolates.ts) */
+    bag: {
+      badge: "함께 담기",
+      points: [
+        "꽃다발이 쏙 들어가는 투명 쇼핑백이에요",
+        "이동과 보관에 편리해요 — 꽃이 눌리지 않아요",
+        "세워 둘 수 있어 차 안·식당에서도 편해요",
+      ],
     },
   },
 

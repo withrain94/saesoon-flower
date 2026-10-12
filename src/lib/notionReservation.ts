@@ -1,4 +1,4 @@
-import type { ChocolateId } from "@/data/chocolates";
+import { getAddOnIcon, type ChocolateId } from "@/data/chocolates";
 import { getEventOn, type SpecialEvent } from "@/data/events";
 import { findBlackboardPreset } from "@/data/reservationOptions";
 import { ko } from "@/i18n/ko";
@@ -190,7 +190,7 @@ export function buildNotionRows({ id, status, adminMemo, request }: StoredReserv
       "받는분 성함": "",
       "받는분 연락처": "",
       메시지: "",
-      예약종류: `${canceled}🍫 ${name} ×${chocolate.quantity}`,
+      예약종류: `${canceled}${getAddOnIcon(chocolate.chocolateId)} ${name} ×${chocolate.quantity}`,
       "받는 방법": receiveMethod,
       배송지: "",
       토퍼: "",

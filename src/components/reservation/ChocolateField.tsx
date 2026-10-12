@@ -1,6 +1,6 @@
 import Image from "next/image";
 import QuantityStepper from "@/components/ui/QuantityStepper";
-import { chocolates, MAX_CHOCOLATE_QUANTITY } from "@/data/chocolates";
+import { chocolateChoices, MAX_CHOCOLATE_QUANTITY, type ChocolateId } from "@/data/chocolates";
 import { useT } from "@/hooks/useLocale";
 
 /**
@@ -10,25 +10,32 @@ import { useT } from "@/hooks/useLocale";
 export default function ChocolateField({
   quantities,
   onChange,
+  withHeading = true,
 }: {
   /** 초콜릿 id → 수량 */
   quantities: Record<string, number>;
   onChange: (chocolateId: string, quantity: number) => void;
+  /** 물어보는 창 안에서는 제목을 창이 이미 보여주므로 끔 */
+  withHeading?: boolean;
 }) {
   const t = useT();
 
   return (
     <div>
-      <p className="text-[15px] font-bold text-ink">
-        <span aria-hidden="true">🍫 </span>
-        {t.chocolate.title} <span className="text-[13px] font-normal text-sub">({t.common.optional})</span>
-      </p>
-      <p className="mt-0.5 text-[13px] text-sub">{t.chocolate.description}</p>
+      {withHeading && (
+        <>
+          <p className="text-[15px] font-bold text-ink">
+            <span aria-hidden="true">🍫 </span>
+            {t.chocolate.title} <span className="text-[13px] font-normal text-sub">({t.common.optional})</span>
+          </p>
+          <p className="mt-0.5 text-[13px] text-sub">{t.chocolate.description}</p>
+        </>
+      )}
 
-      <ul className="mt-3 divide-y divide-line rounded-xl border border-line">
-        {chocolates.map((chocolate) => {
+      <ul className="mt-3 divide-y divide-line overflow-hidden rounded-xl border border-line bg-white">
+        {chocolateChoices.map((chocolate) => {
           const quantity = quantities[chocolate.id] ?? 0;
-          const copy = t.chocolate.items[chocolate.id];
+          const copy = t.chocolate.items[chocolate.id as ChocolateId];
           return (
             <li
               key={chocolate.id}

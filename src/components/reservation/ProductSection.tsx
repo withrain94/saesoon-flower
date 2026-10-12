@@ -4,6 +4,7 @@ import { useState } from "react";
 import ErrorText from "@/components/ui/ErrorText";
 import { ChevronIcon, GridIcon } from "@/components/ui/icons";
 import SectionHeading from "@/components/ui/SectionHeading";
+import { shoppingBag } from "@/data/chocolates";
 import { getCategory, getNextCategory, productCategories, sortProductsByRank } from "@/data/products";
 import { siteLinksByCategory } from "@/data/shop";
 import { useT } from "@/hooks/useLocale";
@@ -12,6 +13,7 @@ import type { ProductCategoryId, Selection } from "@/types/reservation";
 import CategoryNotice from "./CategoryNotice";
 import ProductOption from "./ProductOption";
 import ProductPhotos from "./ProductPhotos";
+import ShoppingBagOption from "./ShoppingBagOption";
 import { scrollToSection, SECTION, sectionScrollMargin } from "./sections";
 
 type SortKey = "price" | "rank";
@@ -22,6 +24,8 @@ export default function ProductSection({
   quantities,
   countByCategory,
   onQuantityChange,
+  addOnQuantities,
+  onAddOnChange,
   showError,
 }: {
   /** 지금 보고 있는 상품 종류 (첫 화면 입구 카드와 공유) */
@@ -30,6 +34,9 @@ export default function ProductSection({
   quantities: Selection["quantities"];
   countByCategory: Record<ProductCategoryId, number>;
   onQuantityChange: (productId: string, quantity: number) => void;
+  /** 쇼핑백·초콜릿 id → 수량 (꽃다발 목록 맨 위 쇼핑백 칸용) */
+  addOnQuantities: Record<string, number>;
+  onAddOnChange: (addOnId: string, quantity: number) => void;
   showError: boolean;
 }) {
   const t = useT();
@@ -129,6 +136,12 @@ export default function ProductSection({
       </a>
 
       <ul role="tabpanel" aria-label={t.productSection.listAria(copy.name)} className="mt-1 divide-y divide-line">
+        {categoryId === "bouquet" && (
+          <ShoppingBagOption
+            quantity={addOnQuantities[shoppingBag.id] ?? 0}
+            onQuantityChange={(quantity) => onAddOnChange(shoppingBag.id, quantity)}
+          />
+        )}
         {products.map((product) => (
           <ProductOption
             key={product.id}

@@ -155,7 +155,7 @@ export const vi: Messages = {
       points: ["Kích thước vừa phải, đẹp để tặng không áp lực", "Hợp cho tân gia, quà nhỏ và lời chúc mừng"],
     },
     "basket-80000": {
-      title: "TOP2) Giỏ hoa cơ bản đầy đặn hơn",
+      title: "TOP3) Giỏ hoa cơ bản đầy đặn hơn",
       points: ["Giỏ hoa cơ bản làm đầy đặn hơn hoặc với tông màu đặc biệt"],
     },
     "basket-100000": {
@@ -167,7 +167,7 @@ export const vi: Messages = {
       ],
     },
     "basket-150000": {
-      title: "TOP3) Giỏ hoa sự kiện đầy đặn hơn",
+      title: "TOP2) Giỏ hoa sự kiện đầy đặn hơn",
       points: [
         "Giỏ hoa sự kiện làm đầy đặn hơn hoặc với tông màu đặc biệt",
         "Độ đầy đặn phù hợp nhất cho sự kiện, triển lãm, chúc mừng",
@@ -336,12 +336,28 @@ export const vi: Messages = {
     title: "Thêm sô-cô-la",
     description: "Vị ngọt gửi kèm bó hoa — quý khách muốn bao nhiêu cũng được.",
     photoAlt: (name) => `Ảnh ${name}`,
+    prompt: {
+      title: "Quý khách có muốn thêm sô-cô-la không?",
+      description: "Chỉ từ 1.500 KRW. Tiệm sẽ gói cùng với hoa.",
+      submitWithout: "Không cần, đặt như vậy",
+      submitWith: (count) => `Đặt kèm ${count} sô-cô-la`,
+      close: "Đóng",
+    },
     items: {
       "happyhippo-1": { name: "Happy Hippo × 1", note: "Bánh Kinder Happy Hippo rất được yêu thích." },
       "ferrero-1": { name: "Ferrero Rocher × 1", note: "Gói sẵn trên que để cắm vào bó hoa." },
       "kinderjoy-1": { name: "Kinder Joy × 1", note: "Có đồ chơi bên trong, hợp làm quà cho trẻ em." },
       "happyhippo-10": { name: "Happy Hippo × 10", note: "Gợi ý cho dịp đặc biệt — cắm kèm 10 cái." },
       "ferrero-10": { name: "Ferrero Rocher × 10", note: "Gợi ý cho dịp đặc biệt — cắm kèm 10 cái." },
+      shoppingbag: { name: "Túi xách đựng bó hoa", note: "Dễ mang theo và có thể đặt đứng." },
+    },
+    bag: {
+      badge: "Mua kèm",
+      points: [
+        "Túi trong suốt vừa vặn với bó hoa",
+        "Tiện mang đi và bảo quản — hoa không bị dập",
+        "Có thể đặt đứng, tiện khi để trong xe hoặc ở nhà hàng",
+      ],
     },
   },
 

@@ -63,7 +63,8 @@ public/flowers/              상품 사진 ({종류}-{금액}-{번호}.jpg — b
    종류 이름을 화면 문구에 직접 나열하지 말고 `getCategoryNames(t)` / `productCategories`를 쓴다.
    새 상품 종류를 추가할 땐 아래 순서로 (타입 오류가 빠진 곳을 알려준다):
    `types`의 `ProductCategoryId` → `products.ts` (`colorChoice`, `featured`) → 각 언어 파일의 `categories`·`products` (안내는 `notice`) → `shop.ts`의 네이버 링크 → `reservationOptions.ts`의 `messageOptionsByCategory`.
-   초콜릿(꽃과 함께 담는 추가 옵션)은 `data/chocolates.ts`(id·금액·사진)와 언어 파일 `chocolate.items`(이름·설명)에서만 수정한다. 받는 분·메시지 칸은 없고 금액만 합계에 더해진다.
+   초콜릿(꽃과 함께 담는 추가 옵션)은 `data/chocolates.ts`(id·금액·사진)와 언어 파일 `chocolate.items`(이름·설명)에서만 수정한다. 받는 분·메시지 칸은 없고 금액만 합계에 더해진다. 초콜릿 칸(`ChocolateField`)은 상품 고르기 바로 아래(`ReservationPage`)에 있다.
+   꽃다발 쇼핑백도 같은 목록의 한 줄(`kind: "bag"`, `shoppingBag`)이라 저장·합계·서류·알림은 초콜릿과 같은 길을 타고, 화면만 꽃다발 목록 맨 위(`ShoppingBagOption`, 문구 `chocolate.bag`)에 따로 보인다. 초콜릿만 볼 땐 `chocolateChoices`·`hasChocolate`, 매장용 그림글자는 `getAddOnIcon`.
    블랙보드 문구 선택지(예: 호접난 "알아서 써주세요" 등)는 `reservationOptions.ts`의 `blackboardPresetsByCategory`(실제 적힐 한국어)와 언어 파일 `blackboardPresets`(선택지 이름)에서 수정한다. ("직접 입력"은 자동으로 붙음) 저장된 선택지 id로 찾을 땐 `findBlackboardPreset`.
    새 메시지 방식이 필요하면 `MessageType`·`UnitMessage` → `lib/units.ts`(빈 값·설명) → `lib/reservationRequest.ts` → `MessageEditor`.
 6. 신청서 input의 `name`은 `ReservationFormField`와 같아야 하고, 입력값은 `lib/reservationRequest.ts`에서만 읽는다.

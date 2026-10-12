@@ -4,7 +4,10 @@ import { getChocolateName, getItemName, type SelectionSummary } from "@/lib/sele
 /** 담은 상품·초콜릿·일정·총 금액 박스 */
 export default function OrderSummary({ summary }: { summary: SelectionSummary }) {
   const t = useT();
-  const { items, chocolateItems, scheduleLabel, totalQuantity, totalPrice } = summary;
+  const { items, scheduleLabel, totalQuantity, totalPrice } = summary;
+  // 쇼핑백은 "담은 상품" 아래에, 초콜릿은 "초콜릿 추가" 아래에
+  const bagItems = summary.chocolateItems.filter((item) => item.chocolate.kind === "bag");
+  const chocolateItems = summary.chocolateItems.filter((item) => item.chocolate.kind !== "bag");
 
   return (
     <div className="rounded-xl bg-soft px-4 py-3.5 text-left text-[14px]">
@@ -22,6 +25,18 @@ export default function OrderSummary({ summary }: { summary: SelectionSummary })
         </ul>
       ) : (
         <p className="mt-1 font-semibold text-faint">{t.summary.itemsEmpty}</p>
+      )}
+      {bagItems.length > 0 && (
+        <ul className="mt-1 space-y-1">
+          {bagItems.map(({ chocolate, quantity }) => (
+            <li key={chocolate.id} className="flex items-baseline justify-between gap-3">
+              <span className="font-semibold text-ink">
+                {getChocolateName(chocolate, t)} × {quantity}
+              </span>
+              <span className="shrink-0 text-body">{t.format.price(chocolate.price * quantity)}</span>
+            </li>
+          ))}
+        </ul>
       )}
 
       {chocolateItems.length > 0 && (

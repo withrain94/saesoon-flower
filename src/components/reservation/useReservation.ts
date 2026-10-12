@@ -4,6 +4,7 @@ import { useNow } from "@/hooks/useNow";
 import { buildReservationRequest } from "@/lib/reservationRequest";
 import {
   emptySelection,
+  hasChocolate,
   getSelectionIssue,
   isScheduleBookable,
   summarizeSelection,
@@ -74,6 +75,13 @@ export function useReservation() {
   const [submitting, setSubmitting] = useState(false);
   /** 저장 실패 안내 (고객 언어) */
   const [submitError, setSubmitError] = useState<string | null>(null);
+  /**
+   * 초콜릿을 하나도 안 담고 예약하기를 누르면 한 번만 물어보는 창 (담긴 신청서 내용을 들고 있음).
+   * null = 안 떠 있음 (2026-10-12 사용자 요청)
+   */
+  const [chocolatePrompt, setChocolatePrompt] = useState<FormData | null>(null);
+  /** 이미 한 번 물어봤으면 다시 묻지 않음 */
+  const [chocolateAsked, setChocolateAsked] = useState(false);
 
   // 토퍼 칸은 특별한 날 + "승진식 꽃이에요"를 골랐을 때만
   const units = resolveUnits(getOrderUnits(selection), unitDetails, forEvent ? selection.date : null, orderer);
@@ -170,6 +178,13 @@ export function useReservation() {
       return;
     }
 
+    // 초콜릿을 하나도 안 담았으면 한 번만 물어보고 멈춤 ("이대로 예약"을 누르면 다시 이 함수로 돌아옴)
+    if (!chocolateAsked && !hasChocolate(selection)) {
+      setChocolateAsked(true);
+      setChocolatePrompt(formData);
+      return;
+    }
+
     const request = buildReservationRequest(selection, units, formData, submittedAt, locale);
     setSubmitting(true);
     try {
@@ -188,6 +203,13 @@ export function useReservation() {
     }
   }
 
+  /** 물어보는 창에서 "예약하기" — 그 사이 담은 초콜릿까지 넣어 저장 */
+  function submitFromChocolatePrompt() {
+    const formData = chocolatePrompt;
+    setChocolatePrompt(null);
+    if (formData) void submit(formData);
+  }
+
   const issue = getSelectionIssue(selection, now);
 
   return {
@@ -203,6 +225,10 @@ export function useReservation() {
     setReceiveMethod,
     chocolateQuantities: selection.chocolates,
     setChocolateQuantity,
+    /** 초콜릿을 안 담고 예약하기를 눌렀을 때 뜨는 창 */
+    chocolatePromptOpen: chocolatePrompt !== null,
+    closeChocolatePrompt: () => setChocolatePrompt(null),
+    submitFromChocolatePrompt,
     forEvent,
     setForEvent,
     /** 제출을 시도한 뒤에만 보여줄 미선택 항목 */

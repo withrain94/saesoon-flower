@@ -8,7 +8,6 @@ import { needsColorChoice, type SelectionSummary } from "@/lib/selection";
 import type { OrdererContact, ResolvedUnit } from "@/lib/units";
 import type { ReceiveMethod } from "@/types/reservation";
 import type { SpecialEvent } from "@/data/events";
-import ChocolateField from "./ChocolateField";
 import ColorField from "./ColorField";
 import EventOrderField from "./EventOrderField";
 import OrderSummary from "./OrderSummary";
@@ -32,8 +31,6 @@ export default function OrdererForm({
   onOrdererChange,
   receiveMethod,
   onReceiveMethodChange,
-  chocolateQuantities,
-  onChocolateChange,
   event,
   forEvent,
   onForEventChange,
@@ -46,9 +43,6 @@ export default function OrdererForm({
   onOrdererChange: (patch: Partial<OrdererContact>) => void;
   receiveMethod: ReceiveMethod;
   onReceiveMethodChange: (value: ReceiveMethod) => void;
-  /** 초콜릿 id → 수량 */
-  chocolateQuantities: Record<string, number>;
-  onChocolateChange: (chocolateId: string, quantity: number) => void;
   /** 받는 날이 특별한 날이면 그 행사 (아니면 null) */
   event: SpecialEvent | null;
   forEvent: boolean | null;
@@ -115,10 +109,6 @@ export default function OrdererForm({
       />
 
       <RecipientMessageField units={units} actions={unitActions} receiveMethod={receiveMethod} />
-
-      <div className="h-px bg-line" />
-
-      <ChocolateField quantities={chocolateQuantities} onChange={onChocolateChange} />
 
       <div className="h-px bg-line" />
 

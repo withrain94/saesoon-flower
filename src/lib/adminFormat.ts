@@ -55,7 +55,7 @@ export function summarizeItems(request: ReservationRequest) {
     .join(" · ");
 }
 
-/** 함께 담은 초콜릿 — "해피히포 1개 ×2 · 페레로로쉐 10개" (없으면 "") */
+/** 함께 담은 초콜릿·쇼핑백 — "해피히포 1개 ×2 · 페레로로쉐 10개 · 꽃다발 쇼핑백" (없으면 "") */
 export function describeChocolates(request: ReservationRequest) {
   return (request.chocolates ?? [])
     .map((chocolate) => {
