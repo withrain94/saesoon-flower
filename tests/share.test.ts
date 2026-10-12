@@ -11,6 +11,7 @@ function request(paymentMethod: PaymentMethod = "bank"): ReservationRequest {
   return {
     items: [{ productId: bouquet.id, category: bouquet.category, price: bouquet.price, quantity: 2 }],
     deliveries: [],
+    chocolates: [],
     totalQuantity: 2,
     totalPrice: bouquet.price * 2,
     date: "2026-11-27",

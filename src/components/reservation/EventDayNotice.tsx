@@ -19,7 +19,7 @@ export default function EventDayNotice({
   return (
     <div>
       <p className={`font-extrabold text-ink ${compact ? "text-[15px]" : "text-[17px]"}`}>
-        <span aria-hidden="true">🎓 </span>
+        <span aria-hidden="true">{event.icon} </span>
         {copy.title}
       </p>
       <p className="mt-0.5 text-[14px] font-bold text-brand-dark">{formatDateLong(event.date, t)}</p>

@@ -7,6 +7,7 @@ import {
   getSelectionIssue,
   isScheduleBookable,
   summarizeSelection,
+  withChocolateQuantity,
   withQuantity,
 } from "@/lib/selection";
 import { receiveMethods } from "@/data/reservationOptions";
@@ -85,6 +86,14 @@ export function useReservation() {
     setSelection((current) => ({
       ...current,
       quantities: withQuantity(current.quantities, productId, quantity),
+    }));
+  }
+
+  /** 초콜릿 수량 — 꽃과 달리 받는 분·메시지 칸을 만들지 않음 */
+  function setChocolateQuantity(chocolateId: string, quantity: number) {
+    setSelection((current) => ({
+      ...current,
+      chocolates: withChocolateQuantity(current.chocolates, chocolateId, quantity),
     }));
   }
 
@@ -192,6 +201,8 @@ export function useReservation() {
     setOrderer,
     receiveMethod,
     setReceiveMethod,
+    chocolateQuantities: selection.chocolates,
+    setChocolateQuantity,
     forEvent,
     setForEvent,
     /** 제출을 시도한 뒤에만 보여줄 미선택 항목 */

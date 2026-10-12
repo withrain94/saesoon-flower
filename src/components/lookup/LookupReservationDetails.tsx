@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import BankAccountCard from "@/components/reservation/BankAccountCard";
 import DocumentsPanel from "@/components/reservation/DocumentsPanel";
+import type { ChocolateId } from "@/data/chocolates";
 import { findBlackboardPreset } from "@/data/reservationOptions";
 import { maskReceiptNumber } from "@/lib/customerLookup";
 import { useLookupT } from "@/hooks/useLookupT";
@@ -72,6 +73,19 @@ export default function LookupReservationDetails({ reservation }: { reservation:
             </li>
           ))}
         </ul>
+        {(request.chocolates ?? []).length > 0 && (
+          <ul className="divide-y divide-line border-t border-line">
+            {request.chocolates.map((chocolate) => (
+              <li key={chocolate.chocolateId} className="flex justify-between gap-3 py-2 text-[14px]">
+                <span className="text-ink">
+                  🍫 {t.chocolate.items[chocolate.chocolateId as ChocolateId]?.name ?? chocolate.chocolateId} ×{" "}
+                  {chocolate.quantity}
+                </span>
+                <span className="shrink-0 text-body">{t.format.price(chocolate.price * chocolate.quantity)}</span>
+              </li>
+            ))}
+          </ul>
+        )}
         <p className="mt-1 flex justify-between border-t border-line pt-2 text-[15px] font-extrabold text-ink">
           <span>{l.sections.total(request.totalQuantity)}</span>
           <span>{t.format.price(request.totalPrice)}</span>

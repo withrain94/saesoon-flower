@@ -32,6 +32,7 @@ function request(extra: Partial<ReservationRequest> = {}): ReservationRequest {
   return {
     items: [{ productId: bouquet.id, category: bouquet.category, price: bouquet.price, quantity: 1 }],
     deliveries: [delivery()],
+    chocolates: [],
     totalQuantity: 1,
     totalPrice: bouquet.price,
     date: "2026-11-12",

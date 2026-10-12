@@ -1,3 +1,4 @@
+import { getChocolate, MAX_CHOCOLATE_QUANTITY } from "@/data/chocolates";
 import { getEventOn } from "@/data/events";
 import { allProducts } from "@/data/products";
 import {
@@ -20,6 +21,7 @@ import { getPaypalAmount } from "@/lib/payment";
 import { isSlotBookable, type Now } from "@/lib/time";
 import { needsDeliveryAddress } from "@/lib/units";
 import type {
+  ChocolateOrder,
   OrchidDelivery,
   ReservationDelivery,
   ReservationItem,
@@ -79,7 +81,24 @@ export function validateReservationRequest(input: unknown, now: Now, submittedAt
   }
   if (items.length === 0) return fail(validation.noItems);
   const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const itemsPrice = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  // 함께 담은 초콜릿 — 금액은 초콜릿 데이터로 다시 채움 (없으면 빈 배열)
+  const rawChocolates = Array.isArray(raw.chocolates) ? raw.chocolates : [];
+  const chocolates: ChocolateOrder[] = [];
+  for (const rawChocolate of rawChocolates) {
+    const c = (rawChocolate ?? {}) as Record<string, unknown>;
+    const chocolate = getChocolate(str(c.chocolateId, 50));
+    const quantity = Number(c.quantity);
+    if (!chocolate) return fail(validation.unknownProduct);
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_CHOCOLATE_QUANTITY) {
+      return fail(validation.quantity);
+    }
+    if (chocolates.some((added) => added.chocolateId === chocolate.id)) return fail(validation.duplicateProduct);
+    chocolates.push({ chocolateId: chocolate.id, price: chocolate.price, quantity });
+  }
+  const totalPrice =
+    itemsPrice + chocolates.reduce((sum, chocolate) => sum + chocolate.price * chocolate.quantity, 0);
 
   // 날짜·시간: 매장(한국) 시각 기준으로 지금 예약 가능한지
   const date = str(raw.date, 10);
@@ -175,6 +194,7 @@ export function validateReservationRequest(input: unknown, now: Now, submittedAt
     request: {
       items,
       deliveries,
+      chocolates,
       totalQuantity,
       totalPrice,
       date,

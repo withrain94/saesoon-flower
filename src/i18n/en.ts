@@ -235,6 +235,16 @@ export const en: Messages = {
       topperDescription:
         "Enter the name or team name of the sender (the person giving the flowers) for the topper. Toppers differ by course, so the shop will contact you to confirm the course completed.",
     },
+    pepero: {
+      calendarLabel: "Pepero Day",
+      shortTitle: () => "Pepero Day",
+      title: () => "Pepero Day, November 11",
+      highlights: [
+        "You can add chocolates in the reservation form.",
+        "We wrap the flowers and chocolates together.",
+        "Popular time slots fill up early, so please book soon.",
+      ],
+    },
   },
 
   eventBanner: {
@@ -328,6 +338,19 @@ export const en: Messages = {
     ordererPhone: "Your phone number",
     phonePlaceholder: "010-0000-0000 or +1 000 000 0000",
     phoneTitle: "Please check the phone number. (e.g. 010-1234-5678 or +1 415 555 0100)",
+  },
+
+  chocolate: {
+    title: "Add chocolates",
+    description: "A sweet touch to go with the flowers — add as many as you like.",
+    photoAlt: (name) => `${name} photo`,
+    items: {
+      "happyhippo-1": { name: "Happy Hippo × 1", note: "A popular Kinder Happy Hippo on a stick." },
+      "ferrero-1": { name: "Ferrero Rocher × 1", note: "Wrapped on a stick to sit in the bouquet." },
+      "kinderjoy-1": { name: "Kinder Joy × 1", note: "Comes with a toy — lovely for children." },
+      "happyhippo-10": { name: "Happy Hippo × 10", note: "For special days — 10 pieces arranged together." },
+      "ferrero-10": { name: "Ferrero Rocher × 10", note: "For special days — 10 pieces arranged together." },
+    },
   },
 
   summary: {

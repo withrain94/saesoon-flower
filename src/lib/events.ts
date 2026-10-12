@@ -12,10 +12,11 @@ export function getEventCopy(event: SpecialEvent, t: Messages = ko) {
     shortTitle: copy.shortTitle(event.term),
     calendarLabel: copy.calendarLabel,
     highlights: copy.highlights,
-    forEventYes: copy.forEventYes,
-    forEventHint: copy.forEventHint,
-    topperTitle: copy.topperTitle,
-    topperDescription: copy.topperDescription,
+    // 토퍼가 있는 행사만 있는 문구 (없으면 빈 글자)
+    forEventYes: copy.forEventYes ?? "",
+    forEventHint: copy.forEventHint ?? "",
+    topperTitle: copy.topperTitle ?? "",
+    topperDescription: copy.topperDescription ?? "",
   };
 }
 

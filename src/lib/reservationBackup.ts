@@ -1,6 +1,7 @@
 import { documentOptions } from "@/data/reservationOptions";
 import { getStatusOption } from "@/data/reservationStatus";
 import {
+  describeChocolates,
   describeColor,
   describeDeliveryAddress,
   describeDeliveryMessage,
@@ -31,6 +32,7 @@ const HEADERS = [
   "예약자",
   "예약자 연락처",
   "상품",
+  "초콜릿",
   "수량",
   "금액",
   "결제",
@@ -88,6 +90,7 @@ function toRow(reservation: StoredReservation): string[] {
     request.ordererName,
     request.ordererPhone,
     summarizeItems(request),
+    describeChocolates(request),
     String(request.totalQuantity),
     String(request.totalPrice),
     describePayment(request),

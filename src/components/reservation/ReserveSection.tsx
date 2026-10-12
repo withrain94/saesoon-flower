@@ -19,6 +19,8 @@ export default function ReserveSection({
   onOrdererChange,
   receiveMethod,
   onReceiveMethodChange,
+  chocolateQuantities,
+  onChocolateChange,
   event,
   forEvent,
   onForEventChange,
@@ -33,6 +35,8 @@ export default function ReserveSection({
   onOrdererChange: (patch: Partial<OrdererContact>) => void;
   receiveMethod: ReceiveMethod;
   onReceiveMethodChange: (value: ReceiveMethod) => void;
+  chocolateQuantities: Record<string, number>;
+  onChocolateChange: (chocolateId: string, quantity: number) => void;
   event: SpecialEvent | null;
   forEvent: boolean | null;
   onForEventChange: (value: boolean) => void;
@@ -55,6 +59,8 @@ export default function ReserveSection({
           onOrdererChange={onOrdererChange}
           receiveMethod={receiveMethod}
           onReceiveMethodChange={onReceiveMethodChange}
+          chocolateQuantities={chocolateQuantities}
+          onChocolateChange={onChocolateChange}
           event={event}
           forEvent={forEvent}
           onForEventChange={onForEventChange}

@@ -191,6 +191,16 @@ const events: Record<EventKind, EventCopy> = {
     topperDescription:
       "토퍼에 들어갈 보내는 분(주시는 분) 이름 또는 팀 이름을 적어주세요. 과정마다 토퍼가 달라서 수료하신 과정은 매장에서 확인 연락을 드려요.",
   },
+  pepero: {
+    calendarLabel: "빼빼로데이",
+    shortTitle: () => "빼빼로데이",
+    title: () => "11월 11일 빼빼로데이",
+    highlights: [
+      "신청서에서 초콜릿을 함께 담으실 수 있어요.",
+      "꽃과 초콜릿을 같이 포장해 드려요.",
+      "인기 있는 시간대는 미리 마감될 수 있으니 서둘러 예약해 주세요.",
+    ],
+  },
 };
 
 export const ko = {
@@ -344,6 +354,20 @@ export const ko = {
     ordererPhone: "예약자 연락처",
     phonePlaceholder: "010-0000-0000",
     phoneTitle: "연락처를 다시 확인해 주세요. (예: 010-1234-5678)",
+  },
+
+  /** 신청서 "초콜릿 추가" — 종류·금액은 data/chocolates.ts */
+  chocolate: {
+    title: "초콜릿 추가",
+    description: "꽃과 함께 선물하는 달콤함 — 원하는 만큼 담아주세요.",
+    photoAlt: (name: string) => `${name} 사진`,
+    items: {
+      "happyhippo-1": { name: "해피히포 1개", note: "맛도 있고 인기 있는 킨더 해피히포예요." },
+      "ferrero-1": { name: "페레로로쉐 1개", note: "꽃다발에 꽂아 드리는 막대 포장이에요." },
+      "kinderjoy-1": { name: "킨더조이 1개", note: "장난감이 들어 있어 아이 선물로 좋아요." },
+      "happyhippo-10": { name: "해피히포 10개", note: "기념일 추천 — 10개를 함께 꽂아 드려요." },
+      "ferrero-10": { name: "페레로로쉐 10개", note: "신경 쓴 기념일 추천 — 10개를 함께 꽂아 드려요." },
+    },
   },
 
   summary: {

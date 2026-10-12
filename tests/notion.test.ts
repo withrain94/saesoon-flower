@@ -16,6 +16,7 @@ const reservation: StoredReservation = {
   cashReceiptIssuedAt: null,
   request: {
     items: [{ productId: bouquet.id, category: bouquet.category, price: bouquet.price, quantity: 1 }],
+    chocolates: [],
     deliveries: [
       {
         productId: bouquet.id,

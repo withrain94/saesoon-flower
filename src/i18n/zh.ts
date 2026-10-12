@@ -189,6 +189,16 @@ export const zh: Messages = {
       topperDescription:
         "请填写插牌上送花人（赠送方）的姓名或团队名称。每个课程的插牌不同，结业课程由店家另行联系确认。",
     },
+    pepero: {
+      calendarLabel: "巧克力棒节",
+      shortTitle: () => "巧克力棒节",
+      title: () => "11月11日 巧克力棒节",
+      highlights: [
+        "可以在申请表中一起添加巧克力。",
+        "会把鲜花和巧克力一起包装。",
+        "热门时段可能会提前约满，请尽早预约。",
+      ],
+    },
   },
 
   eventBanner: {
@@ -282,6 +292,19 @@ export const zh: Messages = {
     ordererPhone: "预约人电话",
     phonePlaceholder: "010-0000-0000 或 +86 000 0000 0000",
     phoneTitle: "请确认电话号码。（例：010-1234-5678 / +86 138 0000 0000）",
+  },
+
+  chocolate: {
+    title: "加购巧克力",
+    description: "与鲜花一起送出的甜蜜 — 想要几个就加几个。",
+    photoAlt: (name) => `${name}照片`,
+    items: {
+      "happyhippo-1": { name: "快乐河马 1个", note: "好吃又受欢迎的健达快乐河马。" },
+      "ferrero-1": { name: "费列罗 1个", note: "插在花束上的棒棒包装。" },
+      "kinderjoy-1": { name: "健达奇趣蛋 1个", note: "内含玩具，适合送给小朋友。" },
+      "happyhippo-10": { name: "快乐河马 10个", note: "纪念日推荐 — 一次插上10个。" },
+      "ferrero-10": { name: "费列罗 10个", note: "纪念日推荐 — 一次插上10个。" },
+    },
   },
 
   summary: {

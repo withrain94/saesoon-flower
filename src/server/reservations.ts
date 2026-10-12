@@ -47,6 +47,8 @@ function withReceiveDefaults(request: ReservationRequest): ReservationRequest {
     ...request,
     receiveMethod: request.receiveMethod ?? (request.orchidDelivery?.method === "restaurant" ? "delivery" : "pickup"),
     forEvent: request.forEvent ?? getEventOn(request.date) !== undefined,
+    // 초콜릿 칸이 생기기 전(2026-10-12) 기록은 담은 초콜릿이 없음
+    chocolates: request.chocolates ?? [],
     deliveries: request.deliveries.map((delivery) => ({
       ...delivery,
       recipientAddress: delivery.recipientAddress ?? "",

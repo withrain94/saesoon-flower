@@ -1,3 +1,4 @@
+import type { ChocolateId } from "@/data/chocolates";
 import { getEventOn } from "@/data/events";
 import { findBlackboardPreset } from "@/data/reservationOptions";
 import { localeOptions } from "@/i18n";
@@ -50,6 +51,16 @@ export function summarizeItems(request: ReservationRequest) {
     .map((item) => {
       const name = formatAdminItemName(item.category, item.price);
       return item.quantity > 1 ? `${name} ×${item.quantity}` : name;
+    })
+    .join(" · ");
+}
+
+/** 함께 담은 초콜릿 — "해피히포 1개 ×2 · 페레로로쉐 10개" (없으면 "") */
+export function describeChocolates(request: ReservationRequest) {
+  return (request.chocolates ?? [])
+    .map((chocolate) => {
+      const name = ko.chocolate.items[chocolate.chocolateId as ChocolateId]?.name ?? chocolate.chocolateId;
+      return chocolate.quantity > 1 ? `${name} ×${chocolate.quantity}` : name;
     })
     .join(" · ");
 }

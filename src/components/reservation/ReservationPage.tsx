@@ -30,6 +30,8 @@ export default function ReservationPage() {
     setOrderer,
     receiveMethod,
     setReceiveMethod,
+    chocolateQuantities,
+    setChocolateQuantity,
     forEvent,
     setForEvent,
     visibleIssue,
@@ -88,6 +90,8 @@ export default function ReservationPage() {
         onOrdererChange={setOrderer}
         receiveMethod={receiveMethod}
         onReceiveMethodChange={setReceiveMethod}
+        chocolateQuantities={chocolateQuantities}
+        onChocolateChange={setChocolateQuantity}
         event={selection.date ? (getEventOn(selection.date) ?? null) : null}
         forEvent={forEvent}
         onForEventChange={setForEvent}

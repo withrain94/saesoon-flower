@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { ChocolateId } from "@/data/chocolates";
 import { ko } from "@/i18n/ko";
 import {
   describeColor,
@@ -34,6 +35,7 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
   const color = describeColor(request);
   const orchidDelivery = describeOrchidDelivery(request);
   const forEvent = describeForEvent(request);
+  const chocolates = request.chocolates ?? [];
 
   return (
     <div className="space-y-3">
@@ -89,8 +91,21 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
             </li>
           ))}
         </ul>
+        {chocolates.length > 0 && (
+          <ul className="divide-y divide-line border-t border-line">
+            {chocolates.map((chocolate) => (
+              <li key={chocolate.chocolateId} className="flex justify-between gap-3 py-2 text-[14px]">
+                <span className="text-ink">
+                  🍫 {ko.chocolate.items[chocolate.chocolateId as ChocolateId]?.name ?? chocolate.chocolateId} ×{" "}
+                  {chocolate.quantity}
+                </span>
+                <span className="text-body">{ko.format.price(chocolate.price * chocolate.quantity)}</span>
+              </li>
+            ))}
+          </ul>
+        )}
         <p className="mt-1 flex justify-between border-t-2 border-ink pt-2 text-[15px] font-extrabold text-ink">
-          <span>합계 {request.totalQuantity}개</span>
+          <span>합계 {request.totalQuantity}개{chocolates.length > 0 ? " + 초콜릿" : ""}</span>
           <span>{ko.format.price(request.totalPrice)}</span>
         </p>
         <Rows className="mt-3">

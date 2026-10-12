@@ -2,6 +2,7 @@ import { getEventOn } from "@/data/events";
 import { documentOptions } from "@/data/reservationOptions";
 import { ko } from "@/i18n/ko";
 import {
+  describeChocolates,
   describeColor,
   describeDeliveryAddress,
   describeDeliveryMessage,
@@ -46,6 +47,7 @@ export function buildReservationNotice(id: string, request: ReservationRequest, 
       ? `${ko.format.price(request.paypalAmount)} (수수료 포함)`
       : ko.format.price(request.totalPrice);
   const color = describeColor(request);
+  const chocolates = describeChocolates(request);
   const orchid = describeOrchidDelivery(request);
   const documents = documentOptions
     .filter((option) => request.documents.includes(option.value))
@@ -56,6 +58,7 @@ export function buildReservationNotice(id: string, request: ReservationRequest, 
     `🌸 새 예약 · 접수번호 ${formatReceiptNumber(id)}`,
     `📅 ${formatAdminDate(request.date)} ${formatAdminTime(request.time)}${event ? ` · ${getEventCopy(event, ko).shortTitle}` : ""}`,
     `💐 ${summarizeItems(request)} (총 ${request.totalQuantity}개)`,
+    chocolates && `🍫 초콜릿: ${chocolates}`,
     // 현금영수증·카드 결제하실 분까지 (PayPal 금액·이메일은 따로 적으므로 이름만)
     `💰 ${amount} · ${request.paymentMethod === "paypal" ? ko.payment.methods.paypal.label : describePayment(request)}`,
     request.paymentMethod === "paypal" && `📧 PayPal 결제 요청 보낼 이메일 ${request.paypalEmail}`,

@@ -10,7 +10,7 @@ import {
   RESTAURANT_OTHER,
 } from "@/data/reservationOptions";
 import { getPaypalAmount } from "@/lib/payment";
-import { getOrderItems, needsColorChoice } from "@/lib/selection";
+import { getChocolateItems, getOrderItems, needsColorChoice } from "@/lib/selection";
 import { getBlackboardText, needsDeliveryAddress, type ResolvedUnit } from "@/lib/units";
 import type { Locale } from "@/types/i18n";
 import type {
@@ -102,7 +102,11 @@ export function buildReservationRequest(
   locale: Locale,
 ): ReservationRequest {
   const items = getOrderItems(selection);
-  const totalPrice = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const chocolateItems = getChocolateItems(selection);
+  // 결제 금액은 꽃 상품 + 초콜릿 (PayPal 수수료·서류 합계도 이 금액 기준)
+  const totalPrice =
+    items.reduce((sum, item) => sum + item.product.price * item.quantity, 0) +
+    chocolateItems.reduce((sum, item) => sum + item.chocolate.price * item.quantity, 0);
   const color = needsColorChoice(items)
     ? (colorOptionIds.find((id) => id === text(data, "color")) ?? colorOptionIds[0])
     : "";
@@ -125,6 +129,11 @@ export function buildReservationRequest(
       quantity,
     })),
     deliveries: units.map((unit) => toDelivery(unit, receiveMethod)),
+    chocolates: chocolateItems.map(({ chocolate, quantity }) => ({
+      chocolateId: chocolate.id,
+      price: chocolate.price,
+      quantity,
+    })),
     totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
     totalPrice,
     date: selection.date ?? "",

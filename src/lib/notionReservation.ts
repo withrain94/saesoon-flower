@@ -1,3 +1,4 @@
+import type { ChocolateId } from "@/data/chocolates";
 import { getEventOn, type SpecialEvent } from "@/data/events";
 import { findBlackboardPreset } from "@/data/reservationOptions";
 import { ko } from "@/i18n/ko";
@@ -46,6 +47,7 @@ const CANCELED_MARK = "[취소] ";
 const eventPagePrefix: Record<SpecialEvent["kind"], string> = {
   institutePromotion: "인재개발원",
   instituteLongCourse: "인재개발원",
+  pepero: "빼빼로데이",
 };
 
 /** 표 아래에 연락처 모음(중복 제외)을 붙이는 특별한 날 — 단체 문자 보내기용 */
@@ -154,7 +156,7 @@ export function buildNotionRows({ id, status, adminMemo, request }: StoredReserv
   // 입금 여부 — 표 칸 수를 바꾸면 이미 만든 날짜 표에 못 올리므로 결제 방법 칸 앞에 붙임 (취소는 예약종류에 [취소])
   const paidMark = status === "received" ? "[입금 전] " : status === "canceled" ? "" : "[입금 확인] ";
 
-  return request.deliveries.map((delivery) => {
+  const rows = request.deliveries.map((delivery) => {
     const row: Record<(typeof NOTION_TABLE_HEADERS)[number], string> = {
       "원하시는 색감": delivery.category === "orchid" ? "" : color,
       금액: ko.format.price(delivery.price),
@@ -175,4 +177,29 @@ export function buildNotionRows({ id, status, adminMemo, request }: StoredReserv
     };
     return NOTION_TABLE_HEADERS.map((header) => row[header]);
   });
+
+  // 함께 담은 초콜릿 — 종류마다 한 줄 (예약종류 칸에 이름·수량, 받는 분 칸은 비움)
+  const chocolateRows = (request.chocolates ?? []).map((chocolate) => {
+    const name = ko.chocolate.items[chocolate.chocolateId as ChocolateId]?.name ?? chocolate.chocolateId;
+    const row: Record<(typeof NOTION_TABLE_HEADERS)[number], string> = {
+      "원하시는 색감": "",
+      금액: ko.format.price(chocolate.price * chocolate.quantity),
+      "날짜/시간대": schedule,
+      "보내는분 성함": request.ordererName,
+      "보내는분 연락처": request.ordererPhone,
+      "받는분 성함": "",
+      "받는분 연락처": "",
+      메시지: "",
+      예약종류: `${canceled}🍫 ${name} ×${chocolate.quantity}`,
+      "받는 방법": receiveMethod,
+      배송지: "",
+      토퍼: "",
+      "결제 방법": `${paidMark}${payment}`,
+      접수번호: receipt,
+      "매장 메모": adminMemo,
+    };
+    return NOTION_TABLE_HEADERS.map((header) => row[header]);
+  });
+
+  return [...rows, ...chocolateRows];
 }

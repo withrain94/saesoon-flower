@@ -10,7 +10,7 @@ const orderer: OrdererContact = { name: "홍길동", phone: "010-1111-2222" };
 
 /** 상품을 담고 칸별 입력값을 넣어 "같음"을 푼 결과 */
 function resolve(quantities: Record<string, number>, patch: Record<number, Partial<UnitDetail>> = {}, dateKey: string | null = null) {
-  const selection: Selection = { quantities, date: dateKey, time: "12:00" };
+  const selection: Selection = { quantities, chocolates: {}, date: dateKey, time: "12:00" };
   const units = getOrderUnits(selection);
   const details: Record<string, UnitDetail> = {};
   units.forEach((unit, index) => {

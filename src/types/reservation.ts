@@ -40,6 +40,8 @@ export type BusinessDocumentType = "quote" | "statement";
 export type Selection = {
   /** 상품 id("bouquet-60000") → 수량. 0개인 항목은 두지 않음 */
   quantities: Record<string, number>;
+  /** 초콜릿 id("ferrero-1") → 수량. 0개인 항목은 두지 않음 (꽃과 달리 받는 분·메시지 칸이 없음) */
+  chocolates: Record<string, number>;
   /** "YYYY-MM-DD" */
   date: string | null;
   /** "HH:00" */
@@ -101,6 +103,13 @@ export type ReservationItem = {
   quantity: number;
 };
 
+/** 함께 담은 초콜릿 한 줄 (data/chocolates.ts의 id·금액) */
+export type ChocolateOrder = {
+  chocolateId: string;
+  price: number;
+  quantity: number;
+};
+
 /** 상품 1개가 누구에게 어떤 메시지로 가는지 ("같음"이 풀린 최종 값) */
 export type ReservationDelivery = {
   productId: string;
@@ -124,7 +133,11 @@ export type ReservationRequest = {
   items: ReservationItem[];
   /** 상품 1개 단위 받는 분·메시지 */
   deliveries: ReservationDelivery[];
+  /** 함께 담은 초콜릿 (없으면 빈 배열) — 받는 분·메시지 없이 수량만 */
+  chocolates: ChocolateOrder[];
+  /** 꽃 상품 개수 (초콜릿은 빼고 — deliveries 개수와 같아야 함) */
   totalQuantity: number;
+  /** 결제할 금액 = 꽃 상품 + 초콜릿 */
   totalPrice: number;
   date: string;
   time: string;

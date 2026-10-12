@@ -29,9 +29,9 @@ export default function SpecialEventBanner({
     >
       <EventDayNotice event={nearest} />
 
-      {/* 그날 토퍼를 넣어주는 종류(꽃다발·꽃바구니)마다 버튼 — 추천 상품은 채운 버튼 */}
+      {/* 그날 안내에 넣기로 한 종류(꽃다발·꽃바구니)마다 버튼 — 추천 상품은 채운 버튼 */}
       <div className="mt-3 grid grid-cols-2 gap-2">
-        {nearest.topperCategories.map((category) => (
+        {nearest.bannerCategories.map((category) => (
           <button
             key={category}
             type="button"

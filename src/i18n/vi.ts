@@ -227,6 +227,16 @@ export const vi: Messages = {
       topperDescription:
         "Nhập tên hoặc tên nhóm của người tặng hoa để in lên thẻ cắm. Mỗi khóa có thẻ cắm khác nhau nên tiệm sẽ liên hệ để xác nhận khóa học đã hoàn thành.",
     },
+    pepero: {
+      calendarLabel: "Pepero Day",
+      shortTitle: () => "Pepero Day",
+      title: () => "Pepero Day 11 tháng 11",
+      highlights: [
+        "Quý khách có thể thêm sô-cô-la ngay trong đơn đặt hoa.",
+        "Tiệm sẽ gói hoa và sô-cô-la cùng nhau.",
+        "Khung giờ được ưa chuộng có thể hết sớm, vui lòng đặt trước.",
+      ],
+    },
   },
 
   eventBanner: {
@@ -320,6 +330,19 @@ export const vi: Messages = {
     ordererPhone: "Số điện thoại người đặt",
     phonePlaceholder: "010-0000-0000 hoặc +84 00 000 0000",
     phoneTitle: "Vui lòng kiểm tra số điện thoại. (VD: 010-1234-5678 / +84 90 123 4567)",
+  },
+
+  chocolate: {
+    title: "Thêm sô-cô-la",
+    description: "Vị ngọt gửi kèm bó hoa — quý khách muốn bao nhiêu cũng được.",
+    photoAlt: (name) => `Ảnh ${name}`,
+    items: {
+      "happyhippo-1": { name: "Happy Hippo × 1", note: "Bánh Kinder Happy Hippo rất được yêu thích." },
+      "ferrero-1": { name: "Ferrero Rocher × 1", note: "Gói sẵn trên que để cắm vào bó hoa." },
+      "kinderjoy-1": { name: "Kinder Joy × 1", note: "Có đồ chơi bên trong, hợp làm quà cho trẻ em." },
+      "happyhippo-10": { name: "Happy Hippo × 10", note: "Gợi ý cho dịp đặc biệt — cắm kèm 10 cái." },
+      "ferrero-10": { name: "Ferrero Rocher × 10", note: "Gợi ý cho dịp đặc biệt — cắm kèm 10 cái." },
+    },
   },
 
   summary: {

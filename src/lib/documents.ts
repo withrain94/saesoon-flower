@@ -1,6 +1,8 @@
+import type { ChocolateId } from "@/data/chocolates";
 import { allProducts } from "@/data/products";
 import { documentOptions, paymentMethodOptions } from "@/data/reservationOptions";
 import { businessInfo } from "@/data/shop";
+import { ko } from "@/i18n/ko";
 import { formatDateLabel } from "@/lib/date";
 import { formatKoreanAmount } from "@/lib/format";
 import { getItemName } from "@/lib/selection";
@@ -75,6 +77,16 @@ export function buildBusinessDocument(
       amount: item.price * item.quantity,
     };
   });
+
+  // 함께 담은 초콜릿도 한 줄씩 (합계가 결제 금액과 같아야 함)
+  for (const chocolate of reservation.chocolates ?? []) {
+    rows.push({
+      name: ko.chocolate.items[chocolate.chocolateId as ChocolateId]?.name ?? chocolate.chocolateId,
+      quantity: chocolate.quantity,
+      unitPrice: chocolate.price,
+      amount: chocolate.price * chocolate.quantity,
+    });
+  }
   const total = rows.reduce((sum, row) => sum + row.amount, 0);
 
   // 과세면 가격을 부가세 포함으로 보고 공급가액·세액을 나눔

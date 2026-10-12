@@ -1,10 +1,10 @@
 import { useT } from "@/hooks/useLocale";
-import { getItemName, type SelectionSummary } from "@/lib/selection";
+import { getChocolateName, getItemName, type SelectionSummary } from "@/lib/selection";
 
-/** 담은 상품·일정·총 금액 박스 */
+/** 담은 상품·초콜릿·일정·총 금액 박스 */
 export default function OrderSummary({ summary }: { summary: SelectionSummary }) {
   const t = useT();
-  const { items, scheduleLabel, totalQuantity, totalPrice } = summary;
+  const { items, chocolateItems, scheduleLabel, totalQuantity, totalPrice } = summary;
 
   return (
     <div className="rounded-xl bg-soft px-4 py-3.5 text-left text-[14px]">
@@ -22,6 +22,22 @@ export default function OrderSummary({ summary }: { summary: SelectionSummary })
         </ul>
       ) : (
         <p className="mt-1 font-semibold text-faint">{t.summary.itemsEmpty}</p>
+      )}
+
+      {chocolateItems.length > 0 && (
+        <>
+          <p className="mt-2.5 text-[13px] text-sub">{t.chocolate.title}</p>
+          <ul className="mt-1 space-y-1">
+            {chocolateItems.map(({ chocolate, quantity }) => (
+              <li key={chocolate.id} className="flex items-baseline justify-between gap-3">
+                <span className="font-semibold text-ink">
+                  {getChocolateName(chocolate, t)} × {quantity}
+                </span>
+                <span className="shrink-0 text-body">{t.format.price(chocolate.price * quantity)}</span>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
 
       <div className="mt-2.5 flex gap-3">

@@ -1,3 +1,4 @@
+import { chocolates, MAX_CHOCOLATE_QUANTITY, type Chocolate } from "@/data/chocolates";
 import { getEventOn } from "@/data/events";
 import {
   allProducts,
@@ -15,22 +16,34 @@ import { getEventCopy } from "@/lib/events";
 import { formatTimeLabel, isSlotBookable, type Now } from "@/lib/time";
 import type { ProductCategoryId, Selection, SelectionIssue } from "@/types/reservation";
 
-export const emptySelection: Selection = { quantities: {}, date: null, time: null };
+export const emptySelection: Selection = { quantities: {}, chocolates: {}, date: null, time: null };
 
 export type OrderItem = {
   product: Product;
   quantity: number;
 };
 
+/** 담은 초콜릿 한 종류 */
+export type ChocolateItem = {
+  chocolate: Chocolate;
+  quantity: number;
+};
+
 export type SelectionSummary = {
   /** 담은 상품 (꽃다발 → 꽃바구니, 금액순) */
   items: OrderItem[];
+  /** 담은 초콜릿 (화면 순서) */
+  chocolateItems: ChocolateItem[];
   /** 종류별 담은 개수 — 탭 배지용 */
   countByCategory: Record<ProductCategoryId, number>;
   /** "9. 16(수) · 오후 3:00" (선택된 부분만, 없으면 ""). 특별한 날이면 뒤에 "· 제8기 승진식" */
   scheduleLabel: string;
+  /** 꽃 상품 개수 (초콜릿 제외) */
   totalQuantity: number;
+  /** 꽃 상품 + 초콜릿 금액 */
   totalPrice: number;
+  /** 초콜릿 금액만 */
+  chocolatePrice: number;
 };
 
 /** 0 ~ MAX_QUANTITY 범위의 정수로 보정 */
@@ -45,6 +58,31 @@ export function withQuantity(quantities: Selection["quantities"], productId: str
   if (clamped === 0) delete next[productId];
   else next[productId] = clamped;
   return next;
+}
+
+/** 수량을 바꾼 새 초콜릿 목록 (0이면 항목 제거) */
+export function withChocolateQuantity(
+  current: Selection["chocolates"],
+  chocolateId: string,
+  quantity: number,
+) {
+  const next = { ...current };
+  const clamped = Math.min(MAX_CHOCOLATE_QUANTITY, Math.max(0, Math.floor(quantity)));
+  if (clamped === 0) delete next[chocolateId];
+  else next[chocolateId] = clamped;
+  return next;
+}
+
+/** 수량이 1개 이상인 초콜릿 (화면 순서) */
+export function getChocolateItems(selection: Selection): ChocolateItem[] {
+  return chocolates
+    .map((chocolate) => ({ chocolate: chocolate as Chocolate, quantity: selection.chocolates?.[chocolate.id] ?? 0 }))
+    .filter((item) => item.quantity > 0);
+}
+
+/** 초콜릿 이름 (언어별) — "해피히포 1개" */
+export function getChocolateName(chocolate: Chocolate, t: Messages = ko) {
+  return t.chocolate.items[chocolate.id].name;
 }
 
 /** 수량이 1개 이상인 상품 */
@@ -100,7 +138,12 @@ export function getSelectionIssue(selection: Selection, now: Now | null): Select
 
 export function summarizeSelection(selection: Selection, t: Messages = ko): SelectionSummary {
   const items = getOrderItems(selection);
+  const chocolateItems = getChocolateItems(selection);
   const event = selection.date ? getEventOn(selection.date) : undefined;
+  const chocolatePrice = chocolateItems.reduce(
+    (sum, item) => sum + item.chocolate.price * item.quantity,
+    0,
+  );
 
   const countByCategory = Object.fromEntries(
     productCategories.map((category) => [
@@ -113,6 +156,7 @@ export function summarizeSelection(selection: Selection, t: Messages = ko): Sele
 
   return {
     items,
+    chocolateItems,
     countByCategory,
     scheduleLabel: [
       selection.date && formatDateLabel(selection.date, t),
@@ -122,6 +166,7 @@ export function summarizeSelection(selection: Selection, t: Messages = ko): Sele
       .filter(Boolean)
       .join(" · "),
     totalQuantity: items.reduce((sum, item) => sum + item.quantity, 0),
-    totalPrice: items.reduce((sum, item) => sum + item.product.price * item.quantity, 0),
+    totalPrice: items.reduce((sum, item) => sum + item.product.price * item.quantity, 0) + chocolatePrice,
+    chocolatePrice,
   };
 }
