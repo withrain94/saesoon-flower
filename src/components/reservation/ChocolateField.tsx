@@ -2,6 +2,8 @@ import Image from "next/image";
 import QuantityStepper from "@/components/ui/QuantityStepper";
 import { chocolateChoices, MAX_CHOCOLATE_QUANTITY, type ChocolateId } from "@/data/chocolates";
 import { useT } from "@/hooks/useLocale";
+import { usePhotos } from "@/hooks/usePhotos";
+import { chocolateSlot } from "@/lib/sitePhotos";
 
 /**
  * 신청서 "🍫 초콜릿 추가" — 꽃과 함께 보낼 초콜릿을 수량으로 고른다 (2026-10-12 사용자 요청).
@@ -19,6 +21,7 @@ export default function ChocolateField({
   withHeading?: boolean;
 }) {
   const t = useT();
+  const photos = usePhotos();
 
   return (
     <div>
@@ -43,7 +46,7 @@ export default function ChocolateField({
             >
               <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-soft">
                 <Image
-                  src={chocolate.image}
+                  src={photos(chocolateSlot(chocolate.id)).images[0]}
                   alt={t.chocolate.photoAlt(copy.name)}
                   fill
                   sizes="64px"

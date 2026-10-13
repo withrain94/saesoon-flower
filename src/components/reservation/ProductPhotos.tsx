@@ -2,6 +2,8 @@ import Image from "next/image";
 import type { Product } from "@/data/products";
 import { siteLinksByCategory } from "@/data/shop";
 import { useT } from "@/hooks/useLocale";
+import { usePhotos } from "@/hooks/usePhotos";
+import { productSlot } from "@/lib/sitePhotos";
 
 /** 가로로 넘겨보는 실제 제작 사진 — 끝에는 소개 사이트로 가는 칸 */
 export default function ProductPhotos({
@@ -16,11 +18,12 @@ export default function ProductPhotos({
   large?: boolean;
 }) {
   const t = useT();
-  const total = product.images.length;
+  const { images } = usePhotos()(productSlot(product.id));
+  const total = images.length;
 
   return (
     <ul className="-mx-5 mt-4 flex snap-x snap-mandatory scroll-px-5 gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none]">
-      {product.images.map((src, index) => (
+      {images.map((src, index) => (
         <li
           key={src}
           className={`relative shrink-0 snap-start overflow-hidden rounded-xl bg-soft ${

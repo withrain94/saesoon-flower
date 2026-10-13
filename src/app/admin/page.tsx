@@ -59,6 +59,13 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
           🧾 현금영수증 신청 내역 (달별 · 발급 체크)
           <span className="text-sub">›</span>
         </Link>
+        <Link
+          href="/admin/photos"
+          className="mt-2 flex items-center justify-between gap-2 rounded-xl bg-white px-3 py-2.5 text-[13.5px] font-semibold text-ink transition hover:text-brand-dark"
+        >
+          🖼 사진 관리 (올리기 · 지우기 · 순서 · 대표 사진)
+          <span className="text-sub">›</span>
+        </Link>
 
         {!result ? (
           <p className="mt-6 rounded-xl bg-white px-4 py-5 text-[14px] text-danger">

@@ -1,17 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import { shop } from "@/data/shop";
 import { useT } from "@/hooks/useLocale";
+import { usePhotos } from "@/hooks/usePhotos";
 import { getCategoryNames } from "@/lib/selection";
+import { HERO_SLOT } from "@/lib/sitePhotos";
 
 export default function Hero() {
   const t = useT();
+  const photos = usePhotos();
 
   return (
     <section className="relative h-[230px] overflow-hidden">
       <Image
-        src={shop.heroImage}
+        src={photos(HERO_SLOT).images[0]}
         alt={t.hero.imageAlt}
         fill
         preload

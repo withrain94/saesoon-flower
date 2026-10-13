@@ -2,6 +2,8 @@ import Image from "next/image";
 import { ChevronIcon } from "@/components/ui/icons";
 import { productCategories } from "@/data/products";
 import { useT } from "@/hooks/useLocale";
+import { usePhotos } from "@/hooks/usePhotos";
+import { thumbnailSlot } from "@/lib/sitePhotos";
 import type { ProductCategoryId } from "@/types/reservation";
 
 /** 첫 화면 입구 — 어떤 상품 종류를 예약할지 바로 고르게 함 (종류 수만큼 칸이 나뉨) */
@@ -13,6 +15,7 @@ export default function CategoryEntry({
   onSelect: (categoryId: ProductCategoryId) => void;
 }) {
   const t = useT();
+  const photos = usePhotos();
 
   return (
     <section aria-label={t.categoryEntry.ariaLabel} className="px-5 pb-2 pt-3">
@@ -32,7 +35,7 @@ export default function CategoryEntry({
             >
               <div className="relative aspect-square bg-soft">
                 <Image
-                  src={category.thumbnail}
+                  src={photos(thumbnailSlot(category.id)).images[0]}
                   alt={t.categoryEntry.photoAlt(copy.name)}
                   fill
                   sizes="(max-width: 512px) 31vw, 155px"

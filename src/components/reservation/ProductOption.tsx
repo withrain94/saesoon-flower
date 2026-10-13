@@ -3,7 +3,9 @@ import QuantityStepper from "@/components/ui/QuantityStepper";
 import type { Product } from "@/data/products";
 import { MAX_QUANTITY } from "@/data/reservationOptions";
 import { useT } from "@/hooks/useLocale";
+import { usePhotos } from "@/hooks/usePhotos";
 import { getItemName, getProductCopy } from "@/lib/selection";
+import { productSlot } from "@/lib/sitePhotos";
 import ProductPhotos from "./ProductPhotos";
 
 export default function ProductOption({
@@ -26,6 +28,7 @@ export default function ProductOption({
   const selected = quantity > 0;
   const copy = getProductCopy(product, t);
   const itemName = getItemName(product, t);
+  const { images, cover } = usePhotos()(productSlot(product.id));
 
   return (
     <li className={`-mx-5 px-5 py-5 transition-colors ${selected ? "bg-brand-tint" : ""}`}>
@@ -48,14 +51,14 @@ export default function ProductOption({
             className="relative h-[124px] w-[120px] shrink-0 overflow-hidden rounded-xl bg-soft"
           >
             <Image
-              src={product.images[product.cover]}
+              src={images[cover]}
               alt={t.productOption.coverAlt(itemName)}
               fill
               sizes="120px"
               className="object-cover"
             />
             <span className="absolute bottom-1.5 right-1.5 rounded-full bg-black/55 px-2 py-0.5 text-[11px] font-medium text-white">
-              {photosOpen ? t.common.close : t.productOption.photoCount(product.images.length)}
+              {photosOpen ? t.common.close : t.productOption.photoCount(images.length)}
             </span>
           </button>
         )}

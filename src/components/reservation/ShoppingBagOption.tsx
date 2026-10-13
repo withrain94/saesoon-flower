@@ -2,6 +2,8 @@ import Image from "next/image";
 import QuantityStepper from "@/components/ui/QuantityStepper";
 import { MAX_CHOCOLATE_QUANTITY, shoppingBag } from "@/data/chocolates";
 import { useT } from "@/hooks/useLocale";
+import { usePhotos } from "@/hooks/usePhotos";
+import { chocolateSlot } from "@/lib/sitePhotos";
 
 /**
  * 꽃다발 목록 맨 위 "쇼핑백 2,000원" (2026-10-12 사용자 요청).
@@ -15,6 +17,7 @@ export default function ShoppingBagOption({
   onQuantityChange: (quantity: number) => void;
 }) {
   const t = useT();
+  const image = usePhotos()(chocolateSlot(shoppingBag.id)).images[0];
   const selected = quantity > 0;
   const name = t.chocolate.items.shoppingbag.name;
 
@@ -36,7 +39,7 @@ export default function ShoppingBagOption({
         </div>
 
         <div className="relative h-[124px] w-[120px] shrink-0 overflow-hidden rounded-xl bg-soft">
-          <Image src={shoppingBag.image} alt={t.chocolate.photoAlt(name)} fill sizes="120px" className="object-cover" />
+          <Image src={image} alt={t.chocolate.photoAlt(name)} fill sizes="120px" className="object-cover" />
         </div>
       </div>
 

@@ -54,3 +54,22 @@ notify pgrst, 'reload schema';
 alter table public.reservations add column if not exists cash_receipt_issued_at timestamptz;
 
 notify pgrst, 'reload schema';
+
+-- ── 2026-10-13 추가: 관리자 "사진 관리" ─────────────────────────────────────
+-- 관리자가 바꾼 사진 자리만 한 줄씩 저장 (slot = 자리 이름, images = 사진 주소 목록, cover = 대표 사진 순번).
+-- 줄이 없는 자리는 사이트에 들어 있는 기본 사진이 보임. 여러 번 실행해도 안전
+create table if not exists public.site_photos (
+  slot text primary key,
+  images jsonb not null default '[]'::jsonb,
+  cover integer not null default 0,
+  updated_at timestamptz not null default now()
+);
+alter table public.site_photos enable row level security;
+revoke all on table public.site_photos from anon, authenticated;
+grant select, insert, update, delete on table public.site_photos to service_role;
+
+-- 올린 사진 파일을 넣는 보관함 — 누구나 볼 수 있고(손님 화면에 보여야 하므로), 올리기·지우기는 서버(비밀 키)만
+insert into storage.buckets (id, name, public) values ('site-photos', 'site-photos', true)
+on conflict (id) do update set public = true;
+
+notify pgrst, 'reload schema';

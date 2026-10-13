@@ -17,11 +17,11 @@ npm test       # 핵심 규칙 자동 검사 (tests/ — 예약 가능 시간·�
 ```
 src/
 ├─ app/                      페이지 진입점 (page.tsx, layout.tsx, globals.css) · privacy/ 개인정보 처리방침 · check/ 손님 예약 조회·취소 · documents/pdf/ 서류 PDF 다운로드(POST) · cron/tomorrow-reminders/ 매일 저녁 내일 예약 목록(Vercel Cron, vercel.json)
-│  └─ admin/                 관리자 페이지 — login / 목록(page.tsx, ?status= 필터) / [id] 상세 / cash-receipts 현금영수증 신청 내역(접수 달별, ?month=, 발급 완료 체크 — lib/cashReceipts)
+│  └─ admin/                 관리자 페이지 — login / 목록(page.tsx, ?status= 필터) / [id] 상세 / cash-receipts 현금영수증 신청 내역(접수 달별, ?month=, 발급 완료 체크 — lib/cashReceipts) / photos 사진 관리(올리기·지우기·순서·대표 — lib/sitePhotos)
 ├─ proxy.ts                  /admin 요청마다 로그인 세션 갱신 (Next 16: middleware → proxy)
 ├─ components/
 │  ├─ lookup/                손님 예약 조회·취소 — ReservationLookup(예약자 이름+연락처), LookupResultList(여러 건이면 목록), LookupReservationDetails, LookupCancelPanel(입금 전 취소 / 입금 후 환불 계좌 받고 취소 요청)
-│  ├─ admin/                 관리자 화면 — CancelRequestCard(손님 취소 요청·환불 계좌), AdminHeader, LoginForm, StatusFilterTabs, StatusBadge, ReservationListItem, ReservationDetail, StatusChanger, AdminMemoForm, AdminDocuments, NotionSyncButton, ReminderToggle(안내 문자 보냄 표시)
+│  ├─ admin/                 관리자 화면 — CancelRequestCard(손님 취소 요청·환불 계좌), AdminHeader, LoginForm, StatusFilterTabs, StatusBadge, ReservationListItem, ReservationDetail, StatusChanger, AdminMemoForm, AdminDocuments, NotionSyncButton, ReminderToggle(안내 문자 보냄 표시), PhotoSlotEditor(사진 자리 하나 고치기)
 │  ├─ layout/                StoreHeader(예약 조회 버튼 — /check에선 숨김 + 소개 사이트 + LanguageSwitcher 🌐), Hero, SiteFooter — 매장 공통 화면
 │  ├─ reservation/           예약 기능
 │  │  ├─ ReservationPage.tsx   섹션 조립만 담당
@@ -36,7 +36,7 @@ src/
 │  └─ ui/                    Field, Checkbox, QuantityStepper, SectionHeading, ErrorText, icons … 재사용 부품
 ├─ server/                   서버 전용 (브라우저로 안 감) — env(환경변수 읽기 전부), supabase(DB·로그인 클라이언트), auth(requireAdmin), reservations(저장·목록·수정), notify(새 예약 텔레그램 알림), notion(날짜별 예약 표 올리기), documentDownload(서류 PDF 받기 — 연락처 또는 관리자 확인), reminders(내일 예약 목록 텔레그램) · documentPdf/(서류 PDF 그리기 + 한글 글꼴)
 │  └─ actions/               "use server" 함수 — reservation(고객 신청 검사·저장), lookup(손님 조회·취소 — 매번 예약자 이름+연락처 재확인), admin(로그인·로그아웃·상태·메모·노션 다시 올리기·안내 문자 보냄 표시)
-├─ hooks/                    useNow(한국 시각), useLocale(언어·useT), useLookupT(조회 화면 문구 — i18n/lookup/), useActiveSection, useElementWidth
+├─ hooks/                    useNow(한국 시각), useLocale(언어·useT), useLookupT(조회 화면 문구 — i18n/lookup/), usePhotos(관리자가 바꾼 사진 반영), useActiveSection, useElementWidth
 ├─ lib/                      순수 함수 (date, time, events, format, selection, units, payment, reservationRequest, reservationValidation, documents)
 │                            + 매장용 한국어 표시: adminFormat(관리자 화면 공용), reservationNotice(텔레그램 문구), reminderNotice(내일 예약 목록 문구), notionReservation(노션 표 칸) · supabaseUrl(Supabase 공개 설정) · reservationShare(완료 화면 카카오톡 공유 글, 카카오 키)
 ├─ i18n/                     화면 문구 — ko(기준)·en·ja·zh·vi. 모양이 ko와 다르면 타입 오류 / index.ts: 언어 목록·messages
@@ -65,6 +65,7 @@ public/flowers/              상품 사진 ({종류}-{금액}-{번호}.jpg — b
    `types`의 `ProductCategoryId` → `products.ts` (`colorChoice`, `featured`) → 각 언어 파일의 `categories`·`products` (안내는 `notice`) → `shop.ts`의 네이버 링크 → `reservationOptions.ts`의 `messageOptionsByCategory`.
    초콜릿(꽃과 함께 담는 추가 옵션)은 `data/chocolates.ts`(id·금액·사진)와 언어 파일 `chocolate.items`(이름·설명)에서만 수정한다. 받는 분·메시지 칸은 없고 금액만 합계에 더해진다. 초콜릿 칸(`ChocolateField`)은 상품 고르기 바로 아래(`ReservationPage`)에 있다.
    꽃다발 쇼핑백도 같은 목록의 한 줄(`kind: "bag"`, `shoppingBag`)이라 저장·합계·서류·알림은 초콜릿과 같은 길을 타고, 화면만 꽃다발 목록 맨 위(`ShoppingBagOption`, 문구 `chocolate.bag`)에 따로 보인다. 초콜릿만 볼 땐 `chocolateChoices`·`hasChocolate`, 매장용 그림글자는 `getAddOnIcon`.
+   **화면에 사진을 그릴 땐 data의 `images`·`image`·`thumbnail`을 직접 쓰지 않고 `usePhotos()`(hooks/usePhotos)로 꺼낸다** — 관리자 `/admin/photos`에서 바꾼 사진이 반영되게. 사진 자리 목록·검사·순서 바꾸기는 `lib/sitePhotos.ts` 하나(기본 사진은 data에서 읽고, 바꾼 자리만 `site_photos` 표가 덮어씀), DB·보관함은 `server/sitePhotos.ts`, 저장은 `server/actions/photos.ts`(맨 앞 `requireAdmin`, 저장 뒤 `revalidatePath("/")`). 첫 화면은 `app/page.tsx`가 서버에서 읽어 `PhotoOverridesProvider`로 내려주고 못 읽으면 기본 사진으로 뜬다. 새 사진 자리(예: 새 상품)는 data에 추가하면 `photoSlots`에 자동으로 생긴다.
    블랙보드 문구 선택지(예: 호접난 "알아서 써주세요" 등)는 `reservationOptions.ts`의 `blackboardPresetsByCategory`(실제 적힐 한국어)와 언어 파일 `blackboardPresets`(선택지 이름)에서 수정한다. ("직접 입력"은 자동으로 붙음) 저장된 선택지 id로 찾을 땐 `findBlackboardPreset`.
    새 메시지 방식이 필요하면 `MessageType`·`UnitMessage` → `lib/units.ts`(빈 값·설명) → `lib/reservationRequest.ts` → `MessageEditor`.
 6. 신청서 input의 `name`은 `ReservationFormField`와 같아야 하고, 입력값은 `lib/reservationRequest.ts`에서만 읽는다.
