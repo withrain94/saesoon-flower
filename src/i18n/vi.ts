@@ -639,6 +639,8 @@ export const vi: Messages = {
   footer: {
     /** 배달 지역 한 줄 (구글 검색에도 쓰임) */
     area: "Giao hoa tại Jeonju, Wanju · Giao hoa đến Viện Phát triển Nhân lực Chính quyền Địa phương (lễ thăng chức, lễ tốt nghiệp) · Tiệm hoa tự phục vụ 24 giờ tại Thành phố Đổi mới Jeonju",
+    /** 상황별 꽃 한 줄 (구글 검색에도 쓰임) */
+    occasions: "Bó hoa, giỏ hoa tại Jeonju · Lan hồ điệp làm quà ra mắt hai bên gia đình · Hoa mừng thọ 70 tuổi, hoa tốt nghiệp · Trang trí hoa và giao hoa cho sự kiện doanh nghiệp, cơ quan công",
     privacy: "Chính sách bảo mật",
   },
 

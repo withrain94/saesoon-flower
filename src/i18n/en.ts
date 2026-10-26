@@ -648,6 +648,8 @@ export const en: Messages = {
   footer: {
     /** 배달 지역 한 줄 (구글 검색에도 쓰임) */
     area: "Flower delivery in Jeonju & Wanju · Local Government Officials Development Institute (promotion & graduation ceremonies) · 24-hour self-service florist in Jeonju Innovation City",
+    /** 상황별 꽃 한 줄 (구글 검색에도 쓰임) */
+    occasions: "Bouquets & flower baskets in Jeonju · Phalaenopsis orchids for family-meeting gifts · Flowers for 70th birthdays & graduations · Floral decoration & delivery for corporate and public events",
     privacy: "Privacy policy",
   },
 
