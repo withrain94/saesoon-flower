@@ -266,7 +266,7 @@ const basket = defineCategory(
     {
       price: 300000,
       cover: 0,
-      images: photos(range("basket-300000", 4)),
+      images: photos(range("basket-300000", 7)),
     },
   ],
 );
