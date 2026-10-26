@@ -16,7 +16,7 @@ npm test       # 핵심 규칙 자동 검사 (tests/ — 예약 가능 시간·�
 
 ```
 src/
-├─ app/                      페이지 진입점 (page.tsx, layout.tsx, globals.css) · privacy/ 개인정보 처리방침 · check/ 손님 예약 조회·취소 · documents/pdf/ 서류 PDF 다운로드(POST) · cron/tomorrow-reminders/ 매일 저녁 내일 예약 목록(Vercel Cron, vercel.json)
+├─ app/                      페이지 진입점 (page.tsx, layout.tsx, globals.css) · privacy/ 개인정보 처리방침 · guide/[slug] 구글 검색용 주제별 소개 페이지(내용 data/guidePages, 한국어) · robots.ts·sitemap.ts · check/ 손님 예약 조회·취소 · documents/pdf/ 서류 PDF 다운로드(POST) · cron/tomorrow-reminders/ 매일 저녁 내일 예약 목록(Vercel Cron, vercel.json)
 │  └─ admin/                 관리자 페이지 — login / 목록(page.tsx, ?status= 필터) / [id] 상세 / cash-receipts 현금영수증 신청 내역(접수 달별, ?month=, 발급 완료 체크 — lib/cashReceipts) / photos 사진 관리(올리기·지우기·순서·대표 — lib/sitePhotos)
 ├─ proxy.ts                  /admin 요청마다 로그인 세션 갱신 (Next 16: middleware → proxy)
 ├─ components/
@@ -40,7 +40,7 @@ src/
 ├─ lib/                      순수 함수 (date, time, events, format, selection, units, payment, reservationRequest, reservationValidation, documents)
 │                            + 매장용 한국어 표시: adminFormat(관리자 화면 공용), reservationNotice(텔레그램 문구), reminderNotice(내일 예약 목록 문구), notionReservation(노션 표 칸) · supabaseUrl(Supabase 공개 설정) · reservationShare(완료 화면 카카오톡 공유 글, 카카오 키)
 ├─ i18n/                     화면 문구 — ko(기준)·en·ja·zh·vi. 모양이 ko와 다르면 타입 오류 / index.ts: 언어 목록·messages
-├─ data/                     정적 데이터 (products, chocolates, shop, reservationOptions, events) — 금액·사진·날짜·선택지 코드만, 문구는 i18n
+├─ data/                     정적 데이터 (products, chocolates, shop — 검색 정보 searchInfo 포함, reservationOptions, events, guidePages) — 금액·사진·날짜·선택지 코드만, 문구는 i18n
 └─ types/                    공용 타입 (ReservationRequest = 저장할 예약 한 건)
 public/chocolates/          초콜릿 사진 ({초콜릿 id}-01.jpg)
 supabase/schema.sql          예약 표 만들기 (Supabase SQL Editor에서 한 번 실행)
