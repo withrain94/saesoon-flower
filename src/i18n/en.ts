@@ -652,6 +652,14 @@ export const en: Messages = {
     occasions: "Bouquets & flower baskets in Jeonju · Birthday, anniversary & proposal flowers · Parents’ Day, Teachers’ Day, graduation & entrance ceremony flowers · Flower baskets for 60th, 70th & 80th birthdays · Phalaenopsis orchids for family-meeting gifts · Promotion & retirement flowers · Corporate florist · Floral decoration & delivery for corporate and public events",
     /** 기념일 꽃 한 줄 (구글 검색에도 쓰임) */
     seasons: "Flowers & delivery for Valentine’s Day, White Day, Rose Day, Pepero Day and Christmas",
+    /** 주제별 소개 페이지 링크 (페이지 내용은 한국어 — data/guidePages) */
+    guidesTitle: "Flower guides (Korean)",
+    guides: {
+      occasions: "Birthday, Parents’ Day, graduation & 70th birthday flowers",
+      orchid: "Orchids for family-meeting gifts",
+      institute: "Flowers for Institute promotion & graduation ceremonies",
+      business: "Flowers for corporate & public events",
+    },
     privacy: "Privacy policy",
   },
 

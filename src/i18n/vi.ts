@@ -643,6 +643,14 @@ export const vi: Messages = {
     occasions: "Bó hoa, giỏ hoa tại Jeonju · Hoa sinh nhật, kỷ niệm, cầu hôn · Hoa Ngày Cha Mẹ, Ngày Nhà giáo, lễ tốt nghiệp, lễ nhập học · Giỏ hoa mừng thọ 60, 70, 80 tuổi · Lan hồ điệp làm quà ra mắt hai bên gia đình · Hoa chúc mừng thăng chức, nghỉ hưu · Tiệm hoa chuyên cho doanh nghiệp · Trang trí hoa và giao hoa cho sự kiện doanh nghiệp, cơ quan công",
     /** 기념일 꽃 한 줄 (구글 검색에도 쓰임) */
     seasons: "Bó hoa và giao hoa dịp Valentine, White Day, Rose Day, Pepero Day, Giáng sinh",
+    /** 주제별 소개 페이지 링크 (페이지 내용은 한국어 — data/guidePages) */
+    guidesTitle: "Hướng dẫn hoa (tiếng Hàn)",
+    guides: {
+      occasions: "Hoa sinh nhật, Ngày Cha Mẹ, tốt nghiệp, mừng thọ 70",
+      orchid: "Lan hồ điệp làm quà ra mắt gia đình",
+      institute: "Hoa lễ thăng chức, tốt nghiệp tại Viện Phát triển Nhân lực",
+      business: "Hoa cho sự kiện doanh nghiệp, cơ quan công",
+    },
     privacy: "Chính sách bảo mật",
   },
 
