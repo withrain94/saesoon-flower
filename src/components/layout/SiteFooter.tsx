@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { lookupPath, privacyPath } from "@/data/shop";
+import { businessInfo, lookupPath, privacyPath } from "@/data/shop";
 import { useLookupT } from "@/hooks/useLookupT";
 import { useT } from "@/hooks/useLocale";
 
@@ -18,6 +18,8 @@ export default function SiteFooter() {
       <Link href={privacyPath} className="font-semibold underline underline-offset-2 hover:text-brand-dark">
         {t.footer.privacy}
       </Link>
+      <p className="mt-3 leading-relaxed">{t.footer.area}</p>
+      <p className="mt-1">{businessInfo.address}</p>
       <p className="mt-1">© {t.shop.name}</p>
     </footer>
   );

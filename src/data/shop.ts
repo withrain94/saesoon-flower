@@ -77,3 +77,35 @@ export const naverBookingUrls: Record<ProductCategoryId, string> = {
   orchid:
     "https://m.booking.naver.com/booking/6/bizes/1201254/items/7199208?area=pll&entry=pll&lang=ko&startDate=2026-09-15&theme=place",
 };
+
+/** 이 예약 사이트의 주소 — 구글 검색용 정보(sitemap·robots·대표 주소)에 씀. 주소가 바뀌면 여기만 */
+export const bookingSiteUrl = "https://saesoon-flower.vercel.app";
+
+/**
+ * 구글 검색 노출용 정보 (한국어 — 검색 결과 제목·설명, 지도 정보).
+ * 2026-10-26 사용자 요청 키워드: 전주꽃집 · 전주 꽃배달 · 완주 꽃배달 · 완주 지방자치인재개발원 꽃집 · 지방자치인재개발원 꽃배달
+ */
+export const searchInfo = {
+  title: "전주꽃집 새순 | 전주·완주 꽃배달, 지방자치인재개발원 꽃집 예약",
+  description:
+    "전주혁신도시 24시 무인꽃집 새순. 전주 꽃배달·완주 꽃배달, 완주 지방자치인재개발원 승진식·수료식 꽃배달까지 꽃다발·꽃바구니·호접난을 사진으로 보고 온라인으로 예약하세요.",
+  keywords: [
+    "전주꽃집",
+    "전주 꽃집",
+    "전주 꽃배달",
+    "전주혁신도시 꽃집",
+    "완주 꽃배달",
+    "완주 꽃집",
+    "완주 지방자치인재개발원 꽃집",
+    "지방자치인재개발원 꽃배달",
+    "지방자치인재개발원 승진식 꽃",
+    "새순꽃집",
+  ],
+  /** 꽃을 보내는 지역 (지도·검색 정보의 "배달 지역") */
+  areaServed: ["전주시", "완주군", "전주혁신도시", "지방자치인재개발원"],
+  postalAddress: {
+    region: "전북특별자치도",
+    locality: "전주시 덕진구",
+    street: "기지로 77, 대방디엠시티 1층 D108~109호",
+  },
+};

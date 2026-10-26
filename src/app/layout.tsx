@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
-import { getCategoryNames } from "@/lib/selection";
+import { bookingSiteUrl, searchInfo } from "@/data/shop";
 import "./globals.css";
 
-const categoryNames = getCategoryNames();
-
 export const metadata: Metadata = {
-  title: `${categoryNames} 예약하기 | 새순꽃집`,
-  description: `새순꽃집 ${categoryNames}을 사진으로 보고 한 번에 예약하세요.`,
+  metadataBase: new URL(bookingSiteUrl),
+  title: searchInfo.title,
+  description: searchInfo.description,
+  keywords: searchInfo.keywords,
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    siteName: "새순꽃집",
+    title: searchInfo.title,
+    description: searchInfo.description,
+    images: ["/flowers/bouquet-80000-06.jpg"],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
