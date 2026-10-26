@@ -20,6 +20,7 @@ export default function SiteFooter() {
       </Link>
       <p className="mt-3 leading-relaxed">{t.footer.area}</p>
       <p className="mt-1 leading-relaxed">{t.footer.occasions}</p>
+      <p className="mt-1 leading-relaxed">{t.footer.seasons}</p>
       <p className="mt-1">{businessInfo.address}</p>
       <p className="mt-1">© {t.shop.name}</p>
     </footer>
