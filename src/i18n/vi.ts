@@ -237,6 +237,26 @@ export const vi: Messages = {
         "Khung giờ được ưa chuộng có thể hết sớm, vui lòng đặt trước.",
       ],
     },
+    christmasEve: {
+      calendarLabel: "Đêm Giáng sinh",
+      shortTitle: () => "Đêm Giáng sinh",
+      title: () => "Đêm Giáng sinh 24 tháng 12",
+      highlights: [
+        "Hoa bó, giỏ hoa mang không khí cuối năm ấm áp.",
+        "Quý khách có thể thêm sô-cô-la ngay trong đơn đặt hoa.",
+        "Khung giờ được ưa chuộng có thể hết sớm, vui lòng đặt trước.",
+      ],
+    },
+    christmas: {
+      calendarLabel: "Giáng sinh",
+      shortTitle: () => "Giáng sinh",
+      title: () => "Giáng sinh 25 tháng 12",
+      highlights: [
+        "Hoa bó, giỏ hoa mang không khí cuối năm ấm áp.",
+        "Quý khách có thể thêm sô-cô-la ngay trong đơn đặt hoa.",
+        "Khung giờ được ưa chuộng có thể hết sớm, vui lòng đặt trước.",
+      ],
+    },
   },
 
   eventBanner: {

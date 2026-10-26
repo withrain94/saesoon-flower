@@ -245,6 +245,26 @@ export const en: Messages = {
         "Popular time slots fill up early, so please book soon.",
       ],
     },
+    christmasEve: {
+      calendarLabel: "Christmas Eve",
+      shortTitle: () => "Christmas Eve",
+      title: () => "Christmas Eve, December 24",
+      highlights: [
+        "Bouquets and baskets with a festive year-end feel.",
+        "You can add chocolates in the reservation form.",
+        "Popular time slots fill up early, so please book soon.",
+      ],
+    },
+    christmas: {
+      calendarLabel: "Christmas",
+      shortTitle: () => "Christmas",
+      title: () => "Christmas Day, December 25",
+      highlights: [
+        "Bouquets and baskets with a festive year-end feel.",
+        "You can add chocolates in the reservation form.",
+        "Popular time slots fill up early, so please book soon.",
+      ],
+    },
   },
 
   eventBanner: {

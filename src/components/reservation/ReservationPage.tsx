@@ -6,6 +6,7 @@ import { getEventOn, type SpecialEvent } from "@/data/events";
 import { productCategories } from "@/data/products";
 import { isSlotBookable } from "@/lib/time";
 import type { ProductCategoryId } from "@/types/reservation";
+import BookingSteps from "./BookingSteps";
 import CategoryEntry from "./CategoryEntry";
 import ChocolateField from "./ChocolateField";
 import ChocolatePrompt from "./ChocolatePrompt";
@@ -65,6 +66,7 @@ export default function ReservationPage() {
   return (
     <>
       <SpecialEventBanner now={now} onBook={bookEvent} />
+      {reservation === null && <BookingSteps />}
       <CategoryEntry countByCategory={summary.countByCategory} onSelect={openCategory} />
       <NaverOnlyBookingLinks />
       <NaverBookingBanner />

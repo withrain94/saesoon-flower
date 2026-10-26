@@ -199,6 +199,26 @@ export const zh: Messages = {
         "热门时段可能会提前约满，请尽早预约。",
       ],
     },
+    christmasEve: {
+      calendarLabel: "平安夜",
+      shortTitle: () => "平安夜",
+      title: () => "12月24日 平安夜",
+      highlights: [
+        "为您准备充满年末氛围的花束·花篮。",
+        "可以在申请表中一起添加巧克力。",
+        "热门时段可能会提前约满，请尽早预约。",
+      ],
+    },
+    christmas: {
+      calendarLabel: "圣诞节",
+      shortTitle: () => "圣诞节",
+      title: () => "12月25日 圣诞节",
+      highlights: [
+        "为您准备充满年末氛围的花束·花篮。",
+        "可以在申请表中一起添加巧克力。",
+        "热门时段可能会提前约满，请尽早预约。",
+      ],
+    },
   },
 
   eventBanner: {

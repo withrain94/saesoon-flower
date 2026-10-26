@@ -78,6 +78,22 @@ export const naverBookingUrls: Record<ProductCategoryId, string> = {
     "https://m.booking.naver.com/booking/6/bizes/1201254/items/7199208?area=pll&entry=pll&lang=ko&startDate=2026-09-15&theme=place",
 };
 
+/**
+ * 손님용 매장 연락처·위치 (첫 화면 매장 안내) — 소개 사이트와 같은 값.
+ * 전화는 견적서·거래명세표(businessInfo.phone)와 같은 010-5954-3963 — 2026-10-26 사용자 확인("010-5954-3963 이 맞아").
+ * 처음 넣었던 010-9594-3963 은 숫자 순서가 바뀐 번호라 고침.
+ */
+export const storeContact = {
+  phone: businessInfo.phone,
+  naverMapUrl: "https://naver.me/FEgzBgIi",
+  kakaoChannelUrl: "https://pf.kakao.com/_xcRJxkG",
+  instagramUrl: "https://www.instagram.com/saesoon_jeonju",
+  blogUrl: "https://blog.naver.com/saesoonflower24",
+  coupangEatsUrl: "https://web.coupangeats.com/share?storeId=931861&dishId&key=ce4a8791-8f17-44b8-b837-54d60ff17dec",
+  /** 직원이 매장에 있는 시간 (월~금, 시) — 나머지 시간은 무인 운영 */
+  staffedHours: { open: 9, close: 17 },
+};
+
 /** 이 예약 사이트의 주소 — 구글 검색용 정보(sitemap·robots·대표 주소)에 씀. 주소가 바뀌면 여기만 */
 export const bookingSiteUrl = "https://saesoon-flower.vercel.app";
 

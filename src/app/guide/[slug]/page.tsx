@@ -42,7 +42,7 @@ export default async function GuidePage({ params }: PageProps<"/guide/[slug]">) 
   const overrides = await getPhotoOverrides();
   const photos = page.photoProducts.map((id) => resolveSlotPhotos(id, overrides)).map((p) => p.images[p.cover] ?? p.images[0]);
   const events = page.showInstituteEvents
-    ? getOpenEvents(toNowInTimeZone(new Date())).filter((event) => event.kind !== "pepero")
+    ? getOpenEvents(toNowInTimeZone(new Date())).filter((event) => event.kind === "institutePromotion" || event.kind === "instituteLongCourse")
     : [];
 
   return (

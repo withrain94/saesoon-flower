@@ -48,6 +48,8 @@ const eventPagePrefix: Record<SpecialEvent["kind"], string> = {
   institutePromotion: "인재개발원",
   instituteLongCourse: "인재개발원",
   pepero: "빼빼로데이",
+  christmasEve: "크리스마스이브",
+  christmas: "크리스마스",
 };
 
 /** 표 아래에 연락처 모음(중복 제외)을 붙이는 특별한 날 — 단체 문자 보내기용 */

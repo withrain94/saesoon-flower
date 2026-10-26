@@ -2,7 +2,7 @@ import { allSlots } from "@/data/reservationOptions";
 import type { ProductCategoryId } from "@/types/reservation";
 
 /** 특별한 날 종류 — 언어 파일 events의 키 */
-export type EventKind = "institutePromotion" | "instituteLongCourse" | "pepero";
+export type EventKind = "institutePromotion" | "instituteLongCourse" | "pepero" | "christmasEve" | "christmas";
 
 /**
  * 특별한 날 — 달력 표시, 그날 고를 수 있는 시간, 첫 화면 안내에 쓰임.
@@ -76,6 +76,24 @@ function pepero(date: string): SpecialEvent {
   };
 }
 
+/**
+ * 크리스마스이브(12/24)·크리스마스(12/25) — 2026-10-26 사용자 요청.
+ * 빼빼로데이와 같음: 시간·마감은 평소대로, 토퍼 없음, 첫 화면 안내·달력 표시만.
+ */
+function christmas(kind: "christmasEve" | "christmas", date: string): SpecialEvent {
+  return {
+    id: `${kind}-${date}`,
+    kind,
+    icon: "🎄",
+    term: 0,
+    date,
+    slots: allSlots,
+    recommendedCategory: "bouquet",
+    bannerCategories: ["bouquet", "basket"],
+    topperCategories: [],
+  };
+}
+
 /** 날짜순. 새 일정이 잡히면 한 줄 추가 */
 export const specialEvents: SpecialEvent[] = [
   institutePromotion(8, "2026-10-08"),
@@ -84,6 +102,8 @@ export const specialEvents: SpecialEvent[] = [
   instituteLongCourse("2026-11-27"),
   institutePromotion(10, "2026-12-04"),
   institutePromotion(11, "2026-12-18"),
+  christmas("christmasEve", "2026-12-24"),
+  christmas("christmas", "2026-12-25"),
 ];
 
 export function getEventOn(dateKey: string): SpecialEvent | undefined {
