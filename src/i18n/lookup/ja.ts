@@ -66,6 +66,10 @@ export const lookupJa: LookupMessages = {
     refundTitle: "返金先の口座",
     refundBank: "銀行名",
     refundBankPlaceholder: "例: 農協、国民銀行",
+    /** 은행은 목록에서 고름 (토스 환불에 맞는 이름) — 목록에 없으면 기타 */
+    refundBankChoose: "銀行を選んでください",
+    refundBankOther: "その他（直接入力）",
+    refundBankOtherPlaceholder: "銀行名",
     refundAccount: "口座番号",
     refundAccountPlaceholder: "数字のみ、または - を含む",
     refundHolder: "口座名義",

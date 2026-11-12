@@ -70,6 +70,10 @@ export const lookupKo = {
     refundTitle: "환불받을 계좌",
     refundBank: "은행명",
     refundBankPlaceholder: "예: 농협, 국민은행",
+    /** 은행은 목록에서 고름 (토스 환불에 맞는 이름) — 목록에 없으면 기타 */
+    refundBankChoose: "은행을 골라 주세요",
+    refundBankOther: "기타 (직접 입력)",
+    refundBankOtherPlaceholder: "은행 이름 (예: ○○저축은행)",
     refundAccount: "계좌번호",
     refundAccountPlaceholder: "숫자만 또는 - 포함",
     refundHolder: "예금주",

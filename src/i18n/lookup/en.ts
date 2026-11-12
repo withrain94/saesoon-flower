@@ -66,6 +66,10 @@ export const lookupEn: LookupMessages = {
     refundTitle: "Refund account",
     refundBank: "Bank name",
     refundBankPlaceholder: "e.g. NH Bank, KB Kookmin Bank",
+    /** 은행은 목록에서 고름 (토스 환불에 맞는 이름) — 목록에 없으면 기타 */
+    refundBankChoose: "Choose a bank",
+    refundBankOther: "Other (type it in)",
+    refundBankOtherPlaceholder: "Bank name",
     refundAccount: "Account number",
     refundAccountPlaceholder: "Numbers only or with -",
     refundHolder: "Account holder",

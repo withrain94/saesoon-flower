@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import ErrorText from "@/components/ui/ErrorText";
 import { inputClassName } from "@/components/ui/Field";
 import { businessInfo } from "@/data/shop";
+import { tossBanks } from "@/data/tossBanks";
 import { useLookupT } from "@/hooks/useLookupT";
 import { getCustomerCancelOption, REFUND_TEXT_MAX } from "@/lib/customerLookup";
 import { cancelReservationByCustomer } from "@/server/actions/lookup";
@@ -30,6 +31,8 @@ export default function LookupCancelPanel({
   const [open, setOpen] = useState(false);
   const [paid, setPaid] = useState<boolean | null>(option === "request" ? true : null);
   const [refund, setRefund] = useState({ bank: "", account: "", holder: "" });
+  /** 은행 고르기 — 목록의 은행 이름 / "other"(직접 입력) / ""(아직 안 고름) */
+  const [bankChoice, setBankChoice] = useState("");
   /** 손님이 직접 적는 접수번호 — 남이 이름·연락처만 알고 취소하지 못하도록 */
   const [typedReceipt, setTypedReceipt] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -80,6 +83,7 @@ export default function LookupCancelPanel({
     });
   };
 
+  const OTHER_BANK = "other";
   const field = (key: keyof typeof refund, label: string, placeholder: string, inputMode?: "numeric") => (
     <label className="block">
       <span className="text-[13px] font-semibold text-body">{label}</span>
@@ -155,7 +159,30 @@ export default function LookupCancelPanel({
             <div className="space-y-2 rounded-xl bg-soft p-3">
               <p className="text-[14px] font-bold text-ink">{l.cancel.refundTitle}</p>
               <p className="rounded-lg bg-white px-3 py-2 text-[13px] font-semibold text-danger">⚠️ {l.cancel.refundWarning}</p>
-              {field("bank", l.cancel.refundBank, l.cancel.refundBankPlaceholder)}
+              <label className="block">
+                <span className="text-[13px] font-semibold text-body">{l.cancel.refundBank}</span>
+                <select
+                  value={bankChoice}
+                  required
+                  onChange={(event) => {
+                    const choice = event.target.value;
+                    setBankChoice(choice);
+                    setRefund((current) => ({ ...current, bank: choice === OTHER_BANK ? "" : choice }));
+                  }}
+                  className={`${inputClassName} mt-1`}
+                >
+                  <option value="" disabled>
+                    {l.cancel.refundBankChoose}
+                  </option>
+                  {tossBanks.map((bank) => (
+                    <option key={bank.code} value={bank.name}>
+                      {bank.name}
+                    </option>
+                  ))}
+                  <option value={OTHER_BANK}>{l.cancel.refundBankOther}</option>
+                </select>
+              </label>
+              {bankChoice === OTHER_BANK && field("bank", l.cancel.refundBankOther, l.cancel.refundBankOtherPlaceholder)}
               {field("account", l.cancel.refundAccount, l.cancel.refundAccountPlaceholder, "numeric")}
               {field("holder", l.cancel.refundHolder, l.cancel.refundHolderPlaceholder)}
               <p className="text-[12px] text-sub">{l.cancel.refundPrivacy}</p>

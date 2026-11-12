@@ -66,6 +66,10 @@ export const lookupZh: LookupMessages = {
     refundTitle: "退款账户",
     refundBank: "银行名称",
     refundBankPlaceholder: "例：农协、国民银行",
+    /** 은행은 목록에서 고름 (토스 환불에 맞는 이름) — 목록에 없으면 기타 */
+    refundBankChoose: "请选择银行",
+    refundBankOther: "其他（直接输入）",
+    refundBankOtherPlaceholder: "银行名称",
     refundAccount: "账号",
     refundAccountPlaceholder: "仅数字或包含 -",
     refundHolder: "户名",

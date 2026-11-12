@@ -66,6 +66,10 @@ export const lookupVi: LookupMessages = {
     refundTitle: "Tài khoản nhận hoàn tiền",
     refundBank: "Tên ngân hàng",
     refundBankPlaceholder: "Ví dụ: NH, KB Kookmin",
+    /** 은행은 목록에서 고름 (토스 환불에 맞는 이름) — 목록에 없으면 기타 */
+    refundBankChoose: "Chọn ngân hàng",
+    refundBankOther: "Khác (tự nhập)",
+    refundBankOtherPlaceholder: "Tên ngân hàng",
     refundAccount: "Số tài khoản",
     refundAccountPlaceholder: "Chỉ số hoặc có dấu -",
     refundHolder: "Chủ tài khoản",

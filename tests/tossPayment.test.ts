@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { allProducts } from "@/data/products";
-import { guessTossBankCode } from "@/data/tossBanks";
+import { guessTossBankCode, tossBanks } from "@/data/tossBanks";
 import { validateReservationRequest } from "@/lib/reservationValidation";
 import { toNowInTimeZone } from "@/lib/time";
 import {
@@ -201,5 +201,7 @@ describe("토스 결제 규칙 (lib/tossPayment)", () => {
     assert.equal(guessTossBankCode("카카오뱅크"), "90");
     assert.equal(guessTossBankCode("전북은행"), "37");
     assert.equal(guessTossBankCode(""), null);
+    // 손님 화면 목록에서 고른 이름은 모두 제 코드로 돌아와야 함
+    for (const bank of tossBanks) assert.equal(guessTossBankCode(bank.name), bank.code, bank.name);
   });
 });
