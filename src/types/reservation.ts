@@ -30,7 +30,13 @@ export type OrchidDelivery = {
 /** 현금영수증 — 계좌이체일 때만 */
 export type CashReceiptType = "none" | "income" | "expense";
 
-/** 카드 결제하실 분 — 예약자와 동일 / 다름(연락처 직접 입력). 카드 결제일 때만 */
+/**
+ * 카드 종류 — online: 개인카드, 신청 직후 토스페이먼츠 결제창에서 바로 결제 /
+ * keyin: 법인카드 등, 매장이 연락해 카드번호를 받아 키인 결제 (온라인 결제를 안 켰으면 카드는 모두 keyin)
+ */
+export type CardKind = "online" | "keyin";
+
+/** 카드 결제하실 분 — 예약자와 동일 / 다름(연락처 직접 입력). 키인 카드 결제일 때만 */
 export type CardPayerType = "same" | "other";
 
 /** 요청할 수 있는 증빙 서류 — 견적서 / 거래명세표 */
@@ -161,7 +167,14 @@ export type ReservationRequest = {
   cashReceiptType: CashReceiptType;
   /** 소득공제: 휴대폰 번호 / 지출증빙: 사업자등록번호 */
   cashReceiptNumber: string;
-  /** 카드 결제가 아니면 "same" */
+  /** 카드 결제일 때 개인카드(온라인)/법인카드(키인) — 카드가 아니면 "keyin" */
+  cardKind: CardKind;
+  /**
+   * 토스페이먼츠 온라인 결제로 받는 예약인지 (서버가 정함) — 계좌이체(예약마다 전용 입금 계좌) 또는 개인카드.
+   * 온라인 결제를 켜기 전 예약·법인카드·PayPal은 false
+   */
+  tossPayment: boolean;
+  /** 키인 카드 결제가 아니면 "same" */
   cardPayer: CardPayerType;
   /** 예약자와 다를 때 적은 결제하실 분 성함·연락처 */
   cardPayerContact: string;
@@ -177,6 +190,50 @@ export type ReservationRequest = {
   privacyAgreed: boolean;
   /** 고객이 신청서를 본 화면 언어 (주문 내용은 한국어·옵션 코드로 저장) */
   locale: Locale;
+};
+
+/** 토스페이먼츠 결제 상태 (Payment 객체 status 그대로) */
+export type TossPaymentStatus =
+  | "READY"
+  | "IN_PROGRESS"
+  | "WAITING_FOR_DEPOSIT"
+  | "DONE"
+  | "CANCELED"
+  | "PARTIAL_CANCELED"
+  | "ABORTED"
+  | "EXPIRED";
+
+/**
+ * 예약에 붙은 토스페이먼츠 결제 기록 (reservations.payment 칸) — 토스에서 받은 값만 저장.
+ * 카드번호 등 카드 정보는 매장 서버로 오지 않음
+ */
+export type TossPaymentRecord = {
+  /** 토스에 보낸 주문번호 (예약 id + "_" + 시도 번호) — 결제창을 다시 열 때마다 새로 만듦 */
+  orderId: string;
+  /** 결제 승인 뒤 토스가 준 결제 키 — 결제창을 닫았으면 null */
+  paymentKey: string | null;
+  status: TossPaymentStatus;
+  /** 토스가 준 결제수단 이름 (카드·가상계좌·간편결제 등, 한국어) */
+  method: string | null;
+  /** 결제(발급)한 금액 */
+  amount: number;
+  /** 결제 완료(입금 완료) 시각 */
+  approvedAt: string | null;
+  /** 가상계좌 — 계좌이체 예약일 때만 */
+  virtualAccount: {
+    /** 은행 두 자리 코드 (data/tossBanks.ts) */
+    bankCode: string;
+    accountNumber: string;
+    /** 입금 기한 (한국 시각 yyyy-MM-ddTHH:mm:ss) */
+    dueDate: string;
+  } | null;
+  /** 현금영수증 — 손님이 결제창에서 신청했고 발급됐을 때 */
+  cashReceipt: { type: string; issueNumber: string; receiptUrl: string } | null;
+  /** 카드 매출전표·입금 명세서 주소 */
+  receiptUrl: string | null;
+  /** 결제를 취소(환불)한 시각 */
+  canceledAt: string | null;
+  updatedAt: string;
 };
 
 /** 관리자 페이지 예약 진행 상태 */
@@ -210,7 +267,12 @@ export type StoredReservation = {
   reminderSentAt: string | null;
   /** 매장이 현금영수증을 발급했다고 표시한 시각 (ISO) — 안 했으면 null. 관리자 전용 */
   cashReceiptIssuedAt: string | null;
+  /** 토스페이먼츠 결제 기록 — 온라인 결제가 아니면 null */
+  payment: TossPaymentRecord | null;
 };
+
+/** 손님 화면에 보여줄 온라인 결제 상태 (결제 키 등 매장용 값은 뺌) */
+export type CustomerPaymentView = Pick<TossPaymentRecord, "status" | "amount" | "virtualAccount" | "receiptUrl">;
 
 /** 손님 예약 조회 화면에 보내는 내용 (매장 메모 등 매장 전용 정보는 뺌) */
 export type CustomerReservationView = {
@@ -221,6 +283,8 @@ export type CustomerReservationView = {
   /** 취소 요청을 보냈으면 요청 시각 */
   cancelRequestedAt: string | null;
   request: ReservationRequest;
+  /** 온라인 결제 상태 — 온라인 결제가 아니면 null */
+  payment: CustomerPaymentView | null;
 };
 
 /** 신청서 input의 name 목록 (받는 분·메시지는 상태로 관리하므로 제외) */
@@ -238,6 +302,7 @@ export type ReservationFormField =
   | "paypalEmail"
   | "cashReceiptType"
   | "cashReceiptNumber"
+  | "cardKind"
   | "cardPayer"
   | "cardPayerContact"
   | "documents"

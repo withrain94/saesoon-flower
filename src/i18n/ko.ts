@@ -739,6 +739,51 @@ export const ko = {
     documentCompany: "서류에 적을 상호·기관명을 입력해 주세요.",
     documentBusinessNumber: "서류용 사업자등록번호를 확인해 주세요.",
   },
+
+  /** 토스페이먼츠 온라인 결제 (계좌이체 = 예약 전용 입금 계좌, 개인카드 = 카드 결제창) — 켜져 있을 때만 보임 */
+  toss: {
+    bankDescription: "전용 계좌 · 자동 확인",
+    cardDescription: "개인카드 바로 결제 · 법인카드",
+    bankGuide: [
+      "[예약하기]를 누르면 이 예약만을 위한 입금 계좌가 만들어져요.",
+      "그 계좌로 입금하시면 자동으로 확인돼요. 입금자명은 달라도 괜찮아요.",
+      "현금영수증은 입금 계좌를 받는 화면에서 신청할 수 있어요.",
+    ],
+    cardKindTitle: "어떤 카드로 결제하시나요?",
+    cardKinds: {
+      online: { label: "개인카드", description: "[예약하기]를 누르면 카드 결제창이 바로 열려요" },
+      keyin: { label: "법인카드 (키인 결제)", description: "매장에서 연락드리면 카드번호·유효기간을 알려주세요" },
+    },
+    payNow: "카드 결제하기",
+    payNowBank: "입금 계좌 받기",
+    opening: "결제창을 여는 중…",
+    pending: "아직 결제가 끝나지 않았어요. 아래 버튼을 눌러 결제를 마쳐 주세요.",
+    pendingBank: "아직 입금 계좌를 받지 않으셨어요. 아래 버튼을 눌러 이 예약 전용 입금 계좌를 받아 주세요.",
+    cardDone: "✅ 카드 결제가 완료되었어요.",
+    bankWaiting: "아래 계좌로 입금해 주세요. 입금되면 자동으로 확인돼요.",
+    bankDone: "✅ 입금이 확인되었어요.",
+    accountLabel: "이 예약 전용 입금 계좌",
+    amount: (price: string) => `입금하실 금액 ${price}`,
+    dueDate: (text: string) => `${text}까지 입금해 주세요`,
+    expired: `입금 기한이 지났어요. 매장(${businessInfo.phone})으로 연락해 주세요.`,
+    canceled: "결제가 취소되었어요.",
+    receipt: "영수증 보기 ›",
+    successTitle: "예약과 결제가 완료되었어요! 🎉",
+    successTitleBank: "예약이 접수되었어요! 입금만 남았어요",
+    checking: "결제를 확인하고 있어요…",
+    failTitle: "결제가 완료되지 않았어요",
+    failBody: "예약 신청은 저장되어 있어요. 아래 버튼으로 다시 결제하거나, 나중에 [예약 조회]에서 결제할 수 있어요.",
+    failReason: (message: string) => `사유: ${message}`,
+    goLookup: "예약 조회로 가기 ›",
+    goHome: "예약 페이지로 돌아가기",
+    errors: {
+      unavailable: `지금은 온라인 결제를 할 수 없어요. 매장(${businessInfo.phone})으로 연락해 주세요.`,
+      notFound: "예약을 찾지 못했어요. [예약 조회]에서 확인해 주세요.",
+      notPayable: "이미 결제했거나 지금 결제할 수 없는 예약이에요. [예약 조회]에서 확인해 주세요.",
+      amountMismatch: `결제 금액이 예약 금액과 달라요. 매장(${businessInfo.phone})으로 연락해 주세요.`,
+      failed: `결제를 처리하지 못했어요. 다시 시도하거나 매장(${businessInfo.phone})으로 연락해 주세요.`,
+    },
+  },
 };
 
 export type Messages = typeof ko;

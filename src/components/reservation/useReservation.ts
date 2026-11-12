@@ -34,12 +34,15 @@ import type {
   UnitMessage,
 } from "@/types/reservation";
 import { issueSection, scrollToSection, SECTION } from "./sections";
+import { isUserCancel, openTossCheckout, rememberPendingPayment } from "./tossCheckout";
 
 /** 저장이 끝난 예약 — 접수 id + 서버에서 다시 검사·계산한 내용 */
 export type SubmittedReservation = {
   id: string;
   request: ReservationRequest;
 };
+
+/** 온라인 결제 예약이면 결제창이 바로 열림 — 손님이 닫으면 완료 화면의 [결제하기]로 다시 */
 
 /** 상품 1개 칸에서 할 수 있는 동작 */
 export type UnitActions = {
@@ -195,6 +198,15 @@ export function useReservation() {
       }
       setReservation({ id: result.id, request: result.request });
       scrollToSection(SECTION.reserve);
+      if (result.toss) {
+        rememberPendingPayment({ reservationId: result.id, phone: result.request.ordererPhone });
+        try {
+          await openTossCheckout(result.toss);
+        } catch (error) {
+          // 손님이 결제창을 닫은 경우는 조용히 — 완료 화면에 [결제하기] 버튼이 있음
+          if (!isUserCancel(error)) console.error("[toss] 결제창을 열지 못했어요", error);
+        }
+      }
     } catch {
       // 인터넷 끊김 등 서버에 닿지 못한 경우
       setSubmitError(t.submit.failed);

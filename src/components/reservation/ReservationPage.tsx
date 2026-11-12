@@ -21,7 +21,8 @@ import SpecialEventBanner from "./SpecialEventBanner";
 import SubmitBar from "./SubmitBar";
 import { useReservation } from "./useReservation";
 
-export default function ReservationPage() {
+/** tossEnabled: 토스페이먼츠 온라인 결제가 켜져 있는지 (app/page.tsx가 서버 환경변수로 정함) */
+export default function ReservationPage({ tossEnabled }: { tossEnabled: boolean }) {
   const {
     now,
     selection,
@@ -111,6 +112,7 @@ export default function ReservationPage() {
         forEvent={forEvent}
         onForEventChange={setForEvent}
         onSubmit={submit}
+        tossEnabled={tossEnabled}
       />
       {reservation === null && <SubmitBar summary={summary} submitting={submitting} error={submitError} />}
       <ChocolatePrompt

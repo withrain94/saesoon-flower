@@ -1,4 +1,5 @@
 import {
+  cardKinds,
   cardPayerTypes,
   cashReceiptOptions,
   COLOR_OTHER,
@@ -117,7 +118,11 @@ export function buildReservationRequest(
   const cashReceiptType =
     paymentMethod === "bank" ? toCashReceiptType(text(data, "cashReceiptType")) : "none";
   // 결제하실 분 연락처는 카드 결제일 때만
-  const cardPayer = paymentMethod === "card" ? toCardPayerType(text(data, "cardPayer")) : "same";
+  // 카드 종류 — 온라인 결제가 꺼져 있으면 칸이 없어서 keyin (서버가 다시 정함)
+  const cardKind =
+    paymentMethod === "card" ? (cardKinds.find((kind) => kind === text(data, "cardKind")) ?? "keyin") : "keyin";
+  const cardPayer =
+    paymentMethod === "card" && cardKind === "keyin" ? toCardPayerType(text(data, "cardPayer")) : "same";
   const documents = toDocuments(data);
   const wantsDocuments = documents.length > 0;
 
@@ -151,6 +156,9 @@ export function buildReservationRequest(
     paypalAmount: paymentMethod === "paypal" ? getPaypalAmount(totalPrice) : 0,
     cashReceiptType,
     cashReceiptNumber: cashReceiptType === "none" ? "" : text(data, "cashReceiptNumber"),
+    cardKind,
+    // 온라인 결제 여부는 서버가 환경변수로 정함
+    tossPayment: false,
     cardPayer,
     cardPayerContact: cardPayer === "other" ? text(data, "cardPayerContact") : "",
     documents,

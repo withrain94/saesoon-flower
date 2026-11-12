@@ -2,6 +2,7 @@ import { getChocolate, MAX_CHOCOLATE_QUANTITY } from "@/data/chocolates";
 import { getEventOn } from "@/data/events";
 import { allProducts } from "@/data/products";
 import {
+  cardKinds,
   BUSINESS_NUMBER_PATTERN,
   cardPayerTypes,
   cashReceiptOptions,
@@ -51,7 +52,16 @@ const str = (value: unknown, max = MAX_TEXT) =>
 const oneOf = <T extends string>(value: unknown, options: readonly T[], fallback: T): T =>
   options.find((option) => option === value) ?? fallback;
 
-export function validateReservationRequest(input: unknown, now: Now, submittedAt: Date): ValidationResult {
+/**
+ * options.tossEnabled: 토스페이먼츠 온라인 결제가 켜져 있는지 (서버 환경변수로 정함) —
+ * 켜져 있으면 계좌이체·개인카드는 온라인 결제(tossPayment), 현금영수증은 결제창에서 신청하므로 신청서 값은 버림
+ */
+export function validateReservationRequest(
+  input: unknown,
+  now: Now,
+  submittedAt: Date,
+  options: { tossEnabled: boolean } = { tossEnabled: false },
+): ValidationResult {
   const raw = (typeof input === "object" && input !== null ? input : {}) as Record<string, unknown>;
   const locale = isLocale(raw.locale) ? raw.locale : DEFAULT_LOCALE;
   const { validation } = messages[locale];
@@ -166,14 +176,20 @@ export function validateReservationRequest(input: unknown, now: Now, submittedAt
   // 결제
   const paymentMethods = paymentMethodOptions.map((option) => option.value);
   const paymentMethod = oneOf(raw.paymentMethod, paymentMethods, paymentMethods[0]);
+  // 카드 종류 — 온라인 결제를 안 켰으면 카드는 모두 전화(키인) 결제
+  const cardKind =
+    paymentMethod === "card" && options.tossEnabled ? oneOf(raw.cardKind, cardKinds, cardKinds[0]) : "keyin";
+  const tossPayment = options.tossEnabled && (paymentMethod === "bank" || (paymentMethod === "card" && cardKind === "online"));
   const cashReceiptTypes = cashReceiptOptions.map((option) => option.value);
-  const cashReceiptType = paymentMethod === "bank" ? oneOf(raw.cashReceiptType, cashReceiptTypes, "none") : "none";
+  const cashReceiptType =
+    paymentMethod === "bank" && !tossPayment ? oneOf(raw.cashReceiptType, cashReceiptTypes, "none") : "none";
   const cashReceiptNumber = cashReceiptType === "none" ? "" : str(raw.cashReceiptNumber, 25);
   if (cashReceiptType === "income" && !PHONE.test(cashReceiptNumber)) return fail(validation.cashReceiptPhone);
   if (cashReceiptType === "expense" && !BUSINESS_NUMBER.test(cashReceiptNumber)) {
     return fail(validation.cashReceiptBusiness);
   }
-  const cardPayer = paymentMethod === "card" ? oneOf(raw.cardPayer, cardPayerTypes, "same") : "same";
+  const cardPayer =
+    paymentMethod === "card" && cardKind === "keyin" ? oneOf(raw.cardPayer, cardPayerTypes, "same") : "same";
   const cardPayerContact = cardPayer === "other" ? str(raw.cardPayerContact, 100) : "";
   if (cardPayer === "other" && !cardPayerContact) return fail(validation.cardPayer);
   const paypalEmail = paymentMethod === "paypal" ? str(raw.paypalEmail, 100) : "";
@@ -211,6 +227,8 @@ export function validateReservationRequest(input: unknown, now: Now, submittedAt
       paypalAmount: paymentMethod === "paypal" ? getPaypalAmount(totalPrice) : 0,
       cashReceiptType,
       cashReceiptNumber,
+      cardKind,
+      tossPayment,
       cardPayer,
       cardPayerContact,
       documents,

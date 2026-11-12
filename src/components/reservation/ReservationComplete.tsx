@@ -16,6 +16,7 @@ import BankAccountCard from "./BankAccountCard";
 import DocumentsPanel from "./DocumentsPanel";
 import OrderSummary from "./OrderSummary";
 import ShareReservationButtons from "./ShareReservationButtons";
+import TossPaymentCard from "./TossPaymentCard";
 import type { SubmittedReservation } from "./useReservation";
 
 export default function ReservationComplete({
@@ -43,7 +44,7 @@ export default function ReservationComplete({
         {t.complete.receiptNumber(formatReceiptNumber(submitted.id))}
       </p>
       <p className="mt-0.5 text-[12.5px] text-sub">{t.complete.receiptNote}</p>
-      <p className="mt-1.5 text-[15px] text-body">{payment.complete}</p>
+      {!reservation.tossPayment && <p className="mt-1.5 text-[15px] text-body">{payment.complete}</p>}
       <p className="mt-3 text-sm text-sub">{t.complete.orderer(reservation.ordererName, reservation.ordererPhone)}</p>
       <p className="mx-auto mt-2 max-w-sm rounded-xl bg-brand-tint px-4 py-2.5 text-[13px] font-bold text-brand-dark">
         📱 {t.complete.reminder}
@@ -60,7 +61,16 @@ export default function ReservationComplete({
       {/* 결제 방법별 다음 할 일 */}
       <div className="mt-5 space-y-2 rounded-2xl bg-panel p-3 text-left">
         <p className="px-1 text-[13px] font-bold text-brand-dark">{t.complete.paymentMethod(payment.label)}</p>
-        {reservation.paymentMethod === "bank" && (
+        {reservation.tossPayment && (
+          <TossPaymentCard
+            reservationId={submitted.id}
+            phone={reservation.ordererPhone}
+            method={reservation.paymentMethod}
+            status="received"
+            payment={null}
+          />
+        )}
+        {reservation.paymentMethod === "bank" && !reservation.tossPayment && (
           <>
             <BankAccountCard />
             {reservation.cashReceiptType !== "none" && (
@@ -73,7 +83,7 @@ export default function ReservationComplete({
             )}
           </>
         )}
-        {reservation.paymentMethod === "card" && (
+        {reservation.paymentMethod === "card" && !reservation.tossPayment && (
           <p className="px-1 text-[13px] text-body">
             {t.complete.cardPayer(
               reservation.cardPayer === "other" ? reservation.cardPayerContact : t.complete.cardPayerSame,

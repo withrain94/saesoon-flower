@@ -9,6 +9,7 @@ import { SECTION } from "@/components/reservation/sections";
 import { PhotoOverridesProvider } from "@/hooks/usePhotos";
 import type { Metadata } from "next";
 import { bookingSiteUrl, searchInfo, shop, storeContact } from "@/data/shop";
+import { getTossEnv } from "@/server/env";
 import { getPhotoOverrides } from "@/server/sitePhotos";
 
 /** 관리자가 바꾼 사진이 늦어도 1분 안에 보이게 (바꾸면 서버 함수가 바로 다시 만들기도 함) */
@@ -66,7 +67,7 @@ export default async function Home() {
           <Hero bookHref={bookHref} storeHref={`#${STORE_INFO_ID}`} />
           <div className="relative -mt-6 rounded-t-[28px] bg-white pt-3">
             <StoreQuickInfo />
-            <ReservationPage />
+            <ReservationPage tossEnabled={getTossEnv() !== null} />
           </div>
           <StoreInfoSections bookHref={bookHref} />
         </main>

@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import BankAccountCard from "@/components/reservation/BankAccountCard";
 import DocumentsPanel from "@/components/reservation/DocumentsPanel";
+import TossPaymentCard from "@/components/reservation/TossPaymentCard";
 import { getAddOnIcon, type ChocolateId } from "@/data/chocolates";
 import { findBlackboardPreset } from "@/data/reservationOptions";
 import { maskReceiptNumber } from "@/lib/customerLookup";
@@ -13,7 +14,14 @@ import { getSlotHour } from "@/lib/time";
 import type { CustomerReservationView, ReservationDelivery } from "@/types/reservation";
 
 /** 손님 예약 조회 결과 — 신청한 내용을 손님 언어로 (매장 메모 등은 받지 않음) */
-export default function LookupReservationDetails({ reservation }: { reservation: CustomerReservationView }) {
+/** phone: 조회할 때 적은 예약자 연락처 — 온라인 결제 [결제하기]에 씀 (모르면 null) */
+export default function LookupReservationDetails({
+  reservation,
+  phone = null,
+}: {
+  reservation: CustomerReservationView;
+  phone?: string | null;
+}) {
   const t = useT();
   const l = useLookupT();
   const { request, status, cancelRequestedAt } = reservation;
@@ -133,7 +141,18 @@ export default function LookupReservationDetails({ reservation }: { reservation:
 
       <Card title={l.sections.payment}>
         <p className="text-[14px] font-bold text-ink">{payment.label}</p>
-        {request.paymentMethod === "bank" && status === "received" && !cancelRequestedAt && (
+        {request.tossPayment && !cancelRequestedAt && (
+          <div className="mt-2 rounded-xl bg-panel p-2">
+            <TossPaymentCard
+              reservationId={reservation.id}
+              phone={phone}
+              method={request.paymentMethod}
+              status={status}
+              payment={reservation.payment}
+            />
+          </div>
+        )}
+        {request.paymentMethod === "bank" && !request.tossPayment && status === "received" && !cancelRequestedAt && (
           <div className="mt-2 rounded-xl bg-panel p-2">
             <p className="px-1 pb-2 text-[13px] text-body">{payment.complete}</p>
             <BankAccountCard />
@@ -144,7 +163,7 @@ export default function LookupReservationDetails({ reservation }: { reservation:
             {t.complete.cashReceipt(t.payment.cashReceiptOptions[request.cashReceiptType], request.cashReceiptNumber)}
           </p>
         )}
-        {request.paymentMethod === "card" && (
+        {request.paymentMethod === "card" && !request.tossPayment && (
           <p className="mt-1 text-[13px] text-body">
             {t.complete.cardPayer(request.cardPayer === "other" ? request.cardPayerContact : t.complete.cardPayerSame)}
           </p>

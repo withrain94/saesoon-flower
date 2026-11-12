@@ -14,6 +14,7 @@ const reservation: StoredReservation = {
   cancelRequest: null,
   reminderSentAt: null,
   cashReceiptIssuedAt: null,
+  payment: null,
   request: {
     items: [{ productId: bouquet.id, category: bouquet.category, price: bouquet.price, quantity: 1 }],
     chocolates: [],
@@ -51,6 +52,8 @@ const reservation: StoredReservation = {
     paypalAmount: 0,
     cashReceiptType: "none",
     cashReceiptNumber: "",
+    cardKind: "keyin",
+    tossPayment: false,
     cardPayer: "same",
     cardPayerContact: "",
     documents: [],

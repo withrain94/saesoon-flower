@@ -55,6 +55,10 @@ export const privacyPath = "/privacy";
 /** 취소·환불 정책 페이지 주소 (페이지 아래쪽 링크, 결제 회사 심사용) */
 export const refundPath = "/refund";
 
+/** 토스페이먼츠 결제창에서 결제 뒤 돌아오는 화면 (성공·실패) */
+export const tossSuccessPath = "/payments/toss/success";
+export const tossFailPath = "/payments/toss/fail";
+
 /** 손님 예약 조회·취소 화면 (접수번호를 미리 채우려면 ?no=접수번호) */
 export const lookupPath = "/check";
 

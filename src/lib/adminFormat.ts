@@ -122,11 +122,15 @@ export function describePayment(request: ReservationRequest) {
   const label = payment.methods[request.paymentMethod].label;
   switch (request.paymentMethod) {
     case "bank":
+      if (request.tossPayment) return `${label} · 예약 전용 계좌(입금되면 자동 확인)`;
       return request.cashReceiptType === "none"
         ? label
         : `${label} · 현금영수증 ${payment.cashReceiptOptions[request.cashReceiptType]} ${request.cashReceiptNumber}`;
     case "card":
-      return request.cardPayer === "other" ? `${label} · 결제하실 분 ${request.cardPayerContact}` : label;
+      if (request.tossPayment) return `${label} · 개인카드 온라인 결제`;
+      return request.cardPayer === "other"
+        ? `${label} · 키인(전화) · 결제하실 분 ${request.cardPayerContact}`
+        : `${label} · 키인(전화)`;
     case "paypal":
       return `${label} ${ko.format.price(request.paypalAmount)} · ${request.paypalEmail}`;
   }

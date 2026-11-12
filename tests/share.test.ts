@@ -28,6 +28,8 @@ function request(paymentMethod: PaymentMethod = "bank"): ReservationRequest {
     paypalAmount: paymentMethod === "paypal" ? bouquet.price * 2.2 : 0,
     cashReceiptType: "none",
     cashReceiptNumber: "",
+    cardKind: "keyin",
+    tossPayment: false,
     cardPayer: "same",
     cardPayerContact: "",
     documents: [],

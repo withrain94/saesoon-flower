@@ -23,6 +23,7 @@ export default function ReserveSection({
   forEvent,
   onForEventChange,
   onSubmit,
+  tossEnabled,
 }: {
   /** null = 아직 제출 전 */
   reservation: SubmittedReservation | null;
@@ -37,6 +38,7 @@ export default function ReserveSection({
   forEvent: boolean | null;
   onForEventChange: (value: boolean) => void;
   onSubmit: (formData: FormData) => void;
+  tossEnabled: boolean;
 }) {
   const t = useT();
 
@@ -59,6 +61,7 @@ export default function ReserveSection({
           forEvent={forEvent}
           onForEventChange={onForEventChange}
           onSubmit={onSubmit}
+          tossEnabled={tossEnabled}
         />
       )}
     </section>

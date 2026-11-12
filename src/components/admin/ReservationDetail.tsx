@@ -13,6 +13,7 @@ import {
   formatAdminDate,
   formatAdminDateTime,
   formatAdminItemName,
+  describePayment,
   formatAdminTime,
   localeNames,
 } from "@/lib/adminFormat";
@@ -27,6 +28,7 @@ import CashReceiptIssuedCheckbox from "./CashReceiptIssuedCheckbox";
 import ReminderToggle from "./ReminderToggle";
 import StatusBadge from "./StatusBadge";
 import StatusChanger from "./StatusChanger";
+import TossPaymentPanel from "./TossPaymentPanel";
 
 /** 관리자 예약 상세 — 신청서에 적힌 내용 전부 + 상태·메모 변경 */
 export default function ReservationDetail({ reservation }: { reservation: StoredReservation }) {
@@ -143,9 +145,14 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
       <Card title="결제">
         <Rows>
           <Row label="결제 방법">
-            <span className="font-semibold">{payment.methods[request.paymentMethod].label}</span>
+            <span className="font-semibold">{describePayment(request)}</span>
           </Row>
-          {request.paymentMethod === "bank" && (
+          {request.tossPayment && (
+            <Row label="온라인 결제">
+              <TossPaymentPanel reservation={reservation} />
+            </Row>
+          )}
+          {request.paymentMethod === "bank" && !request.tossPayment && (
             <Row label={payment.cashReceiptTitle}>
               {payment.cashReceiptOptions[request.cashReceiptType]}
               {request.cashReceiptNumber && ` · ${request.cashReceiptNumber}`}
@@ -156,7 +163,7 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
               <CashReceiptIssuedCheckbox id={id} issuedAt={reservation.cashReceiptIssuedAt} />
             </Row>
           )}
-          {request.paymentMethod === "card" && (
+          {request.paymentMethod === "card" && !request.tossPayment && (
             <Row label="결제하실 분">
               {request.cardPayer === "other" ? request.cardPayerContact : ko.complete.cardPayerSame}
             </Row>

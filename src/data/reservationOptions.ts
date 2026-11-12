@@ -1,5 +1,6 @@
 import type {
   BusinessDocumentType,
+  CardKind,
   CardPayerType,
   CashReceiptType,
   MessageType,
@@ -76,6 +77,16 @@ export const paymentMethodOptions: { value: PaymentMethod; label: string }[] = [
 
 /** PayPal(해외 결제) 수수료 — 상품 금액에 더함 */
 export const PAYPAL_FEE_RATE = 0.1;
+
+/** 카드 종류 (온라인 결제를 켰을 때만 고름) — 첫 번째가 기본값: 개인카드 바로 결제 / 법인카드 키인 결제 */
+export const cardKinds: CardKind[] = ["online", "keyin"];
+
+/**
+ * 계좌이체(예약마다 전용 입금 계좌) 입금 기한 — 받는 시간 1시간 전까지, 단 최대 72시간·최소 1시간.
+ * 기한이 지나면 그 계좌로는 입금이 안 됨 (매장이 연락해 다시 안내)
+ */
+export const VIRTUAL_ACCOUNT_MAX_HOURS = 72;
+export const VIRTUAL_ACCOUNT_BEFORE_SLOT_HOURS = 1;
 
 /** 카드 결제하실 분 연락처 — 첫 번째가 기본값 */
 export const cardPayerTypes: CardPayerType[] = ["same", "other"];

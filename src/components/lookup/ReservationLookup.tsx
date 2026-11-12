@@ -139,7 +139,7 @@ export default function ReservationLookup() {
               {done === "canceled" ? l.cancel.canceledDone : l.cancel.requestedDone}
             </p>
           )}
-          <LookupReservationDetails reservation={reservation} />
+          <LookupReservationDetails reservation={reservation} phone={phone} />
           <LookupCancelPanel
             key={`${reservation.receiptNumber}-${reservation.status}-${reservation.cancelRequestedAt}`}
             reservation={reservation}

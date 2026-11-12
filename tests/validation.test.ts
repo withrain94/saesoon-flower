@@ -49,6 +49,8 @@ function request(extra: Partial<ReservationRequest> = {}): ReservationRequest {
     paypalAmount: 0,
     cashReceiptType: "none",
     cashReceiptNumber: "",
+    cardKind: "keyin",
+    tossPayment: false,
     cardPayer: "same",
     cardPayerContact: "",
     documents: [],

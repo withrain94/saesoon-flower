@@ -4,15 +4,19 @@ import { after } from "next/server";
 import { DEFAULT_LOCALE, isLocale, messages } from "@/i18n";
 import { validateReservationRequest } from "@/lib/reservationValidation";
 import { toNowInTimeZone } from "@/lib/time";
+import { buildTossCheckout, readyPaymentRecord, toTossOrderId, type TossCheckout } from "@/lib/tossPayment";
 import type { ReservationRequest } from "@/types/reservation";
-import { getSiteOrigin, getSupabaseEnv } from "../env";
+import { getSiteOrigin, getSupabaseEnv, getTossEnv } from "../env";
 import { syncReservationToNotionById } from "../notion";
 import { notifyNewReservation } from "../notify";
 import { insertReservation } from "../reservations";
 
-/** 신청 결과 — 성공이면 접수 id와 서버에서 다시 계산한 예약 내용, 실패면 고객 언어로 된 안내 문구 */
+/**
+ * 신청 결과 — 성공이면 접수 id와 서버에서 다시 계산한 예약 내용, 실패면 고객 언어로 된 안내 문구.
+ * toss: 온라인 결제 예약이면 바로 열 결제창 정보 (아니면 null)
+ */
 export type SubmitReservationResult =
-  | { ok: true; id: string; request: ReservationRequest }
+  | { ok: true; id: string; request: ReservationRequest; toss: TossCheckout | null }
   | { ok: false; message: string };
 
 /**
@@ -27,15 +31,31 @@ export async function submitReservation(input: unknown): Promise<SubmitReservati
   if (!getSupabaseEnv()) return { ok: false, message: t.submit.unavailable };
 
   const submittedAt = new Date();
-  const result = validateReservationRequest(input, toNowInTimeZone(submittedAt), submittedAt);
+  const toss = getTossEnv();
+  const result = validateReservationRequest(input, toNowInTimeZone(submittedAt), submittedAt, {
+    tossEnabled: toss !== null,
+  });
   if (!result.ok) return result;
 
   try {
-    const id = await insertReservation(result.request);
+    // 온라인 결제 예약은 주문번호에 예약 id가 들어가므로 id를 먼저 정해 결제 기록과 함께 저장
+    let checkout: TossCheckout | null = null;
+    let id: string;
+    if (toss && result.request.tossPayment) {
+      id = crypto.randomUUID();
+      const orderId = toTossOrderId(id, submittedAt.getTime().toString(36));
+      checkout = buildTossCheckout(id, result.request, toss.clientKey, orderId, submittedAt);
+      await insertReservation(result.request, {
+        id,
+        payment: readyPaymentRecord(orderId, result.request.totalPrice, submittedAt),
+      });
+    } else {
+      id = await insertReservation(result.request);
+    }
     // 매장 알림·노션 표는 손님 완료 화면을 기다리게 하지 않도록 응답 뒤에 보냄 (실패해도 예약은 그대로)
     after(() => notifyNewReservation(id, result.request, getSiteOrigin()));
     after(() => syncReservationToNotionById(id));
-    return { ok: true, id, request: result.request };
+    return { ok: true, id, request: result.request, toss: checkout };
   } catch (error) {
     // 고객 정보는 남기지 않고 오류 종류만 서버 로그에
     console.error("[submitReservation] 저장 실패", error instanceof Error ? error.message : error);

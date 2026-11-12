@@ -35,6 +35,7 @@ export default function OrdererForm({
   forEvent,
   onForEventChange,
   onSubmit,
+  tossEnabled,
 }: {
   summary: SelectionSummary;
   units: ResolvedUnit[];
@@ -48,6 +49,8 @@ export default function OrdererForm({
   forEvent: boolean | null;
   onForEventChange: (value: boolean) => void;
   onSubmit: (formData: FormData) => void;
+  /** 토스페이먼츠 온라인 결제가 켜져 있는지 (서버 환경변수) */
+  tossEnabled: boolean;
 }) {
   const t = useT();
   const hasOrchid = summary.items.some((item) => item.product.category === "orchid");
@@ -112,7 +115,7 @@ export default function OrdererForm({
 
       <div className="h-px bg-line" />
 
-      <PaymentMethodField totalPrice={summary.totalPrice} />
+      <PaymentMethodField totalPrice={summary.totalPrice} tossEnabled={tossEnabled} />
 
       <div className="h-px bg-line" />
 

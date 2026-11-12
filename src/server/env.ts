@@ -69,3 +69,22 @@ export function getAdminEmails() {
     .map((email) => email.trim().toLowerCase())
     .filter(Boolean);
 }
+
+/**
+ * 토스페이먼츠 온라인 결제 (계좌이체 = 예약마다 전용 입금 계좌, 개인카드 = 카드 결제창).
+ * TOSS_CLIENT_KEY(결제창을 여는 공개 키, test_ck_/live_ck_) + TOSS_SECRET_KEY(비밀 키, test_sk_/live_sk_).
+ * 둘 다 있어야 켜짐 — 없으면 예전처럼 매장 계좌 안내 + 카드는 전화(키인) 결제.
+ * 시험 키(test_)와 실제 키(live_)를 섞어 넣으면 결제가 안 되므로 같은 종류인지도 확인
+ */
+export function getTossEnv() {
+  const clientKey = process.env.TOSS_CLIENT_KEY?.trim();
+  const secretKey = process.env.TOSS_SECRET_KEY?.trim();
+  if (!clientKey || !secretKey) return null;
+  const clientMode = clientKey.startsWith("live_ck_") ? "live" : clientKey.startsWith("test_ck_") ? "test" : null;
+  const secretMode = secretKey.startsWith("live_sk_") ? "live" : secretKey.startsWith("test_sk_") ? "test" : null;
+  if (!clientMode || clientMode !== secretMode) {
+    console.error("[toss] 키 형식이 맞지 않아 온라인 결제를 껐어요 (test_ck_/test_sk_ 또는 live_ck_/live_sk_ 짝)");
+    return null;
+  }
+  return { clientKey, secretKey, testMode: clientMode === "test" };
+}

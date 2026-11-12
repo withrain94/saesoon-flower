@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { inputClassName } from "@/components/ui/Field";
 import {
+  cardKinds,
   cardPayerTypes,
   cashReceiptOptions,
   paymentMethodOptions,
@@ -10,7 +11,7 @@ import {
 import { DEFAULT_LOCALE } from "@/i18n";
 import { useLocale, useT } from "@/hooks/useLocale";
 import { getPaypalAmount, getPaypalFee, PAYPAL_FEE_PERCENT } from "@/lib/payment";
-import type { CardPayerType, CashReceiptType, PaymentMethod } from "@/types/reservation";
+import type { CardKind, CardPayerType, CashReceiptType, PaymentMethod } from "@/types/reservation";
 import BankAccountCard from "./BankAccountCard";
 import { scrollToNaverLinks } from "./sections";
 
@@ -18,13 +19,21 @@ import { scrollToNaverLinks } from "./sections";
  * 결제 방법 + 방법별 안내.
  * input name: paymentMethod
  *   / (계좌이체) cashReceiptType, cashReceiptNumber
- *   / (카드 결제) cardPayer, cardPayerContact
+ *   / (카드 결제) cardKind(온라인 결제가 켜져 있을 때), cardPayer, cardPayerContact(키인 결제일 때)
  *   / (PayPal) paypalEmail
+ * 온라인 결제(tossEnabled)가 켜져 있으면 계좌이체 = 예약 전용 입금 계좌(현금영수증은 결제창에서), 카드 = 개인카드 결제창 / 법인카드 키인
  */
-export default function PaymentMethodField({ totalPrice }: { totalPrice: number }) {
+export default function PaymentMethodField({ totalPrice, tossEnabled }: { totalPrice: number; tossEnabled: boolean }) {
   const t = useT();
   const locale = useLocale();
   const [method, setMethod] = useState<PaymentMethod>(paymentMethodOptions[0].value);
+  const [cardKind, setCardKind] = useState<CardKind>(cardKinds[0]);
+  const description = (value: PaymentMethod) =>
+    tossEnabled && value === "bank"
+      ? t.toss.bankDescription
+      : tossEnabled && value === "card"
+        ? t.toss.cardDescription
+        : t.payment.methods[value].description;
   // 외국어 화면이면 해외 결제(PayPal) 안내를 결제 방법 위에 크게
   const foreign = locale !== DEFAULT_LOCALE;
 
@@ -68,7 +77,7 @@ export default function PaymentMethodField({ totalPrice }: { totalPrice: number 
               />
               <span className="block text-[15px] font-bold leading-snug">{t.payment.methods[value].label}</span>
               <span className={`mt-0.5 block text-[11px] leading-snug ${active ? "text-white/85" : "text-sub"}`}>
-                {t.payment.methods[value].description}
+                {description(value)}
               </span>
             </label>
           );
@@ -76,20 +85,18 @@ export default function PaymentMethodField({ totalPrice }: { totalPrice: number 
       </div>
 
       <div className="mt-3 space-y-3 rounded-2xl bg-panel p-3">
-        {method === "bank" && (
+        {method === "bank" && tossEnabled && <GuideList lines={t.toss.bankGuide} />}
+        {method === "bank" && !tossEnabled && (
           <>
             <BankAccountCard />
             <CashReceiptField />
           </>
         )}
 
-        {method === "card" && (
+        {method === "card" && tossEnabled && <CardKindField value={cardKind} onChange={setCardKind} />}
+        {method === "card" && (!tossEnabled || cardKind === "keyin") && (
           <>
-            <ul className="space-y-1 rounded-xl bg-white px-4 py-3 text-sm text-body">
-              {t.payment.cardGuide.map((line) => (
-                <li key={line}>· {line}</li>
-              ))}
-            </ul>
+            <GuideList lines={t.payment.cardGuide} />
             <CardPayerField />
           </>
         )}
@@ -114,6 +121,53 @@ export default function PaymentMethodField({ totalPrice }: { totalPrice: number 
         </button>
       </p>
     </fieldset>
+  );
+}
+
+function GuideList({ lines }: { lines: readonly string[] }) {
+  return (
+    <ul className="space-y-1 rounded-xl bg-white px-4 py-3 text-sm text-body">
+      {lines.map((line) => (
+        <li key={line}>· {line}</li>
+      ))}
+    </ul>
+  );
+}
+
+/** 카드 종류 — 개인카드(결제창 바로 결제) / 법인카드(매장이 연락해 키인 결제) */
+function CardKindField({ value, onChange }: { value: CardKind; onChange: (value: CardKind) => void }) {
+  const t = useT();
+
+  return (
+    <div className="rounded-xl bg-white px-4 py-3">
+      <p className="text-[14px] font-bold text-ink">{t.toss.cardKindTitle}</p>
+      <div role="radiogroup" aria-label={t.toss.cardKindTitle} className="mt-2 grid gap-1.5">
+        {cardKinds.map((kind) => {
+          const active = kind === value;
+          return (
+            <label
+              key={kind}
+              className={`cursor-pointer rounded-lg border px-3 py-2.5 text-left transition has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand/40 ${
+                active ? "border-brand bg-brand-tint" : "border-field hover:border-brand"
+              }`}
+            >
+              <input
+                type="radio"
+                name="cardKind"
+                value={kind}
+                checked={active}
+                onChange={() => onChange(kind)}
+                className="sr-only"
+              />
+              <span className={`block text-[14px] font-bold ${active ? "text-brand-dark" : "text-ink"}`}>
+                {t.toss.cardKinds[kind].label}
+              </span>
+              <span className="mt-0.5 block text-[12.5px] text-sub">{t.toss.cardKinds[kind].description}</span>
+            </label>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 

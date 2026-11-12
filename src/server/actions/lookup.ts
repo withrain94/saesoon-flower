@@ -11,6 +11,7 @@ import {
   toRefundAccount,
 } from "@/lib/customerLookup";
 import { formatReceiptNumber } from "@/lib/format";
+import { toCustomerPaymentView, toTossPaymentRecord } from "@/lib/tossPayment";
 import type { CustomerReservationView, StoredReservation } from "@/types/reservation";
 import { ADMIN_HOME_PATH } from "../auth";
 import { getSiteOrigin, getSupabaseEnv } from "../env";
@@ -21,7 +22,9 @@ import {
   findReservationsByPhoneEnding,
   findReservationsByReceipt,
   saveCancelRequest,
+  saveTossPayment,
 } from "../reservations";
+import { cancelTossPayment } from "../toss";
 
 /**
  * 손님 예약 조회·취소 — 누구나 부를 수 있는 서버 함수이므로 매번 예약자 이름 + 연락처를 다시 확인한다.
@@ -114,6 +117,7 @@ function toView(reservation: StoredReservation): CustomerReservationView {
     // 입금했다고 답한 취소 요청만 "취소 요청 접수됨" (입금 전 바로 취소는 상태가 취소됨)
     cancelRequestedAt: reservation.cancelRequest?.paid ? reservation.cancelRequest.requestedAt : null,
     request: reservation.request,
+    payment: toCustomerPaymentView(reservation.payment),
   };
 }
 
@@ -201,6 +205,20 @@ export async function cancelReservationByCustomer(input: CancelInput): Promise<L
     if (option === "cancel" && !input.alreadyPaid) {
       const record = { requestedAt, paid: false, ...noRefund };
       if (!(await cancelUnpaidReservation(reservation.id, record))) return { ok: false, code: "notCancelable" };
+      // 입금 기다리는 전용 계좌가 있으면 닫음 (취소 뒤에 입금되지 않게) — 실패하면 매장에 알림
+      const waiting = reservation.payment;
+      if (waiting?.status === "WAITING_FOR_DEPOSIT" && waiting.paymentKey) {
+        after(async () => {
+          const result = await cancelTossPayment(waiting.paymentKey!, "손님 예약 취소 (입금 전)");
+          const closed = result.ok ? toTossPaymentRecord(result.payment, new Date()) : null;
+          if (closed) await saveTossPayment(reservation.id, closed);
+          else {
+            await sendTelegramMessage(
+              `⚠️ 손님이 취소한 예약(접수번호 ${formatReceiptNumber(reservation.id)})의 전용 입금 계좌를 닫지 못했어요. 관리자에서 [토스 결제 취소]를 눌러 주세요.`,
+            );
+          }
+        });
+      }
       after(() => sendTelegramMessage(buildCancelNotice("canceled", reservation.id, reservation.request, adminUrl)));
       // 접수 때 노션에 올라간 줄에 [취소] 표시
       after(() => syncReservationToNotionById(reservation.id));

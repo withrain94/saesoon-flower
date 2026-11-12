@@ -73,3 +73,10 @@ insert into storage.buckets (id, name, public) values ('site-photos', 'site-phot
 on conflict (id) do update set public = true;
 
 notify pgrst, 'reload schema';
+
+-- ── 2026-11-13 추가: 토스페이먼츠 온라인 결제 ─────────────────────────────────
+-- 예약마다 토스 결제 기록(주문번호·결제 상태·전용 입금 계좌·현금영수증·영수증 주소)을 저장 (온라인 결제가 아니면 null).
+-- 카드번호 등 카드 정보는 저장하지 않음(토스 결제창에만 입력). 토스 키를 넣기 전에 꼭 실행. 여러 번 실행해도 안전
+alter table public.reservations add column if not exists payment jsonb;
+
+notify pgrst, 'reload schema';

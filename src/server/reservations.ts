@@ -8,6 +8,7 @@ import type {
   ReservationRequest,
   ReservationStatus,
   StoredReservation,
+  TossPaymentRecord,
 } from "@/types/reservation";
 import { createDatabaseClient } from "./supabase";
 
@@ -26,6 +27,8 @@ type ReservationRow = {
   reminder_sent_at?: string | null;
   /** 현금영수증 발급 표시 — schema.sql 2026-10-09 추가 SQL을 실행하기 전에는 없음 */
   cash_receipt_issued_at?: string | null;
+  /** 토스페이먼츠 결제 기록 — schema.sql 2026-11-13 추가 SQL을 실행하기 전에는 없음 */
+  payment?: TossPaymentRecord | null;
 };
 
 /** 토퍼가 이름·직급(수료 과정) 두 칸이던 예전 기록에서 적혀 있던 값 한 줄 */
@@ -49,6 +52,9 @@ function withReceiveDefaults(request: ReservationRequest): ReservationRequest {
     forEvent: request.forEvent ?? getEventOn(request.date) !== undefined,
     // 초콜릿 칸이 생기기 전(2026-10-12) 기록은 담은 초콜릿이 없음
     chocolates: request.chocolates ?? [],
+    // 온라인 결제가 생기기 전(2026-11-13) 기록 — 카드는 모두 전화(키인) 결제, 온라인 결제 아님
+    cardKind: request.cardKind ?? "keyin",
+    tossPayment: request.tossPayment ?? false,
     deliveries: request.deliveries.map((delivery) => ({
       ...delivery,
       recipientAddress: delivery.recipientAddress ?? "",
@@ -68,11 +74,18 @@ function fromRow(row: ReservationRow): StoredReservation {
     cancelRequest: row.cancel_request ? { ...row.cancel_request, paid: row.cancel_request.paid ?? true } : null,
     reminderSentAt: row.reminder_sent_at ?? null,
     cashReceiptIssuedAt: row.cash_receipt_issued_at ?? null,
+    payment: row.payment ?? null,
   };
 }
 
-/** 검사를 통과한 예약 저장 → 새 예약 id */
-export async function insertReservation(request: ReservationRequest): Promise<string> {
+/**
+ * 검사를 통과한 예약 저장 → 새 예약 id.
+ * 온라인 결제 예약은 id를 먼저 정해(주문번호에 들어가므로) 결제창을 열기 전 기록(payment)과 같이 저장
+ */
+export async function insertReservation(
+  request: ReservationRequest,
+  withPayment?: { id: string; payment: TossPaymentRecord },
+): Promise<string> {
   const { data, error } = await createDatabaseClient()
     .from(TABLE)
     .insert({
@@ -85,6 +98,7 @@ export async function insertReservation(request: ReservationRequest): Promise<st
       total_quantity: request.totalQuantity,
       privacy_agreed_at: request.submittedAt,
       request,
+      ...(withPayment ? { id: withPayment.id, payment: withPayment.payment } : {}),
     })
     .select("id")
     .single();
@@ -257,6 +271,29 @@ export async function saveCancelRequest(
     .eq("id", id)
     .in("status", allowedStatuses)
     .is("cancel_request", null)
+    .select("id");
+  if (error) throw error;
+  return data.length > 0;
+}
+
+/** 토스페이먼츠 결제 기록 저장 (결제창 열기·결제 승인·웹훅·관리자 취소) */
+export async function saveTossPayment(id: string, payment: TossPaymentRecord) {
+  const { error } = await createDatabaseClient()
+    .from(TABLE)
+    .update({ payment, updated_at: new Date().toISOString() })
+    .eq("id", id);
+  if (error) throw error;
+}
+
+/**
+ * 결제·입금이 확인되면 접수 → 입금·결제 확인으로 (매장이 이미 다른 상태로 바꿨으면 그대로) — 바꿨으면 true
+ */
+export async function markReservationPaid(id: string): Promise<boolean> {
+  const { data, error } = await createDatabaseClient()
+    .from(TABLE)
+    .update({ status: "confirmed", updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .eq("status", "received")
     .select("id");
   if (error) throw error;
   return data.length > 0;
