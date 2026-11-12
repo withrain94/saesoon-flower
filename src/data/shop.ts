@@ -52,6 +52,9 @@ export const naverOnlyBookings = [
 /** 개인정보 처리방침 페이지 주소 (신청서 동의 칸·페이지 아래쪽 링크) */
 export const privacyPath = "/privacy";
 
+/** 취소·환불 정책 페이지 주소 (페이지 아래쪽 링크, 결제 회사 심사용) */
+export const refundPath = "/refund";
+
 /** 손님 예약 조회·취소 화면 (접수번호를 미리 채우려면 ?no=접수번호) */
 export const lookupPath = "/check";
 

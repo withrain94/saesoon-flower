@@ -681,6 +681,7 @@ export const en: Messages = {
       business: "Flowers for corporate & public events",
     },
     privacy: "Privacy policy",
+    refund: "Cancellation & refund policy",
   },
 
   validation: {

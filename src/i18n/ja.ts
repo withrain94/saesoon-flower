@@ -673,6 +673,7 @@ export const ja: Messages = {
       business: "企業・公共機関イベントの花",
     },
     privacy: "個人情報処理方針",
+    refund: "キャンセル・返金ポリシー",
   },
 
   validation: {

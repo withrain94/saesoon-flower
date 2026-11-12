@@ -672,6 +672,7 @@ export const vi: Messages = {
       business: "Hoa cho sự kiện doanh nghiệp, cơ quan công",
     },
     privacy: "Chính sách bảo mật",
+    refund: "Chính sách hủy & hoàn tiền",
   },
 
   validation: {

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { guidePages, guidePath } from "@/data/guidePages";
-import { businessInfo, lookupPath, privacyPath } from "@/data/shop";
+import { businessInfo, lookupPath, privacyPath, refundPath } from "@/data/shop";
 import { useLookupT } from "@/hooks/useLookupT";
 import { useT } from "@/hooks/useLocale";
 
@@ -18,6 +18,10 @@ export default function SiteFooter() {
       </Link>
       <Link href={privacyPath} className="font-semibold underline underline-offset-2 hover:text-brand-dark">
         {t.footer.privacy}
+      </Link>
+      <span aria-hidden className="mx-2 text-faint">·</span>
+      <Link href={refundPath} className="font-semibold underline underline-offset-2 hover:text-brand-dark">
+        {t.footer.refund}
       </Link>
       <nav aria-label={t.footer.guidesTitle} className="mt-4">
         <p className="font-semibold text-ink">{t.footer.guidesTitle}</p>

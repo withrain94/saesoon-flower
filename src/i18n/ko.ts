@@ -711,6 +711,7 @@ export const ko = {
       business: "기업·공공기관 행사 꽃",
     },
     privacy: "개인정보 처리방침",
+    refund: "취소·환불 정책",
   },
 
   /** 서버에서 다시 검사할 때의 안내 */

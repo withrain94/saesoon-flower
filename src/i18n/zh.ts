@@ -633,6 +633,7 @@ export const zh: Messages = {
       business: "企业·公共机构活动鲜花",
     },
     privacy: "个人信息处理方针",
+    refund: "取消与退款政策",
   },
 
   validation: {
