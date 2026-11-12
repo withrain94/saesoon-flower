@@ -55,7 +55,17 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
           접수번호 {formatReceiptNumber(id)} · 접수 {formatAdminDateTime(createdAt)}
         </p>
         <div className="mt-3 border-t border-line pt-3">
-          <StatusChanger id={id} status={status} />
+          <StatusChanger
+            id={id}
+            status={status}
+            onlinePayment={
+              reservation.payment?.status === "DONE"
+                ? "paid"
+                : reservation.payment?.status === "WAITING_FOR_DEPOSIT"
+                  ? "waiting"
+                  : null
+            }
+          />
         </div>
         {status !== "canceled" && (
           <div className="mt-3 border-t border-line pt-3">
