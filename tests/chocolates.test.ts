@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { chocolateChoices, chocolates, MAX_CHOCOLATE_QUANTITY, shoppingBag } from "@/data/chocolates";
+import { chocolateChoices, chocolates, dollChoices, getAddOnIcon, MAX_CHOCOLATE_QUANTITY, shoppingBag } from "@/data/chocolates";
 import { allProducts } from "@/data/products";
 import { buildBusinessDocument } from "@/lib/documents";
 import { validateReservationRequest } from "@/lib/reservationValidation";
-import { hasChocolate, summarizeSelection, withChocolateQuantity } from "@/lib/selection";
+import { formatAdminItemName } from "@/lib/adminFormat";
+import { getItemName, hasChocolate, summarizeSelection, withChocolateQuantity } from "@/lib/selection";
 import { toNowInTimeZone } from "@/lib/time";
 import type { ReservationRequest, Selection } from "@/types/reservation";
 
@@ -89,7 +90,7 @@ describe("초콜릿 추가 (data/chocolates · lib/selection · 서버 검사)",
     assert.equal(hasChocolate(selection({ [shoppingBag.id]: 1, "ferrero-1": 1 })), true);
     // 초콜릿 칸에는 쇼핑백이 안 보임
     assert.equal(chocolateChoices.some((chocolate) => chocolate.id === shoppingBag.id), false);
-    assert.equal(chocolateChoices.length, chocolates.length - 1);
+    assert.equal(chocolateChoices.length, chocolates.length - 1 - dollChoices.length);
   });
 
   it("수량을 0으로 만들면 목록에서 빠지고, 최대 수량을 넘지 않음", () => {
@@ -132,6 +133,67 @@ describe("초콜릿 추가 (data/chocolates · lib/selection · 서버 검사)",
       const document = buildBusinessDocument("quote", result.request);
       assert.equal(document.rows.length, 2);
       assert.equal(document.total, result.request.totalPrice);
+    }
+  });
+});
+
+describe("치이카와 인형꽃다발·인형 단품 (2026-11-17)", () => {
+  const dolls = allProducts.filter((product) => product.category === "doll");
+
+  it("인형꽃다발 4종 — 8만원 3개(캐릭터별) + 3총사 10만원, id가 겹치지 않음", () => {
+    assert.deepEqual(
+      dolls.map((product) => [product.id, product.price]),
+      [["doll-chiikawa", 80000], ["doll-hachiware", 80000], ["doll-usagi", 80000], ["doll-trio", 100000]],
+    );
+    assert.equal(new Set(allProducts.map((product) => product.id)).size, allProducts.length);
+  });
+
+  it("금액이 같아도 상품 이름으로 구분 (손님 화면·관리자·알림)", () => {
+    assert.equal(getItemName(dolls[0]), "치이카와 인형꽃다발 8만원");
+    assert.equal(getItemName(bouquet), "꽃다발 5만원");
+    assert.equal(
+      formatAdminItemName({ productId: "doll-hachiware", category: "doll", price: 80000 }),
+      "하치와레 인형꽃다발 8만원",
+    );
+    assert.equal(formatAdminItemName({ productId: "bouquet-60000", category: "bouquet", price: 60000 }), "꽃다발 6만원");
+  });
+
+  it("인형 단품 3종 각 8,000원 — 합계에 더해지고, 담으면 \"함께?\" 창이 안 뜸", () => {
+    assert.deepEqual(dollChoices.map((doll) => [doll.id, doll.price]), [
+      ["doll-chiikawa", 8000],
+      ["doll-hachiware", 8000],
+      ["doll-usagi", 8000],
+    ]);
+    const summary = summarizeSelection(selection({ "doll-usagi": 2 }));
+    assert.equal(summary.totalPrice, bouquet.price + 16000);
+    // 인형을 담았으면 "초콜릿·인형도 함께?" 창은 안 뜸 (2026-11-17 사용자 요청으로 창에 인형도 보임)
+    assert.equal(hasChocolate(selection({ "doll-usagi": 2 })), true);
+    assert.equal(chocolateChoices.some((chocolate) => chocolate.id.startsWith("doll-")), false);
+    assert.equal(getAddOnIcon("doll-usagi"), "🧸");
+    assert.equal(getAddOnIcon(shoppingBag.id), "🛍️");
+    assert.equal(getAddOnIcon("ferrero-1"), "🍫");
+  });
+
+  it("서버가 인형꽃다발·인형 단품을 받아 금액을 다시 계산", () => {
+    const base = request([{ chocolateId: "doll-chiikawa", price: 1, quantity: 1 }]);
+    const trio = dolls[3];
+    const result = validateReservationRequest(
+      {
+        ...base,
+        items: [{ productId: trio.id, category: trio.category, price: 1, quantity: 1 }],
+        deliveries: base.deliveries.map((delivery) => ({ ...delivery, productId: trio.id, category: trio.category, price: 1 })),
+      },
+      now,
+      submittedAt,
+    );
+    assert.equal(result.ok, true);
+    if (result.ok) {
+      assert.equal(result.request.items[0].price, 100000);
+      assert.equal(result.request.chocolates[0].price, 8000);
+      assert.equal(result.request.totalPrice, 108000);
+      const document = buildBusinessDocument("quote", result.request);
+      assert.equal(document.rows[0].name, "먼작귀 3총사 인형꽃다발 10만원");
+      assert.equal(document.total, 108000);
     }
   });
 });

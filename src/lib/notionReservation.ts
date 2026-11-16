@@ -1,6 +1,7 @@
 import { getAddOnIcon, type ChocolateId } from "@/data/chocolates";
 import { getEventOn, type SpecialEvent } from "@/data/events";
 import { findBlackboardPreset } from "@/data/reservationOptions";
+import type { ProductId } from "@/data/products";
 import { ko } from "@/i18n/ko";
 import { describeColor, describeDeliveryAddress, describePayment, describeReceiveMethod } from "@/lib/adminFormat";
 import { parseDateKey } from "@/lib/date";
@@ -168,7 +169,8 @@ export function buildNotionRows({ id, status, adminMemo, request }: StoredReserv
       "받는분 성함": delivery.recipientName || "(예약자 픽업)",
       "받는분 연락처": delivery.recipientPhone,
       메시지: formatMessage(delivery),
-      예약종류: `${canceled}${ko.categories[delivery.category].name}`,
+      // 인형꽃다발은 캐릭터마다 금액이 같아 상품 이름("치이카와 인형꽃다발")으로
+      예약종류: `${canceled}${ko.products[delivery.productId as ProductId]?.name ?? ko.categories[delivery.category].name}`,
       "받는 방법": receiveMethod,
       // 꽃다발·꽃바구니는 적은 주소, 호접난은 배송 식당
       배송지: describeDeliveryAddress(request, delivery) ?? "",

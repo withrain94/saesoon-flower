@@ -69,10 +69,12 @@ export const siteLinksByCategory: Record<ProductCategoryId, string> = {
   bouquet: `${siteUrl}/#product-01`,
   basket: `${siteUrl}/#product-02`,
   orchid: `${siteUrl}/#meeting`,
+  // 인형꽃다발은 소개 사이트에 따로 없어 꽃다발 소개로
+  doll: `${siteUrl}/#product-01`,
 };
 
-/** 상품 종류별 네이버 예약 페이지 */
-export const naverBookingUrls: Record<ProductCategoryId, string> = {
+/** 상품 종류별 네이버 예약 페이지 — 인형꽃다발은 네이버 예약에 없음(이 페이지에서만) */
+export const naverBookingUrls: Partial<Record<ProductCategoryId, string>> = {
   bouquet:
     "https://m.booking.naver.com/booking/6/bizes/1201254/items/6060631?area=pll&entry=pll&fbclid=PAQ0xDSwMRX6BjbGNrAhOIKGV4dG4DYWVtAjEwAAGmqiuZCxfN75n2HqwN8G5Jf8MVuLz2dHiXYUIUUzGuVLZpPlQjja3MvbXl_aem_wQIDFQI5CMD5rQV_zMIV3w&lang=ko&startDate=2026-09-19&theme=place",
   basket:

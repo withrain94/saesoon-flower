@@ -65,7 +65,7 @@ export const en: Messages = {
     bouquet: { name: "Bouquet", tagline: "A gift to hand over in person" },
     basket: { name: "Flower basket", tagline: "A gift to display and enjoy longer" },
     orchid: {
-      name: "Phalaenopsis orchid",
+      name: "Orchid",
       tagline: "Bojagi-wrapped gift for meeting the families",
       popularNote: "Set of 2 · one for each family",
       notice: {
@@ -83,6 +83,25 @@ export const en: Messages = {
           "If you request white orchids,\nwhich give a clear and graceful impression like a bride,\nwe will carefully prepare\nthe finest-quality orchids to match.",
           "At Saesoon,\na florist who is also\na certified 1st-grade bojagi art expert\nwraps the flowers by hand.",
           "The bojagi color is chosen\nconsidering\n- the tone of the white orchids\n- the length of the flower stalks\n- the spread of the leaves,\nso each time we prepare\nthe wrapping cloth color that suits them best.",
+        ],
+      },
+    },
+    doll: {
+      name: "Plush bouquet",
+      tagline: "A bouquet with a Chiikawa plush tucked in",
+      popularNote: "Choose Chiikawa, Hachiware or Usagi — or all three · plushies can also be added on their own",
+      notice: {
+        summary: [
+          "Leave the color on “Up to the florist” and we'll wrap it in the character's recommended color.",
+          "Flowers may differ slightly from the photo depending on the season and stock.",
+          "Want an extra plush? Add one under “Add chocolates & plushies” below.",
+        ],
+        full: [
+          "Recommended colors by character",
+          "Chiikawa — pink",
+          "Hachiware — light pink flowers + blue wrapping",
+          "Usagi — yellow",
+          "For another color, choose it under “Preferred colors” in the form or write it in “Other”.",
         ],
       },
     },
@@ -200,6 +219,42 @@ export const en: Messages = {
         "A set of 2, so each family receives one",
         "Free delivery to Jeonju family-meeting restaurants such as Honamgak, Gung and Gogungdam",
         "Double wrapping, so it can be kept wrapped and cared for after gifting",
+      ],
+    },
+    "doll-chiikawa": {
+      title: "[Pink] Chiikawa's Rosy Confession",
+      name: "Chiikawa plush bouquet",
+      points: [
+        "A Chiikawa plush tucked in among the flowers — instantly heart-melting.",
+        "Recommended wrapping: pink, the perfect match for shy Chiikawa.",
+        "The flowers fade, but the plush stays — a gift remembered for a long time.",
+      ],
+    },
+    "doll-hachiware": {
+      title: "[Light pink · Blue] Hachiware's Sky-Blue Cheer",
+      name: "Hachiware plush bouquet",
+      points: [
+        "Cheerful, kind-hearted Hachiware delivers your encouragement.",
+        "Recommended: light pink flowers with blue wrapping — just like Hachiware's ears.",
+        "Great for birthdays, passing an exam or a little cheering up.",
+      ],
+    },
+    "doll-usagi": {
+      title: "[Yellow] Usagi's Yellow “Ura!”",
+      name: "Usagi plush bouquet",
+      points: [
+        "Wild and wacky Usagi makes them burst out laughing the moment they see it.",
+        "Recommended wrapping: yellow, bright and lively.",
+        "Great for graduations, congratulations or a mood boost.",
+      ],
+    },
+    "doll-trio": {
+      title: "[Trio] All Three Chiikawa Friends",
+      name: "Chiikawa trio plush bouquet",
+      points: [
+        "Chiikawa, Hachiware and Usagi, all together in one bouquet.",
+        "A fan's dream — a bouquet made for photos.",
+        "Give all their favorite friends at once for a birthday or anniversary.",
       ],
     },
   },
@@ -361,14 +416,18 @@ export const en: Messages = {
   },
 
   chocolate: {
-    title: "Add chocolates",
-    description: "A sweet touch to go with the flowers — add as many as you like.",
+    title: "Add chocolates & plushies",
+    description: "Something sweet or something cute to go with the flowers — add as many as you like.",
+    /** 초콜릿 칸 안 인형 단품 묶음 제목 (2026-11-17) */
+    dollHeading: "Chiikawa plushies",
+    /** "함께?" 창에서 인형 아래 초콜릿 묶음 제목 */
+    chocolateHeading: "Chocolates",
     photoAlt: (name) => `${name} photo`,
     prompt: {
-      title: "Would you like to add chocolates?",
-      description: "From 1,500 KRW. We wrap them together with the flowers.",
+      title: "Add chocolates or a plush?",
+      description: "Chocolates from 1,500 KRW, Chiikawa plushies 8,000 KRW. We wrap them together with the flowers.",
       submitWithout: "No thanks, reserve as is",
-      submitWith: (count) => `Reserve with ${count} chocolate${count === 1 ? "" : "s"}`,
+      submitWith: (count) => `Reserve with ${count} add-on${count === 1 ? "" : "s"}`,
       close: "Close",
     },
     items: {
@@ -378,6 +437,9 @@ export const en: Messages = {
       "happyhippo-10": { name: "Happy Hippo × 10", note: "For special days — 10 pieces arranged together." },
       "ferrero-10": { name: "Ferrero Rocher × 10", note: "For special days — 10 pieces arranged together." },
       shoppingbag: { name: "Bouquet carrier bag", note: "Easy to carry and to stand upright." },
+      "doll-chiikawa": { name: "Chiikawa plush", note: "Tucked in with the flowers of any bouquet." },
+      "doll-hachiware": { name: "Hachiware plush", note: "Tucked in with the flowers of any bouquet." },
+      "doll-usagi": { name: "Usagi plush", note: "Tucked in with the flowers of any bouquet." },
     },
     bag: {
       badge: "Add-on",

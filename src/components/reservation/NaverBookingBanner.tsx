@@ -17,10 +17,13 @@ export default function NaverBookingBanner() {
       <p className="text-[15px] font-bold text-ink">{t.naverBanner.title}</p>
       <p className="mt-0.5 text-[13px] text-sub">{t.naverBanner.description}</p>
       <ul className="mt-2.5 grid auto-cols-fr grid-flow-col gap-2">
-        {productCategories.map((category) => (
+        {productCategories.flatMap((category) => {
+          const url = naverBookingUrls[category.id];
+          return url ? [{ category, url }] : [];
+        }).map(({ category, url }) => (
           <li key={category.id}>
             <a
-              href={naverBookingUrls[category.id]}
+              href={url}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={t.naverBanner.linkAria(t.categories[category.id].name)}

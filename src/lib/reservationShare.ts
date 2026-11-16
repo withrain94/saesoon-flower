@@ -2,6 +2,7 @@ import { bankAccount } from "@/data/shop";
 import type { Messages } from "@/i18n/ko";
 import { parseDateKey } from "@/lib/date";
 import { formatReceiptNumber } from "@/lib/format";
+import { getSavedItemName } from "@/lib/selection";
 import { getSlotHour } from "@/lib/time";
 import type { ReservationRequest } from "@/types/reservation";
 
@@ -48,7 +49,7 @@ function buildLines(t: Messages, shopName: string, id: string, request: Reservat
   const date = parseDateKey(request.date);
   const [first, ...rest] = request.items;
   const firstName = first
-    ? `${t.format.itemName(t.categories[first.category].name, t.format.priceShort(first.price))} × ${first.quantity}`
+    ? `${getSavedItemName(first, t)} × ${first.quantity}`
     : "";
 
   return [

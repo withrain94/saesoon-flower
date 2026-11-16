@@ -1,7 +1,7 @@
 import type { Locale } from "./i18n";
 
 /** 상품 종류 */
-export type ProductCategoryId = "bouquet" | "basket" | "orchid";
+export type ProductCategoryId = "bouquet" | "basket" | "orchid" | "doll";
 
 /** 메시지 방식 — 꽃다발: 없음/메모지, 꽃바구니: 없음/리본글씨/블랙보드, 호접난: 블랙보드 */
 export type MessageType = "none" | "memo" | "ribbon" | "blackboard";

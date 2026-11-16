@@ -80,7 +80,7 @@ export function getChocolateItems(selection: Selection): ChocolateItem[] {
     .filter((item) => item.quantity > 0);
 }
 
-/** 초콜릿을 하나라도 담았는지 — 쇼핑백만 담은 건 세지 않음 ("초콜릿도 함께?" 창을 띄울지) */
+/** 초콜릿·인형을 하나라도 담았는지 — 쇼핑백만 담은 건 세지 않음 ("초콜릿·인형도 함께?" 창을 띄울지) */
 export function hasChocolate(selection: Selection) {
   return getChocolateItems(selection).some((item) => item.chocolate.kind !== "bag");
 }
@@ -112,9 +112,20 @@ export function getProductCopy(product: Product, t: Messages = ko) {
   return t.products[product.id as ProductId];
 }
 
-/** "꽃다발 6만원" (언어별) */
+/** "꽃다발 6만원" (언어별). 금액이 같은 상품이 여러 개인 종류는 상품 이름으로 — "치이카와 인형꽃다발 8만원" */
 export function getItemName(product: Product, t: Messages = ko) {
-  return t.format.itemName(t.categories[product.category].name, t.format.priceShort(product.price));
+  const name = getProductCopy(product, t).name ?? t.categories[product.category].name;
+  return t.format.itemName(name, t.format.priceShort(product.price));
+}
+
+/** 저장된 예약 한 줄(상품 id·종류·금액)의 이름 — 지금 상품 목록에 없으면 "종류 금액" */
+export function getSavedItemName(
+  item: { productId: string; category: ProductCategoryId; price: number },
+  t: Messages = ko,
+) {
+  const product = allProducts.find((candidate) => candidate.id === item.productId);
+  if (product) return t.format.itemName(getProductCopy(product, t).name ?? t.categories[item.category].name, t.format.priceShort(item.price));
+  return t.format.itemName(t.categories[item.category].name, t.format.priceShort(item.price));
 }
 
 /** 목록 위 한 줄 안내 — 문구가 따로 없으면 인기 순위대로 "인기 금액: 6만원 · 10만원 … 순" */

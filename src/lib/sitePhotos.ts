@@ -2,6 +2,7 @@ import { chocolates, type ChocolateId } from "@/data/chocolates";
 import { productCategories } from "@/data/products";
 import { shop } from "@/data/shop";
 import { ko } from "@/i18n/ko";
+import { getItemName } from "@/lib/selection";
 import type { ProductCategoryId } from "@/types/reservation";
 
 /**
@@ -43,7 +44,7 @@ export const chocolateSlot = (chocolateId: string) => `chocolate-${chocolateId}`
 export const photoSlotGroups: { id: PhotoSlotGroup; label: string }[] = [
   { id: "home", label: "첫 화면" },
   ...productCategories.map((category) => ({ id: category.id, label: ko.categories[category.id].name })),
-  { id: "addOn", label: "초콜릿·쇼핑백" },
+  { id: "addOn", label: "초콜릿·쇼핑백·인형" },
 ];
 
 /** 코드에 들어 있는 기본 사진 — 화면 순서대로 */
@@ -61,7 +62,7 @@ export const photoSlots: PhotoSlot[] = [
     category.products.map((product) => ({
       id: productSlot(product.id),
       group: category.id,
-      label: ko.format.itemName(ko.categories[category.id].name, ko.format.priceShort(product.price)),
+      label: getItemName(product, ko),
       single: false,
       images: product.images,
       cover: product.cover,

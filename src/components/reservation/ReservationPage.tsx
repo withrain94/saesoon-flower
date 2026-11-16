@@ -85,7 +85,7 @@ export default function ReservationPage() {
       {reservation === null && (
         <div className="px-5 pb-7 pt-1">
           <div className="rounded-2xl border border-brand bg-brand-tint px-4 py-4">
-            <ChocolateField quantities={chocolateQuantities} onChange={setChocolateQuantity} />
+            <ChocolateField quantities={chocolateQuantities} onChange={setChocolateQuantity} withDolls />
           </div>
         </div>
       )}

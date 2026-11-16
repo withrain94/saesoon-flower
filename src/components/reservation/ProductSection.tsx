@@ -74,13 +74,14 @@ export default function ProductSection({
               role="tab"
               aria-selected={active}
               onClick={() => onCategoryChange(item.id)}
-              className={`flex min-h-12 items-center justify-center gap-1.5 rounded-xl border px-1 py-1.5 text-center text-[15px] font-bold leading-tight transition ${
+              className={`flex min-h-12 flex-wrap items-center justify-center gap-x-1 gap-y-0.5 rounded-xl border px-0.5 py-1.5 text-center text-[14px] font-bold leading-tight transition ${
                 active
                   ? "border-brand bg-brand text-white"
                   : "border-field bg-white text-body hover:border-brand"
               }`}
             >
-              {t.categories[item.id].name}
+              {/* 종류가 4개라 이름이 글자 중간에서 줄바꿈되지 않게 — 띄어쓰기에서만 (개수 표시는 넘치면 아랫줄로) */}
+              <span className="break-keep">{t.categories[item.id].name}</span>
               {count > 0 && (
                 <span
                   className={`min-w-5 shrink-0 rounded-full px-1.5 text-[12px] leading-5 ${

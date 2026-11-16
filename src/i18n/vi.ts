@@ -78,6 +78,25 @@ export const vi: Messages = {
         ],
       },
     },
+    doll: {
+      name: "Bó hoa thú bông",
+      tagline: "Bó hoa kèm thú bông Chiikawa",
+      popularNote: "Chọn Chiikawa, Hachiware, Usagi hoặc cả bộ ba · cũng có thể thêm riêng thú bông",
+      notice: {
+        summary: [
+          "Nếu để tông màu là “Để tiệm chọn”, chúng tôi sẽ gói theo màu gợi ý của nhân vật.",
+          "Hoa có thể hơi khác ảnh tùy mùa và hàng về.",
+          "Muốn thêm thú bông, hãy chọn ở mục “Thêm sô-cô-la · thú bông” bên dưới.",
+        ],
+        full: [
+          "Màu gợi ý theo nhân vật",
+          "Chiikawa — hồng",
+          "Hachiware — hoa hồng nhạt + giấy gói xanh dương",
+          "Usagi — vàng",
+          "Muốn màu khác, hãy chọn ở mục “Tông màu mong muốn” trong đơn hoặc ghi vào “Khác”.",
+        ],
+      },
+    },
   },
 
   products: {
@@ -192,6 +211,42 @@ export const vi: Messages = {
         "Bộ 2 chậu để tặng mỗi bên gia đình một chậu",
         "Miễn phí giao đến các nhà hàng ra mắt ở Jeonju như Honamgak, Gung, Gogungdam",
         "Gói hai lớp, có thể giữ nguyên lớp gói và chăm sóc sau khi tặng",
+      ],
+    },
+    "doll-chiikawa": {
+      title: "[Hồng] Lời tỏ tình hồng của Chiikawa",
+      name: "Bó hoa thú bông Chiikawa",
+      points: [
+        "Thú bông Chiikawa nằm giữa những bông hoa — nhìn là tan chảy.",
+        "Gói gợi ý: hồng — hợp nhất với Chiikawa nhút nhát.",
+        "Hoa có thể héo nhưng thú bông còn mãi, món quà được nhớ lâu.",
+      ],
+    },
+    "doll-hachiware": {
+      title: "[Hồng nhạt · Xanh] Lời cổ vũ xanh trời của Hachiware",
+      name: "Bó hoa thú bông Hachiware",
+      points: [
+        "Hachiware luôn lạc quan và ấm áp, gửi trao lời cổ vũ của bạn.",
+        "Gợi ý: hoa hồng nhạt với giấy gói xanh — đúng màu tai Hachiware.",
+        "Hợp làm quà sinh nhật, thi đỗ hay động viên.",
+      ],
+    },
+    "doll-usagi": {
+      title: "[Vàng] Tiếng “Ura!” vàng rực của Usagi",
+      name: "Bó hoa thú bông Usagi",
+      points: [
+        "Usagi tinh nghịch khiến người nhận bật cười ngay khi thấy.",
+        "Gói gợi ý: vàng — tươi sáng và vui nhộn.",
+        "Hợp làm quà tốt nghiệp, chúc mừng hay đổi tâm trạng.",
+      ],
+    },
+    "doll-trio": {
+      title: "[Bộ ba] Đủ cả ba bạn Chiikawa",
+      name: "Bó hoa thú bông bộ ba Chiikawa",
+      points: [
+        "Chiikawa, Hachiware và Usagi cùng tụ họp trong một bó hoa.",
+        "Fan nào thấy cũng phải hét lên — bó hoa sinh ra để chụp ảnh.",
+        "Tặng cả nhóm bạn yêu thích một lần vào sinh nhật hay ngày kỷ niệm.",
       ],
     },
   },
@@ -353,14 +408,18 @@ export const vi: Messages = {
   },
 
   chocolate: {
-    title: "Thêm sô-cô-la",
-    description: "Vị ngọt gửi kèm bó hoa — quý khách muốn bao nhiêu cũng được.",
+    title: "Thêm sô-cô-la · thú bông",
+    description: "Vị ngọt và sự dễ thương gửi kèm bó hoa — quý khách muốn bao nhiêu cũng được.",
+    /** 초콜릿 칸 안 인형 단품 묶음 제목 (2026-11-17) */
+    dollHeading: "Thú bông Chiikawa",
+    /** "함께?" 창에서 인형 아래 초콜릿 묶음 제목 */
+    chocolateHeading: "Sô-cô-la",
     photoAlt: (name) => `Ảnh ${name}`,
     prompt: {
-      title: "Quý khách có muốn thêm sô-cô-la không?",
-      description: "Chỉ từ 1.500 KRW. Tiệm sẽ gói cùng với hoa.",
+      title: "Quý khách có muốn thêm sô-cô-la hoặc thú bông không?",
+      description: "Sô-cô-la chỉ từ 1.500 KRW, thú bông Chiikawa 8.000 KRW. Tiệm sẽ gói cùng với hoa.",
       submitWithout: "Không cần, đặt như vậy",
-      submitWith: (count) => `Đặt kèm ${count} sô-cô-la`,
+      submitWith: (count) => `Đặt kèm ${count} món`,
       close: "Đóng",
     },
     items: {
@@ -370,6 +429,9 @@ export const vi: Messages = {
       "happyhippo-10": { name: "Happy Hippo × 10", note: "Gợi ý cho dịp đặc biệt — cắm kèm 10 cái." },
       "ferrero-10": { name: "Ferrero Rocher × 10", note: "Gợi ý cho dịp đặc biệt — cắm kèm 10 cái." },
       shoppingbag: { name: "Túi xách đựng bó hoa", note: "Dễ mang theo và có thể đặt đứng." },
+      "doll-chiikawa": { name: "Thú bông Chiikawa", note: "Cắm cùng hoa trong bó hoa." },
+      "doll-hachiware": { name: "Thú bông Hachiware", note: "Cắm cùng hoa trong bó hoa." },
+      "doll-usagi": { name: "Thú bông Usagi", note: "Cắm cùng hoa trong bó hoa." },
     },
     bag: {
       badge: "Mua kèm",

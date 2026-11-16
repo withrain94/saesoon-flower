@@ -9,6 +9,7 @@ import { maskReceiptNumber } from "@/lib/customerLookup";
 import { useLookupT } from "@/hooks/useLookupT";
 import { useT } from "@/hooks/useLocale";
 import { parseDateKey } from "@/lib/date";
+import { getSavedItemName } from "@/lib/selection";
 import { getSlotHour } from "@/lib/time";
 import type { CustomerReservationView, ReservationDelivery } from "@/types/reservation";
 
@@ -20,8 +21,6 @@ export default function LookupReservationDetails({ reservation }: { reservation:
   const date = parseDateKey(request.date);
   const payment = t.payment.methods[request.paymentMethod];
   const quantities = Object.fromEntries(request.items.map((item) => [item.productId, item.quantity]));
-  const itemName = (category: ReservationDelivery["category"], price: number) =>
-    t.format.itemName(t.categories[category].name, t.format.priceShort(price));
 
   const describeMessage = (delivery: ReservationDelivery) => {
     switch (delivery.messageType) {
@@ -67,7 +66,7 @@ export default function LookupReservationDetails({ reservation }: { reservation:
           {request.items.map((item) => (
             <li key={item.productId} className="flex justify-between gap-3 py-2 text-[14px]">
               <span className="text-ink">
-                {itemName(item.category, item.price)} × {item.quantity}
+                {getSavedItemName(item, t)} × {item.quantity}
               </span>
               <span className="shrink-0 text-body">{t.format.price(item.price * item.quantity)}</span>
             </li>
@@ -111,7 +110,7 @@ export default function LookupReservationDetails({ reservation }: { reservation:
       <Card title={l.sections.deliveries}>
         <ul className="space-y-2 text-[13px]">
           {request.deliveries.map((delivery) => {
-            const name = itemName(delivery.category, delivery.price);
+            const name = getSavedItemName(delivery, t);
             const quantity = quantities[delivery.productId] ?? 1;
             const recipient = [delivery.recipientName, delivery.recipientPhone].filter(Boolean).join(" · ");
             return (

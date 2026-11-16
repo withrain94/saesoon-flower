@@ -295,10 +295,45 @@ const orchid = defineCategory(
   ],
 );
 
-export const productCategories: ProductCategory[] = [bouquet, basket, orchid];
+/**
+ * 금액이 같은 상품이 여러 개인 종류(인형꽃다발 — 캐릭터마다 8만원)는 금액 대신 key로 id를 만든다.
+ * 예: "doll-chiikawa"
+ */
+function defineKeyedCategory<const C extends ProductCategoryId, const K extends string>(
+  info: CategoryInfo<C>,
+  seeds: (Omit<Product, "id" | "category"> & { key: K })[],
+) {
+  return {
+    ...info,
+    startingPrice: Math.min(...seeds.map((seed) => seed.price)),
+    products: seeds.map(({ key, ...seed }) => ({
+      ...seed,
+      id: `${info.id}-${key}` as `${C}-${K}`,
+      category: info.id,
+    })),
+  } satisfies ProductCategory;
+}
 
-/** 모든 상품 id — "bouquet-50000" | ... (언어 파일의 products 키) */
-export type ProductId = (typeof bouquet | typeof basket | typeof orchid)["products"][number]["id"];
+/** 치이카와(먼작귀) 인형꽃다발 (2026-11-17 사용자 요청) — 사진은 매장 예시 1장씩 */
+const doll = defineKeyedCategory(
+  {
+    id: "doll",
+    thumbnail: "/flowers/doll-trio-01.jpg",
+    colorChoice: true,
+    featured: false,
+  },
+  [
+    { key: "chiikawa", price: 80000, cover: 0, images: photos(["doll-chiikawa-01.jpg"]) },
+    { key: "hachiware", price: 80000, cover: 0, images: photos(["doll-hachiware-01.jpg"]) },
+    { key: "usagi", price: 80000, cover: 0, images: photos(["doll-usagi-01.jpg"]) },
+    { key: "trio", price: 100000, cover: 0, images: photos(["doll-trio-01.jpg"]) },
+  ],
+);
+
+export const productCategories: ProductCategory[] = [bouquet, basket, orchid, doll];
+
+/** 모든 상품 id — "bouquet-50000" | ... | "doll-chiikawa" (언어 파일의 products 키) */
+export type ProductId = (typeof bouquet | typeof basket | typeof orchid | typeof doll)["products"][number]["id"];
 
 
 export const allProducts: Product[] = productCategories.flatMap((category) => category.products);
