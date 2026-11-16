@@ -762,4 +762,14 @@ export const ja: Messages = {
     documentCompany: "書類に記載する会社名・機関名をご入力ください。",
     documentBusinessNumber: "書類用の事業者登録番号をご確認ください。",
   },
+
+  minPrice: {
+    names: { graduation: "卒業シーズン" },
+    period: (name: string, sm: number, sd: number, em: number, ed: number) => `${name}（${sm}/${sd}~${em}/${ed}）`,
+    upcoming: (period: string, price: string) => `${period}にお受け取りのご予約は${price}からとなります。`,
+    blocked: (period: string, price: string) => `選択された日付は${period}のため、${price}からご予約いただけます。`,
+    conflict: (period: string, price: string, items: string) =>
+      `${period}は${price}からのご予約となります。${items}を外すか、別の日付をお選びください。`,
+    server: (period: string, price: string) => `${period}は${price}からのご予約となります。商品を選び直してください。`,
+  },
 };

@@ -770,4 +770,14 @@ export const en: Messages = {
     documentCompany: "Please enter the company or organization name for the documents.",
     documentBusinessNumber: "Please check the business registration number for the documents.",
   },
+
+  minPrice: {
+    names: { graduation: "Graduation season" },
+    period: (name: string, sm: number, sd: number, em: number, ed: number) => `${name} (${sm}/${sd}–${em}/${ed})`,
+    upcoming: (period: string, price: string) => `For pickup/delivery during ${period}, items start from ${price}.`,
+    blocked: (period: string, price: string) => `Your date falls in ${period}, so items start from ${price}.`,
+    conflict: (period: string, price: string, items: string) =>
+      `During ${period}, items start from ${price}. Please remove ${items} or choose another date.`,
+    server: (period: string, price: string) => `During ${period}, items start from ${price}. Please choose your items again.`,
+  },
 };

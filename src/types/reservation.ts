@@ -49,7 +49,8 @@ export type Selection = {
 };
 
 /** 아직 선택되지 않은 항목 */
-export type SelectionIssue = "items" | "date" | "time";
+/** price = 담은 상품이 고른 날짜(졸업시즌 등)의 최소 금액보다 쌈 */
+export type SelectionIssue = "items" | "date" | "price" | "time";
 
 /** 받는 분 (픽업이면 비워둘 수 있음 — 예약자가 픽업) */
 export type Recipient = {

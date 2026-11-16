@@ -13,6 +13,7 @@ import { MAX_QUANTITY } from "@/data/reservationOptions";
 import { ko, type Messages } from "@/i18n/ko";
 import { formatDateLabel } from "@/lib/date";
 import { getEventCopy } from "@/lib/events";
+import { describeMinPricePeriod, getBlockedByMinPrice, getMinPricePeriodOn } from "@/lib/minPrice";
 import { formatTimeLabel, isSlotBookable, type Now } from "@/lib/time";
 import type { ProductCategoryId, Selection, SelectionIssue } from "@/types/reservation";
 
@@ -144,10 +145,27 @@ export function isScheduleBookable(selection: Selection, now: Now | null) {
   return isSlotBookable(selection.time, selection.date, now);
 }
 
+/** 담은 상품 중 고른 날짜(졸업시즌 등)에 안 되는 것이 있으면 안내 문구, 없으면 null */
+export function getMinPriceConflict(selection: Selection, t: Messages = ko): string | null {
+  const period = selection.date ? getMinPricePeriodOn(selection.date) : undefined;
+  if (!period) return null;
+  const blocked = getBlockedByMinPrice(
+    getOrderItems(selection).map((item) => item.product),
+    selection.date,
+  );
+  if (blocked.length === 0) return null;
+  return t.minPrice.conflict(
+    describeMinPricePeriod(period, t),
+    t.format.price(period.minPrice),
+    blocked.map((product) => getItemName(product, t)).join(", "),
+  );
+}
+
 /** 가장 먼저 채워야 할 항목. 모두 선택됐으면 null */
 export function getSelectionIssue(selection: Selection, now: Now | null): SelectionIssue | null {
   if (getOrderItems(selection).length === 0) return "items";
   if (selection.date === null) return "date";
+  if (getMinPriceConflict(selection) !== null) return "price";
   if (selection.time === null || !isScheduleBookable(selection, now)) return "time";
   return null;
 }

@@ -31,6 +31,7 @@ export const NAVER_LINKS_ID = "naver-booking-links";
 export const issueSection: Record<SelectionIssue, SectionId> = {
   items: SECTION.items,
   date: SECTION.dateTime,
+  price: SECTION.items,
   time: SECTION.dateTime,
 };
 

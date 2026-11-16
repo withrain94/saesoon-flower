@@ -21,6 +21,7 @@ export default function DateTimeSection({
   time,
   onChange,
   issue,
+  priceConflict,
 }: {
   /** null = 서버 렌더링 중 (아직 현재 시각을 모름) */
   now: Now | null;
@@ -28,6 +29,8 @@ export default function DateTimeSection({
   time: string | null;
   onChange: (patch: Pick<Selection, "date" | "time">) => void;
   issue: "date" | "time" | null;
+  /** 담은 상품이 고른 날짜(졸업시즌 등)에 안 될 때 안내 — 날짜를 고르자마자 보여줌 */
+  priceConflict: string | null;
 }) {
   const t = useT();
   const isSlotDisabled = (slot: string) =>
@@ -55,6 +58,7 @@ export default function DateTimeSection({
       </p>
       {issue === "date" && <ErrorText>{t.dateTime.errorDate}</ErrorText>}
       {issue === "time" && <ErrorText>{t.dateTime.errorTime}</ErrorText>}
+      {priceConflict && <ErrorText>⚠️ {priceConflict}</ErrorText>}
 
       {openEvents.length > 0 && (
         <div className="mt-4">

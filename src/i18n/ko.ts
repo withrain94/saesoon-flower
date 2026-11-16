@@ -801,6 +801,21 @@ export const ko = {
     documentCompany: "서류에 적을 상호·기관명을 입력해 주세요.",
     documentBusinessNumber: "서류용 사업자등록번호를 확인해 주세요.",
   },
+
+  /** 바쁜 시기 최소 금액 (졸업시즌 등 — data/reservationOptions의 minPricePeriods) */
+  minPrice: {
+    names: { graduation: "졸업시즌" },
+    period: (name: string, sm: number, sd: number, em: number, ed: number) => `${name}(${sm}/${sd}~${em}/${ed})`,
+    /** 날짜를 아직 안 골랐을 때 상품 칸 안내 */
+    upcoming: (period: string, price: string) => `${period}에 받으시는 예약은 ${price}부터 가능해요.`,
+    /** 고른 날짜가 기간 안일 때 상품 칸 안내 */
+    blocked: (period: string, price: string) => `고르신 날짜는 ${period}이라 ${price}부터 예약할 수 있어요.`,
+    /** 담은 상품이 고른 날짜에 안 될 때 (상품·날짜 칸) */
+    conflict: (period: string, price: string, items: string) =>
+      `${period}에는 ${price}부터 예약할 수 있어요. 담으신 ${items}을 빼거나 다른 날짜를 골라 주세요.`,
+    /** 서버에서 다시 검사할 때 */
+    server: (period: string, price: string) => `${period}에는 ${price}부터 예약할 수 있어요. 상품을 다시 골라 주세요.`,
+  },
 };
 
 export type Messages = typeof ko;

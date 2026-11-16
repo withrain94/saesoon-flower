@@ -40,6 +40,7 @@ export default function ReservationPage() {
     submitFromChocolatePrompt,
     forEvent,
     setForEvent,
+    priceConflict,
     visibleIssue,
     summary,
     reservation,
@@ -80,6 +81,9 @@ export default function ReservationPage() {
         addOnQuantities={chocolateQuantities}
         onAddOnChange={setChocolateQuantity}
         showError={visibleIssue === "items"}
+        date={selection.date}
+        now={now}
+        priceConflict={reservation === null ? priceConflict : null}
       />
       {/* 초콜릿 추가 — 꽃을 고른 바로 아래 (2026-10-12 사용자 요청: 신청서 안쪽은 너무 아래라 잘 안 보임) */}
       {reservation === null && (
@@ -96,6 +100,7 @@ export default function ReservationPage() {
         time={selection.time}
         onChange={setSchedule}
         issue={visibleIssue === "date" || visibleIssue === "time" ? visibleIssue : null}
+        priceConflict={reservation === null ? priceConflict : null}
       />
       <SectionDivider />
       <ReserveSection

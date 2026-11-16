@@ -18,6 +18,7 @@ import {
 import { DEFAULT_LOCALE, isLocale, messages } from "@/i18n";
 import { hasFreeTopper } from "@/lib/events";
 import { getPaypalAmount } from "@/lib/payment";
+import { describeMinPricePeriod, getBlockedByMinPrice, getMinPricePeriodOn } from "@/lib/minPrice";
 import { isSlotBookable, type Now } from "@/lib/time";
 import { needsDeliveryAddress } from "@/lib/units";
 import type {
@@ -105,6 +106,16 @@ export function validateReservationRequest(input: unknown, now: Now, submittedAt
   const time = str(raw.time, 5);
   if (!DATE_KEY.test(date) || !SLOT.test(time)) return fail(validation.schedule);
   if (!isSlotBookable(time, date, now)) return fail(validation.scheduleClosed);
+  // 졸업시즌 등 — 받는 날짜가 기간 안이면 최소 금액보다 싼 꽃 상품은 안 됨
+  const minPricePeriod = getMinPricePeriodOn(date);
+  if (minPricePeriod && getBlockedByMinPrice(items, date).length > 0) {
+    return fail(
+      messages[locale].minPrice.server(
+        describeMinPricePeriod(minPricePeriod, messages[locale]),
+        messages[locale].format.price(minPricePeriod.minPrice),
+      ),
+    );
+  }
 
   // 받는 방법 — 배송이면 꽃다발·꽃바구니는 받는 분 성함·연락처·배송지 필수 (호접난은 식당 칸)
   const receiveMethod = oneOf(raw.receiveMethod, receiveMethods, receiveMethods[0]);

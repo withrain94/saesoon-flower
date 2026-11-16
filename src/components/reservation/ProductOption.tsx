@@ -15,6 +15,7 @@ export default function ProductOption({
   photosOpen,
   onTogglePhotos,
   featured = false,
+  priceNotice = null,
 }: {
   product: Product;
   quantity: number;
@@ -23,9 +24,12 @@ export default function ProductOption({
   onTogglePhotos: () => void;
   /** 사진을 위에서 이미 크게 보여준 상품 — 옆 작은 사진·사진 펼치기 없이 설명·수량만 */
   featured?: boolean;
+  /** 졸업시즌 등 최소 금액 안내 — blocked(고른 날짜에 안 됨)면 수량을 늘릴 수 없음 */
+  priceNotice?: { kind: "blocked" | "upcoming"; text: string } | null;
 }) {
   const t = useT();
   const selected = quantity > 0;
+  const blocked = priceNotice?.kind === "blocked";
   const copy = getProductCopy(product, t);
   const itemName = getItemName(product, t);
   const { images, cover } = usePhotos()(productSlot(product.id));
@@ -66,13 +70,24 @@ export default function ProductOption({
 
       <div className="mt-3 flex items-center justify-between gap-4">
         <p className="text-[17px] font-bold text-ink">{t.format.price(product.price)}</p>
-        <QuantityStepper value={quantity} max={MAX_QUANTITY} label={itemName} onChange={onQuantityChange} />
+        <QuantityStepper
+          value={quantity}
+          max={blocked ? quantity : MAX_QUANTITY}
+          label={itemName}
+          onChange={onQuantityChange}
+        />
       </div>
       <p
         className={`mt-2 text-right text-[15px] font-bold ${selected ? "text-brand-dark" : "text-faint"}`}
       >
         {t.format.price(product.price * quantity)}
       </p>
+      {priceNotice && (
+        <p className={`mt-1 text-[12.5px] leading-snug ${blocked ? "font-semibold text-danger" : "text-sub"}`}>
+          {blocked ? "⚠️ " : "🎓 "}
+          {priceNotice.text}
+        </p>
+      )}
 
       {!featured && photosOpen && <ProductPhotos product={product} itemName={itemName} />}
     </li>

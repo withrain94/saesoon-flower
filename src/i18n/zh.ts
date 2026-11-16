@@ -722,4 +722,14 @@ export const zh: Messages = {
     documentCompany: "请输入文件上的公司·机构名称。",
     documentBusinessNumber: "请确认文件用的营业执照号。",
   },
+
+  minPrice: {
+    names: { graduation: "毕业季" },
+    period: (name: string, sm: number, sd: number, em: number, ed: number) => `${name}（${sm}/${sd}~${em}/${ed}）`,
+    upcoming: (period: string, price: string) => `${period}取花的预约，${price}起可预约。`,
+    blocked: (period: string, price: string) => `您选择的日期在${period}内，${price}起可预约。`,
+    conflict: (period: string, price: string, items: string) =>
+      `${period}期间${price}起可预约。请移除${items}或选择其他日期。`,
+    server: (period: string, price: string) => `${period}期间${price}起可预约。请重新选择商品。`,
+  },
 };

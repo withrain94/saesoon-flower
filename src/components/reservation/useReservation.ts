@@ -5,6 +5,7 @@ import { buildReservationRequest } from "@/lib/reservationRequest";
 import {
   emptySelection,
   hasChocolate,
+  getMinPriceConflict,
   getSelectionIssue,
   isScheduleBookable,
   summarizeSelection,
@@ -231,6 +232,8 @@ export function useReservation() {
     submitFromChocolatePrompt,
     forEvent,
     setForEvent,
+    /** 담은 상품이 고른 날짜(졸업시즌 등)에 안 될 때 안내 — 제출 전에도 바로 보여줌 */
+    priceConflict: getMinPriceConflict(selection, t),
     /** 제출을 시도한 뒤에만 보여줄 미선택 항목 */
     visibleIssue: showErrors ? issue : null,
     summary: summarizeSelection(selection, t),

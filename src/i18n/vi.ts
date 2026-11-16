@@ -761,4 +761,14 @@ export const vi: Messages = {
     documentCompany: "Vui lòng nhập tên công ty · cơ quan cho chứng từ.",
     documentBusinessNumber: "Vui lòng kiểm tra mã số kinh doanh cho chứng từ.",
   },
+
+  minPrice: {
+    names: { graduation: "Mùa tốt nghiệp" },
+    period: (name: string, sm: number, sd: number, em: number, ed: number) => `${name} (${sd}/${sm}–${ed}/${em})`,
+    upcoming: (period: string, price: string) => `Đơn nhận hoa trong ${period} chỉ áp dụng từ ${price}.`,
+    blocked: (period: string, price: string) => `Ngày bạn chọn thuộc ${period}, chỉ đặt được sản phẩm từ ${price}.`,
+    conflict: (period: string, price: string, items: string) =>
+      `Trong ${period}, chỉ đặt được sản phẩm từ ${price}. Vui lòng bỏ ${items} hoặc chọn ngày khác.`,
+    server: (period: string, price: string) => `Trong ${period}, chỉ đặt được sản phẩm từ ${price}. Vui lòng chọn lại sản phẩm.`,
+  },
 };

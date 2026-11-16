@@ -8,7 +8,9 @@ import { shoppingBag } from "@/data/chocolates";
 import { getCategory, getNextCategory, productCategories, sortProductsByRank } from "@/data/products";
 import { siteLinksByCategory } from "@/data/shop";
 import { useT } from "@/hooks/useLocale";
+import { getMinPriceNoticeText } from "@/lib/minPrice";
 import { getCategoryNames, getItemName, getPopularNote } from "@/lib/selection";
+import type { Now } from "@/lib/time";
 import type { ProductCategoryId, Selection } from "@/types/reservation";
 import CategoryNotice from "./CategoryNotice";
 import ProductOption from "./ProductOption";
@@ -27,6 +29,9 @@ export default function ProductSection({
   addOnQuantities,
   onAddOnChange,
   showError,
+  date,
+  now,
+  priceConflict,
 }: {
   /** 지금 보고 있는 상품 종류 (첫 화면 입구 카드와 공유) */
   categoryId: ProductCategoryId;
@@ -38,6 +43,11 @@ export default function ProductSection({
   addOnQuantities: Record<string, number>;
   onAddOnChange: (addOnId: string, quantity: number) => void;
   showError: boolean;
+  /** 고른 받는 날짜 — 졸업시즌 등 최소 금액 안내용 */
+  date: string | null;
+  now: Now | null;
+  /** 담은 상품이 고른 날짜에 안 될 때 안내 (바로 보여줌) */
+  priceConflict: string | null;
 }) {
   const t = useT();
   const [sort, setSort] = useState<SortKey>("price");
@@ -62,6 +72,7 @@ export default function ProductSection({
       <SectionHeading icon={<GridIcon />}>{t.productSection.heading}</SectionHeading>
       <p className="mt-1.5 text-sm text-sub">{t.productSection.subtitle(getCategoryNames(t))}</p>
       {showError && <ErrorText>{t.productSection.error}</ErrorText>}
+      {priceConflict && <ErrorText>⚠️ {priceConflict}</ErrorText>}
 
       <div role="tablist" aria-label={t.productSection.tabsAria} className="mt-4 grid auto-cols-fr grid-flow-col gap-2">
         {productCategories.map((item) => {
@@ -154,6 +165,7 @@ export default function ProductSection({
               setOpenProductId((current) => (current === product.id ? null : product.id))
             }
             featured={product === featuredProduct}
+            priceNotice={getMinPriceNoticeText(product.price, date, now, t)}
           />
         ))}
       </ul>

@@ -38,7 +38,7 @@ src/
 ├─ server/                   서버 전용 (브라우저로 안 감) — env(환경변수 읽기 전부), supabase(DB·로그인 클라이언트), auth(requireAdmin), reservations(저장·목록·수정), notify(새 예약 텔레그램 알림), notion(날짜별 예약 표 올리기), documentDownload(서류 PDF 받기 — 연락처 또는 관리자 확인), reminders(내일 예약 목록 텔레그램) · documentPdf/(서류 PDF 그리기 + 한글 글꼴)
 │  └─ actions/               "use server" 함수 — reservation(고객 신청 검사·저장), lookup(손님 조회·취소 — 매번 예약자 이름+연락처 재확인), admin(로그인·로그아웃·상태·메모·노션 다시 올리기·안내 문자 보냄 표시)
 ├─ hooks/                    useNow(한국 시각), useLocale(언어·useT), useLookupT(조회 화면 문구 — i18n/lookup/), useStoreInfoT(첫 화면 매장 소개 문구 — i18n/storeInfo/), usePhotos(관리자가 바꾼 사진 반영), useActiveSection, useElementWidth
-├─ lib/                      순수 함수 (date, time, events, format, selection, units, payment, reservationRequest, reservationValidation, documents)
+├─ lib/                      순수 함수 (date, time, events, format, selection, units, payment, reservationRequest, reservationValidation, documents, minPrice — 졸업시즌 등 기간별 최소 금액은 data/reservationOptions의 minPricePeriods)
 │                            + 매장용 한국어 표시: adminFormat(관리자 화면 공용), reservationNotice(텔레그램 문구), reminderNotice(내일 예약 목록 문구), notionReservation(노션 표 칸) · supabaseUrl(Supabase 공개 설정) · reservationShare(완료 화면 카카오톡 공유 글, 카카오 키)
 ├─ i18n/                     화면 문구 — ko(기준)·en·ja·zh·vi. 모양이 ko와 다르면 타입 오류 / index.ts: 언어 목록·messages
 ├─ data/                     정적 데이터 (products, chocolates, shop — 검색 정보 searchInfo 포함, reservationOptions, events, guidePages) — 금액·사진·날짜·선택지 코드만, 문구는 i18n
