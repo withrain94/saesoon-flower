@@ -296,7 +296,7 @@ const orchid = defineCategory(
 );
 
 /**
- * 금액이 같은 상품이 여러 개인 종류(인형꽃다발 — 캐릭터마다 8만원)는 금액 대신 key로 id를 만든다.
+ * 금액이 같은 상품이 여러 개인 종류(치이카와 꽃다발 — 캐릭터마다 8만원)는 금액 대신 key로 id를 만든다.
  * 예: "doll-chiikawa"
  */
 function defineKeyedCategory<const C extends ProductCategoryId, const K extends string>(
@@ -314,7 +314,7 @@ function defineKeyedCategory<const C extends ProductCategoryId, const K extends 
   } satisfies ProductCategory;
 }
 
-/** 치이카와(먼작귀) 인형꽃다발 (2026-11-17 사용자 요청) — 사진은 매장 예시 1장씩 */
+/** 치이카와(먼작귀) 꽃다발 (2026-11-17 사용자 요청, 화면 이름은 "치이카와 꽃다발" — "인형꽃다발"에서 바꿈) — 사진은 매장 예시 1장씩 */
 const doll = defineKeyedCategory(
   {
     id: "doll",

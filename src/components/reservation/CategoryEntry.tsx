@@ -22,7 +22,7 @@ export default function CategoryEntry({
       <p className="text-[15px] font-bold text-ink">{t.categoryEntry.title}</p>
       <p className="mt-0.5 text-[13px] text-sub">{t.categoryEntry.subtitle}</p>
 
-      {/* 종류가 4개(인형꽃다발 추가, 2026-11-17)라 휴대폰에서도 보기 좋게 2×2 */}
+      {/* 종류가 4개(치이카와 꽃다발 추가, 2026-11-17)라 휴대폰에서도 보기 좋게 2×2 */}
       <div className="mt-3 grid grid-cols-2 gap-2">
         {productCategories.map((category) => {
           const count = countByCategory[category.id];

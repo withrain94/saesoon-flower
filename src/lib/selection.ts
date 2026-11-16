@@ -112,7 +112,7 @@ export function getProductCopy(product: Product, t: Messages = ko) {
   return t.products[product.id as ProductId];
 }
 
-/** "꽃다발 6만원" (언어별). 금액이 같은 상품이 여러 개인 종류는 상품 이름으로 — "치이카와 인형꽃다발 8만원" */
+/** "꽃다발 6만원" (언어별). 금액이 같은 상품이 여러 개인 종류는 상품 이름으로 — "치이카와 꽃다발 8만원" */
 export function getItemName(product: Product, t: Messages = ko) {
   const name = getProductCopy(product, t).name ?? t.categories[product.category].name;
   return t.format.itemName(name, t.format.priceShort(product.price));

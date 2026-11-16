@@ -46,7 +46,7 @@ const categories: Record<ProductCategoryId, CategoryCopy> = {
     },
   },
   doll: {
-    name: "인형꽃다발",
+    name: "치이카와 꽃다발",
     tagline: "치이카와 인형이 쏙 들어간 꽃다발",
     popularNote: "치이카와·하치와레·우사기 중 고르거나 3총사로 · 인형만 따로 담기도 돼요",
     notice: {
@@ -179,7 +179,7 @@ const products: Record<ProductId, ProductCopy> = {
   },
   "doll-chiikawa": {
     title: "[핑크] 치이카와의 분홍 고백",
-    name: "치이카와 인형꽃다발",
+    name: "치이카와 꽃다발",
     points: [
       "보기만 해도 마음이 몽글해지는 치이카와 인형이 꽃 사이에 쏙 들어가요.",
       "추천 포장: 핑크 — 수줍은 치이카와와 가장 잘 어울려요.",
@@ -188,7 +188,7 @@ const products: Record<ProductId, ProductCopy> = {
   },
   "doll-hachiware": {
     title: "[연핑크·블루] 하치와레의 하늘빛 응원",
-    name: "하치와레 인형꽃다발",
+    name: "하치와레 꽃다발",
     points: [
       "언제나 씩씩하고 다정한 하치와레가 응원의 마음을 전해요.",
       "추천 포장: 연핑크 꽃에 블루 포장 — 하치와레 귀 색과 꼭 맞아요.",
@@ -197,7 +197,7 @@ const products: Record<ProductId, ProductCopy> = {
   },
   "doll-usagi": {
     title: "[옐로] 우사기의 노랑 “우라!”",
-    name: "우사기 인형꽃다발",
+    name: "우사기 꽃다발",
     points: [
       "엉뚱하고 신나는 우사기가 받는 순간 웃음을 터뜨려요.",
       "추천 포장: 노랑 — 밝고 경쾌한 분위기로 만들어 드려요.",
@@ -206,7 +206,7 @@ const products: Record<ProductId, ProductCopy> = {
   },
   "doll-trio": {
     title: "[3총사] 먼작귀 총출동 꽃다발",
-    name: "먼작귀 3총사 인형꽃다발",
+    name: "먼작귀 3총사 꽃다발",
     points: [
       "치이카와·하치와레·우사기 세 친구가 한 꽃다발에 모두 모였어요.",
       "팬이라면 소리 지를 비주얼 — 사진 찍기 좋은 꽃다발이에요.",

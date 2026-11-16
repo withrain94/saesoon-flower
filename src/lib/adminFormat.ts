@@ -41,7 +41,7 @@ export function formatAdminDateTime(iso: string) {
   }).format(new Date(iso));
 }
 
-/** "꽃다발 6만원" — 금액이 같은 상품이 여러 개인 종류는 상품 이름으로 ("치이카와 인형꽃다발 8만원") */
+/** "꽃다발 6만원" — 금액이 같은 상품이 여러 개인 종류는 상품 이름으로 ("치이카와 꽃다발 8만원") */
 export function formatAdminItemName(item: { productId: string; category: ProductCategoryId; price: number }) {
   return getSavedItemName(item, ko);
 }

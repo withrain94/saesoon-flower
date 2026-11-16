@@ -81,7 +81,7 @@ export const zh: Messages = {
       },
     },
     doll: {
-      name: "玩偶花束",
+      name: "吉伊卡哇花束",
       tagline: "藏着吉伊卡哇玩偶的花束",
       popularNote: "可选吉伊、小八、乌萨奇或三人组 · 也可以单独加购玩偶",
       notice: {
@@ -178,7 +178,7 @@ export const zh: Messages = {
     },
     "doll-chiikawa": {
       title: "[粉色] 吉伊的粉色告白",
-      name: "吉伊玩偶花束",
+      name: "吉伊花束",
       points: [
         "让人心都融化的吉伊玩偶，藏在花丛之间。",
         "推荐包装：粉色 — 最适合害羞的吉伊。",
@@ -187,7 +187,7 @@ export const zh: Messages = {
     },
     "doll-hachiware": {
       title: "[浅粉·蓝] 小八的天蓝应援",
-      name: "小八玩偶花束",
+      name: "小八花束",
       points: [
         "永远积极又温柔的小八，替你送上加油的心意。",
         "推荐：浅粉色花配蓝色包装 — 和小八的耳朵颜色一样。",
@@ -196,7 +196,7 @@ export const zh: Messages = {
     },
     "doll-usagi": {
       title: "[黄色] 乌萨奇的黄色“呜啦！”",
-      name: "乌萨奇玩偶花束",
+      name: "乌萨奇花束",
       points: [
         "古灵精怪的乌萨奇，一收到就让人笑出声。",
         "推荐包装：黄色 — 明亮又活泼。",
@@ -205,7 +205,7 @@ export const zh: Messages = {
     },
     "doll-trio": {
       title: "[三人组] 吉伊卡哇三人组全员集合",
-      name: "吉伊卡哇三人组玩偶花束",
+      name: "吉伊卡哇三人组花束",
       points: [
         "吉伊、小八、乌萨奇三个好朋友聚在同一束花里。",
         "粉丝看了会尖叫的颜值 — 非常适合拍照。",

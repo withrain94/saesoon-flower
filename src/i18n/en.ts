@@ -87,7 +87,7 @@ export const en: Messages = {
       },
     },
     doll: {
-      name: "Plush bouquet",
+      name: "Chiikawa bouquet",
       tagline: "A bouquet with a Chiikawa plush tucked in",
       popularNote: "Choose Chiikawa, Hachiware or Usagi — or all three · plushies can also be added on their own",
       notice: {
@@ -223,7 +223,7 @@ export const en: Messages = {
     },
     "doll-chiikawa": {
       title: "[Pink] Chiikawa's Rosy Confession",
-      name: "Chiikawa plush bouquet",
+      name: "Chiikawa bouquet",
       points: [
         "A Chiikawa plush tucked in among the flowers — instantly heart-melting.",
         "Recommended wrapping: pink, the perfect match for shy Chiikawa.",
@@ -232,7 +232,7 @@ export const en: Messages = {
     },
     "doll-hachiware": {
       title: "[Light pink · Blue] Hachiware's Sky-Blue Cheer",
-      name: "Hachiware plush bouquet",
+      name: "Hachiware bouquet",
       points: [
         "Cheerful, kind-hearted Hachiware delivers your encouragement.",
         "Recommended: light pink flowers with blue wrapping — just like Hachiware's ears.",
@@ -241,7 +241,7 @@ export const en: Messages = {
     },
     "doll-usagi": {
       title: "[Yellow] Usagi's Yellow “Ura!”",
-      name: "Usagi plush bouquet",
+      name: "Usagi bouquet",
       points: [
         "Wild and wacky Usagi makes them burst out laughing the moment they see it.",
         "Recommended wrapping: yellow, bright and lively.",
@@ -250,7 +250,7 @@ export const en: Messages = {
     },
     "doll-trio": {
       title: "[Trio] All Three Chiikawa Friends",
-      name: "Chiikawa trio plush bouquet",
+      name: "Chiikawa trio bouquet",
       points: [
         "Chiikawa, Hachiware and Usagi, all together in one bouquet.",
         "A fan's dream — a bouquet made for photos.",

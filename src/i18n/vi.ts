@@ -79,7 +79,7 @@ export const vi: Messages = {
       },
     },
     doll: {
-      name: "Bó hoa thú bông",
+      name: "Bó hoa Chiikawa",
       tagline: "Bó hoa kèm thú bông Chiikawa",
       popularNote: "Chọn Chiikawa, Hachiware, Usagi hoặc cả bộ ba · cũng có thể thêm riêng thú bông",
       notice: {
@@ -215,7 +215,7 @@ export const vi: Messages = {
     },
     "doll-chiikawa": {
       title: "[Hồng] Lời tỏ tình hồng của Chiikawa",
-      name: "Bó hoa thú bông Chiikawa",
+      name: "Bó hoa Chiikawa",
       points: [
         "Thú bông Chiikawa nằm giữa những bông hoa — nhìn là tan chảy.",
         "Gói gợi ý: hồng — hợp nhất với Chiikawa nhút nhát.",
@@ -224,7 +224,7 @@ export const vi: Messages = {
     },
     "doll-hachiware": {
       title: "[Hồng nhạt · Xanh] Lời cổ vũ xanh trời của Hachiware",
-      name: "Bó hoa thú bông Hachiware",
+      name: "Bó hoa Hachiware",
       points: [
         "Hachiware luôn lạc quan và ấm áp, gửi trao lời cổ vũ của bạn.",
         "Gợi ý: hoa hồng nhạt với giấy gói xanh — đúng màu tai Hachiware.",
@@ -233,7 +233,7 @@ export const vi: Messages = {
     },
     "doll-usagi": {
       title: "[Vàng] Tiếng “Ura!” vàng rực của Usagi",
-      name: "Bó hoa thú bông Usagi",
+      name: "Bó hoa Usagi",
       points: [
         "Usagi tinh nghịch khiến người nhận bật cười ngay khi thấy.",
         "Gói gợi ý: vàng — tươi sáng và vui nhộn.",
@@ -242,7 +242,7 @@ export const vi: Messages = {
     },
     "doll-trio": {
       title: "[Bộ ba] Đủ cả ba bạn Chiikawa",
-      name: "Bó hoa thú bông bộ ba Chiikawa",
+      name: "Bó hoa bộ ba Chiikawa",
       points: [
         "Chiikawa, Hachiware và Usagi cùng tụ họp trong một bó hoa.",
         "Fan nào thấy cũng phải hét lên — bó hoa sinh ra để chụp ảnh.",

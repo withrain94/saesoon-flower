@@ -137,10 +137,10 @@ describe("초콜릿 추가 (data/chocolates · lib/selection · 서버 검사)",
   });
 });
 
-describe("치이카와 인형꽃다발·인형 단품 (2026-11-17)", () => {
+describe("치이카와 꽃다발·인형 단품 (2026-11-17)", () => {
   const dolls = allProducts.filter((product) => product.category === "doll");
 
-  it("인형꽃다발 4종 — 8만원 3개(캐릭터별) + 3총사 10만원, id가 겹치지 않음", () => {
+  it("치이카와 꽃다발 4종 — 8만원 3개(캐릭터별) + 3총사 10만원, id가 겹치지 않음", () => {
     assert.deepEqual(
       dolls.map((product) => [product.id, product.price]),
       [["doll-chiikawa", 80000], ["doll-hachiware", 80000], ["doll-usagi", 80000], ["doll-trio", 100000]],
@@ -149,11 +149,11 @@ describe("치이카와 인형꽃다발·인형 단품 (2026-11-17)", () => {
   });
 
   it("금액이 같아도 상품 이름으로 구분 (손님 화면·관리자·알림)", () => {
-    assert.equal(getItemName(dolls[0]), "치이카와 인형꽃다발 8만원");
+    assert.equal(getItemName(dolls[0]), "치이카와 꽃다발 8만원");
     assert.equal(getItemName(bouquet), "꽃다발 5만원");
     assert.equal(
       formatAdminItemName({ productId: "doll-hachiware", category: "doll", price: 80000 }),
-      "하치와레 인형꽃다발 8만원",
+      "하치와레 꽃다발 8만원",
     );
     assert.equal(formatAdminItemName({ productId: "bouquet-60000", category: "bouquet", price: 60000 }), "꽃다발 6만원");
   });
@@ -174,7 +174,7 @@ describe("치이카와 인형꽃다발·인형 단품 (2026-11-17)", () => {
     assert.equal(getAddOnIcon("ferrero-1"), "🍫");
   });
 
-  it("서버가 인형꽃다발·인형 단품을 받아 금액을 다시 계산", () => {
+  it("서버가 치이카와 꽃다발·인형 단품을 받아 금액을 다시 계산", () => {
     const base = request([{ chocolateId: "doll-chiikawa", price: 1, quantity: 1 }]);
     const trio = dolls[3];
     const result = validateReservationRequest(
@@ -192,7 +192,7 @@ describe("치이카와 인형꽃다발·인형 단품 (2026-11-17)", () => {
       assert.equal(result.request.chocolates[0].price, 8000);
       assert.equal(result.request.totalPrice, 108000);
       const document = buildBusinessDocument("quote", result.request);
-      assert.equal(document.rows[0].name, "먼작귀 3총사 인형꽃다발 10만원");
+      assert.equal(document.rows[0].name, "먼작귀 3총사 꽃다발 10만원");
       assert.equal(document.total, 108000);
     }
   });
