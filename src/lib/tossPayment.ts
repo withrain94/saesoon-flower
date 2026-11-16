@@ -22,6 +22,8 @@ export type TossCheckout = {
   orderId: string;
   orderName: string;
   amount: number;
+  /** 결제 금액 중 면세 금액 = 꽃(꽃다발·꽃바구니·호접난). 초콜릿·쇼핑백은 과세라 빠짐 — 복합과세 상점일 때만 토스가 적용 */
+  taxFreeAmount: number;
   customerName: string;
   /** 국내 휴대폰 번호(숫자만)일 때만 — 해외 번호면 null */
   customerMobilePhone: string | null;
@@ -86,6 +88,11 @@ export function canStartTossPayment(reservation: Pick<StoredReservation, "reques
   );
 }
 
+/** 면세 금액 — 꽃 상품(꽃다발·꽃바구니·호접난)은 면세, 초콜릿·쇼핑백은 과세 (2026-11-17 사용자 확인) */
+export function taxFreeAmountOf(request: Pick<ReservationRequest, "items">) {
+  return request.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+}
+
 export function buildTossCheckout(
   reservationId: string,
   request: ReservationRequest,
@@ -100,6 +107,7 @@ export function buildTossCheckout(
     orderId,
     orderName: tossOrderName(reservationId),
     amount: request.totalPrice,
+    taxFreeAmount: taxFreeAmountOf(request),
     customerName: request.ordererName.slice(0, 100),
     customerMobilePhone: tossCustomerPhone(request.ordererPhone),
     validHours: virtual ? virtualAccountValidHours(request, now) : null,

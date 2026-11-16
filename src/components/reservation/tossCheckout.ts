@@ -47,6 +47,7 @@ export async function openTossCheckout(checkout: TossCheckout) {
   const payment = toss.payment({ customerKey: ANONYMOUS });
   const common = {
     amount: { currency: "KRW", value: checkout.amount },
+    taxFreeAmount: checkout.taxFreeAmount,
     orderId: checkout.orderId,
     orderName: checkout.orderName,
     customerName: checkout.customerName,

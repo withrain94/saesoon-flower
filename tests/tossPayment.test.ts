@@ -151,6 +151,21 @@ describe("토스 결제 규칙 (lib/tossPayment)", () => {
     assert.equal(card.validHours, null);
   });
 
+  it("면세 금액: 꽃만 면세, 초콜릿·쇼핑백은 과세라 빠짐", () => {
+    assert.equal(buildTossCheckout(ID, request(), "k", "o", submittedAt).taxFreeAmount, bouquet.price);
+    const withAddOns = request({
+      items: [{ productId: bouquet.id, category: bouquet.category, price: bouquet.price, quantity: 2 }],
+      chocolates: [
+        { chocolateId: "ferrero-1", price: 3000, quantity: 2 },
+        { chocolateId: "shoppingbag", price: 2000, quantity: 1 },
+      ],
+      totalPrice: bouquet.price * 2 + 8000,
+    });
+    const checkout = buildTossCheckout(ID, withAddOns, "k", "o", submittedAt);
+    assert.equal(checkout.amount, bouquet.price * 2 + 8000);
+    assert.equal(checkout.taxFreeAmount, bouquet.price * 2);
+  });
+
   it("토스 Payment 응답 → 저장 기록 (가상계좌·현금영수증·영수증)", () => {
     const record = toTossPaymentRecord(
       {
