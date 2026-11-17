@@ -66,6 +66,15 @@ export async function listCompletionPhotos(reservationId: string): Promise<Compl
   });
 }
 
+/** 가장 최근에 올린 완성 사진 이름 (없으면 null) — 자동 사진 문자용 */
+export async function getLatestCompletionPhotoName(reservationId: string): Promise<string | null> {
+  const { data, error } = await createDatabaseClient()
+    .storage.from(BUCKET)
+    .list(`${reservationId}/mms`, { limit: 100, sortBy: { column: "name", order: "desc" } });
+  if (error || !data) return null;
+  return data.map((file) => file.name).find(isPhotoName) ?? null;
+}
+
 /** 사진 올리기 — 화면용·문자용 두 크기를 같은 이름으로 저장 */
 export async function uploadCompletionPhoto(reservationId: string, full: ArrayBuffer, mms: ArrayBuffer) {
   await ensureBucket();

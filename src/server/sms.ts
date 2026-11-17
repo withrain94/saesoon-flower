@@ -48,12 +48,18 @@ export async function sendSms({
   phoneNumber,
   text,
   photo,
+  waitForResult = true,
+  ttlSeconds = TTL_SECONDS,
 }: {
   /** 국제 형식 (+8210…) */
   phoneNumber: string;
   text: string;
   /** 사진 문자로 보낼 JPG (없으면 글자 문자) */
   photo?: ArrayBuffer | null;
+  /** false면 접수만 확인하고 바로 돌아옴 (자동 문자처럼 여러 통을 한 번에 보낼 때) */
+  waitForResult?: boolean;
+  /** 폰이 꺼져 있을 때 기다리는 시간(초) */
+  ttlSeconds?: number;
 }): Promise<SmsResult> {
   const env = getSmsGateEnv();
   if (!env) return { state: "notConfigured" };
@@ -61,7 +67,7 @@ export async function sendSms({
 
   const body = {
     phoneNumbers: [phoneNumber],
-    ttl: TTL_SECONDS,
+    ttl: ttlSeconds,
     withDeliveryReport: true,
     ...(photo
       ? {
@@ -86,7 +92,7 @@ export async function sendSms({
   }
 
   const immediate = toResult(created);
-  if (immediate || !created.id) return immediate ?? { state: "pending" };
+  if (immediate || !created.id || !waitForResult) return immediate ?? { state: "pending" };
 
   // 폰이 실제로 보냈는지 잠깐 기다려 봄
   const deadline = Date.now() + WAIT_MS;

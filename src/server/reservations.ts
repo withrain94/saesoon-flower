@@ -17,6 +17,7 @@ const TABLE = "reservations";
 type ReservationRow = {
   id: string;
   created_at: string;
+  updated_at?: string;
   status: string;
   admin_memo: string | null;
   request: ReservationRequest;
@@ -140,6 +141,27 @@ export async function listCashReceiptReservations(): Promise<StoredReservation[]
     .limit(10000);
   if (error) throw error;
   return (data as ReservationRow[]).map(fromRow);
+}
+
+/**
+ * 자동 문자(server/autoSms)가 살펴볼 예약 — 받는 날짜가 dateKeys인 예약(취소 제외) + canceledSince 뒤에 취소된 예약.
+ * 호출하는 쪽(app/cron)이 CRON_SECRET을 먼저 확인
+ */
+export async function listAutoSmsReservations(
+  dateKeys: string[],
+  canceledSince: Date,
+): Promise<(StoredReservation & { updatedAt: string })[]> {
+  const client = createDatabaseClient();
+  const [upcoming, canceled] = await Promise.all([
+    client.from(TABLE).select(COLUMNS).in("reservation_date", dateKeys).neq("status", "canceled").limit(1000),
+    client.from(TABLE).select(COLUMNS).eq("status", "canceled").gte("updated_at", canceledSince.toISOString()).limit(200),
+  ]);
+  if (upcoming.error) throw upcoming.error;
+  if (canceled.error) throw canceled.error;
+  return [...(upcoming.data as ReservationRow[]), ...(canceled.data as ReservationRow[])].map((row) => ({
+    ...fromRow(row),
+    updatedAt: row.updated_at ?? row.created_at,
+  }));
 }
 
 /**
