@@ -16,12 +16,12 @@ npm test       # 핵심 규칙 자동 검사 (tests/ — 예약 가능 시간·�
 
 ```
 src/
-├─ app/                      페이지 진입점 (page.tsx, layout.tsx, globals.css) · privacy/ 개인정보 처리방침 · guide/[slug] 구글 검색용 주제별 소개 페이지(내용 data/guidePages, 한국어) · robots.ts·sitemap.ts · check/ 손님 예약 조회·취소 · documents/pdf/ 서류 PDF 다운로드(POST) · cron/tomorrow-reminders/ 매일 저녁 내일 예약 목록(Vercel Cron, vercel.json)
+├─ app/                      페이지 진입점 (page.tsx, layout.tsx, globals.css) · privacy/ 개인정보 처리방침 · guide/[slug] 구글 검색용 주제별 소개 페이지(내용 data/guidePages, 한국어) · photo/[id] 손님이 문자 링크로 보는 완성 사진 · robots.ts·sitemap.ts · check/ 손님 예약 조회·취소 · documents/pdf/ 서류 PDF 다운로드(POST) · cron/tomorrow-reminders/ 매일 저녁 내일 예약 목록(Vercel Cron, vercel.json)
 │  └─ admin/                 관리자 페이지 — login / 목록(page.tsx, ?status= 필터) / [id] 상세 / cash-receipts 현금영수증 신청 내역(접수 달별, ?month=, 발급 완료 체크 — lib/cashReceipts) / photos 사진 관리(올리기·지우기·순서·대표 — lib/sitePhotos)
 ├─ proxy.ts                  /admin 요청마다 로그인 세션 갱신 (Next 16: middleware → proxy)
 ├─ components/
 │  ├─ lookup/                손님 예약 조회·취소 — ReservationLookup(예약자 이름+연락처), LookupResultList(여러 건이면 목록), LookupReservationDetails, LookupCancelPanel(입금 전 취소 / 입금 후 환불 계좌 받고 취소 요청)
-│  ├─ admin/                 관리자 화면 — CancelRequestCard(손님 취소 요청·환불 계좌), AdminHeader, LoginForm, StatusFilterTabs, StatusBadge, ReservationListItem, ReservationDetail, StatusChanger, AdminMemoForm, AdminDocuments, NotionSyncButton, ReminderToggle(안내 문자 보냄 표시), PhotoSlotEditor(사진 자리 하나 고치기)
+│  ├─ admin/                 관리자 화면 — CancelRequestCard(손님 취소 요청·환불 계좌), AdminHeader, LoginForm, StatusFilterTabs, StatusBadge, ReservationListItem, ReservationDetail, StatusChanger, AdminMemoForm, AdminDocuments, NotionSyncButton, ReminderToggle(안내 문자 보냄 표시), PhotoSlotEditor(사진 자리 하나 고치기), CompletionPanel·CompletionPhotoList·OrdererSmsSender(완성 사진 찍기·고르기 + 지금 문자 보내기)
 │  ├─ layout/                StoreHeader(예약 조회 버튼 — /check에선 숨김 + 소개 사이트 + LanguageSwitcher 🌐), Hero([꽃 예약하기]·[매장 위치] 버튼), StoreQuickInfo(사진 아래 매장 한 줄 요약), StoreInfoSections(신청서 아래 손님 후기·매장 안내·무료배송·자주 묻는 질문 — 문구 i18n/storeInfo/, 연락처 data/shop의 storeContact), SiteFooter — 매장 공통 화면
 │  ├─ reservation/           예약 기능
 │  │  ├─ ReservationPage.tsx   섹션 조립만 담당
@@ -35,7 +35,7 @@ src/
 │  │  ├─ RecipientMessageField / UnitDetailCard / MessageEditor   상품 1개마다 받는 분·메시지 ("앞과 같음")
 │  │  └─ ReserveSection / OrdererForm / PaymentMethodField / BankAccountCard / DocumentRequestField / DocumentsPanel / BusinessDocumentView / ColorField / ReceiveMethodField(픽업/배송 + 배송비 안내) / OrchidDeliveryField(배송이면 호접난 식당) / PrivacyConsentField / OrderSummary / ReservationComplete / ShareReservationButtons(카카오톡으로 나에게 보내기·복사) / SubmitBar
 │  └─ ui/                    Field, Checkbox, QuantityStepper, SectionHeading, ErrorText, icons … 재사용 부품
-├─ server/                   서버 전용 (브라우저로 안 감) — env(환경변수 읽기 전부), supabase(DB·로그인 클라이언트), auth(requireAdmin), reservations(저장·목록·수정), notify(새 예약 텔레그램 알림), notion(날짜별 예약 표 올리기), documentDownload(서류 PDF 받기 — 연락처 또는 관리자 확인), reminders(내일 예약 목록 텔레그램) · documentPdf/(서류 PDF 그리기 + 한글 글꼴)
+├─ server/                   서버 전용 (브라우저로 안 감) — env(환경변수 읽기 전부), supabase(DB·로그인 클라이언트), auth(requireAdmin), reservations(저장·목록·수정), notify(새 예약 텔레그램 알림), notion(날짜별 예약 표 올리기), documentDownload(서류 PDF 받기 — 연락처 또는 관리자 확인), reminders(내일 예약 목록 텔레그램), completionPhotos(완성 사진 비공개 보관함), sms(SMS Gate로 문자 발송) · documentPdf/(서류 PDF 그리기 + 한글 글꼴)
 │  └─ actions/               "use server" 함수 — reservation(고객 신청 검사·저장), lookup(손님 조회·취소 — 매번 예약자 이름+연락처 재확인), admin(로그인·로그아웃·상태·메모·노션 다시 올리기·안내 문자 보냄 표시)
 ├─ hooks/                    useNow(한국 시각), useLocale(언어·useT), useLookupT(조회 화면 문구 — i18n/lookup/), useStoreInfoT(첫 화면 매장 소개 문구 — i18n/storeInfo/), usePhotos(관리자가 바꾼 사진 반영), useActiveSection, useElementWidth
 ├─ lib/                      순수 함수 (date, time, events, format, selection, units, payment, reservationRequest, reservationValidation, documents, minPrice — 졸업시즌 등 기간별 최소 금액은 data/reservationOptions의 minPricePeriods)

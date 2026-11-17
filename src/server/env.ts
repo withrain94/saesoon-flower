@@ -69,3 +69,14 @@ export function getAdminEmails() {
     .map((email) => email.trim().toLowerCase())
     .filter(Boolean);
 }
+
+/**
+ * 예약자에게 문자 보내기 — 매장 안드로이드 폰의 SMS Gate 앱(https://sms-gate.app, 무료) 클라우드 접속 정보.
+ * 앱 화면 "Cloud server"의 사용자 이름·비밀번호. 둘 중 하나라도 없으면 자동 발송 끔(휴대폰 문자 앱 열기만 됨)
+ */
+export function getSmsGateEnv() {
+  const username = process.env.SMS_GATE_USERNAME?.trim();
+  const password = process.env.SMS_GATE_PASSWORD?.trim();
+  if (!username || !password) return null;
+  return { username, password };
+}
