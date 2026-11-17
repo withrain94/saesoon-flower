@@ -65,6 +65,23 @@ const categories: Record<ProductCategoryId, CategoryCopy> = {
       ],
     },
   },
+  xmastree: {
+    name: "크리스마스 식물트리",
+    tagline: "12월 28일까지 · 연말 분위기 식물 선물",
+    popularNote: "아라우카리아 미니트리 · 레몬사이프러스 파우치 · 포인세티아",
+    notice: {
+      summary: [
+        "12월 28일까지 받는 예약만 가능해요. (12월 29일부터는 이 메뉴가 사라져요)",
+        "살아있는 식물이라 모양·크기·잎 색이 사진과 조금 다를 수 있어요.",
+      ],
+      full: [
+        "작은 트리 하나로 시작하는 크리스마스!",
+        "올겨울, 새순꽃집에서 준비한 특별한 크리스마스 식물 선물을 소개해요.",
+        "새빨간 크리스마스 장식과 사랑스러운 미니트리, 산타벨트 리본을 두른 식물 파우치까지!",
+        "작은 공간에도 크리스마스 분위기를 가득 채울 수 있도록 식물의 모양부터 화분, 장식 하나하나 예쁘게 준비했어요.",
+      ],
+    },
+  },
 };
 
 const products: Record<ProductId, ProductCopy> = {
@@ -266,6 +283,38 @@ const products: Record<ProductId, ProductCopy> = {
       "몽글몽글한 핑크 장미 실바핑크 50송이에 페레로로쉐 10개를 더했어요.",
       "한 아름 가득한 핑크빛으로 오래 기억에 남는 꽃다발이에요.",
       "프러포즈·기념일처럼 특별한 날에 좋아요.",
+    ],
+  },
+  "xmastree-araucaria": {
+    title: "아라우카리아 미니트리",
+    name: "아라우카리아 미니트리",
+    points: [
+      "층층이 예쁜 초록 가지에 크리스마스 장식을 더했어요.",
+      "빨간 줄무늬 화이트 토분으로 클래식한 크리스마스 분위기를 완성했어요.",
+    ],
+  },
+  "xmastree-cypress": {
+    title: "레몬사이프러스 파우치",
+    name: "레몬사이프러스 파우치",
+    points: [
+      "싱그러운 연둣빛 잎과 은은한 레몬향!",
+      "산타벨트 리본으로 귀엽게 포장한 크리스마스 식물 선물이에요.",
+    ],
+  },
+  "xmastree-poinsettia-mini": {
+    title: "포인세티아 미니(10cm~15cm)",
+    name: "포인세티아 미니",
+    points: [
+      "크리스마스를 대표하는 빨간 포인세티아를 손에 쏙 들어오는 미니 사이즈로 준비했어요.",
+      "초록 포장과 메리 크리스마스 픽을 더해 가볍게 마음을 전하기 좋아요.",
+    ],
+  },
+  "xmastree-poinsettia-gift": {
+    title: "포인세티아 선물용(15cm~20cm)",
+    name: "포인세티아 선물용",
+    points: [
+      "풍성하게 핀 빨간 잎이 연말 분위기를 가득 채워 줘요.",
+      "초록 포장에 빨간 리본과 크리스마스 픽을 더한 선물용 사이즈예요.",
     ],
   },
 };
@@ -873,6 +922,17 @@ export const ko = {
       `${period}에는 ${price}부터 예약할 수 있어요. 담으신 ${items}을 빼거나 다른 날짜를 골라 주세요.`,
     /** 서버에서 다시 검사할 때 */
     server: (period: string, price: string) => `${period}에는 ${price}부터 예약할 수 있어요. 상품을 다시 골라 주세요.`,
+  },
+  /** 기간 한정 종류(크리스마스 식물트리 등 — data/products의 lastDate) */
+  salePeriod: {
+    /** 고른 날짜가 판매 기간 밖일 때 상품 칸 안내 */
+    blocked: (month: number, day: number) => `${month}월 ${day}일까지 받는 예약만 가능해요.`,
+    /** 담은 상품이 고른 날짜에 안 될 때 (상품·날짜 칸) */
+    conflict: (items: string, month: number, day: number) =>
+      `${items}은(는) ${month}월 ${day}일까지 받는 예약만 가능해요. 빼거나 그 전 날짜를 골라 주세요.`,
+    /** 서버에서 다시 검사할 때 */
+    server: (name: string, month: number, day: number) =>
+      `${name}은(는) ${month}월 ${day}일까지 받는 예약만 가능해요. 날짜나 상품을 다시 골라 주세요.`,
   },
 };
 

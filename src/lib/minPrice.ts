@@ -1,6 +1,8 @@
+import { getCategory } from "@/data/products";
 import { minPricePeriods, type MinPricePeriod } from "@/data/reservationOptions";
 import { ko, type Messages } from "@/i18n/ko";
 import type { Now } from "@/lib/time";
+import type { ProductCategoryId } from "@/types/reservation";
 
 /**
  * 바쁜 시기(졸업시즌 등) 최소 금액 규칙 — 화면(상품·날짜)과 서버 검사가 같이 씀.
@@ -19,8 +21,13 @@ export function isPriceBookableOn(price: number, dateKey: string) {
 }
 
 /** 담은 상품 중 그 날짜에 안 되는 것 */
-export function getBlockedByMinPrice<T extends { price: number }>(items: T[], dateKey: string | null) {
-  return dateKey === null ? [] : items.filter((item) => !isPriceBookableOn(item.price, dateKey));
+/** 담은 상품 중 그 날짜에 안 되는 것 — 크리스마스 식물트리처럼 빠지는 종류(minPriceExempt)는 제외 */
+export function getBlockedByMinPrice<T extends { price: number; category: ProductCategoryId }>(
+  items: T[],
+  dateKey: string | null,
+) {
+  if (dateKey === null) return [];
+  return items.filter((item) => !getCategory(item.category).minPriceExempt && !isPriceBookableOn(item.price, dateKey));
 }
 
 /**

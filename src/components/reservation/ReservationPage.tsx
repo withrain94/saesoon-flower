@@ -68,7 +68,7 @@ export default function ReservationPage() {
     <>
       <SpecialEventBanner now={now} onBook={bookEvent} />
       {reservation === null && <BookingSteps />}
-      <CategoryEntry countByCategory={summary.countByCategory} onSelect={openCategory} />
+      <CategoryEntry countByCategory={summary.countByCategory} onSelect={openCategory} now={now} />
       <NaverOnlyBookingLinks />
       <NaverBookingBanner />
       <SectionTabs />

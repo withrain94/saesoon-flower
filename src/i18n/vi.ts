@@ -98,6 +98,23 @@ export const vi: Messages = {
         ],
       },
     },
+    xmastree: {
+      name: "Cây Giáng sinh",
+      tagline: "Đến 28/12 · quà cây xanh mùa lễ",
+      popularNote: "Cây Araucaria mini · Túi trắc bách diệp chanh · Trạng nguyên",
+      notice: {
+        summary: [
+          "Chỉ nhận đơn có ngày nhận đến 28/12. (Từ 29/12 mục này sẽ không còn)",
+          "Là cây sống nên hình dáng, kích thước và màu lá có thể hơi khác ảnh.",
+        ],
+        full: [
+          "Bắt đầu Giáng sinh với một cây thông nhỏ!",
+          "Mùa đông này, tiệm hoa Saesoon chuẩn bị những món quà cây xanh Giáng sinh đặc biệt.",
+          "Đồ trang trí Giáng sinh đỏ rực, cây thông mini đáng yêu và túi cây quấn ruy băng thắt lưng ông già Noel!",
+          "Chúng tôi chăm chút từ dáng cây, chậu đến từng món trang trí để cả không gian nhỏ cũng ngập tràn không khí Giáng sinh.",
+        ],
+      },
+    },
   },
 
   products: {
@@ -302,6 +319,38 @@ export const vi: Messages = {
         "50 bông hồng Silva Pink bồng bềnh kèm 10 Ferrero Rocher.",
         "Một ôm hồng ngập tràn, đáng nhớ thật lâu.",
         "Hợp cho cầu hôn, kỷ niệm và những ngày đặc biệt.",
+      ],
+    },
+    "xmastree-araucaria": {
+      title: "Cây Araucaria mini",
+      name: "Cây Araucaria mini",
+      points: [
+        "Cành xanh xếp tầng xinh xắn kèm đồ trang trí Giáng sinh.",
+        "Chậu trắng sọc đỏ mang không khí Giáng sinh cổ điển.",
+      ],
+    },
+    "xmastree-cypress": {
+      title: "Túi trắc bách diệp chanh",
+      name: "Túi trắc bách diệp chanh",
+      points: [
+        "Lá xanh non tươi mát và hương chanh dịu nhẹ!",
+        "Món quà cây Giáng sinh gói ruy băng thắt lưng ông già Noel đáng yêu.",
+      ],
+    },
+    "xmastree-poinsettia-mini": {
+      title: "Trạng nguyên mini (10–15cm)",
+      name: "Trạng nguyên mini",
+      points: [
+        "Cây trạng nguyên đỏ đặc trưng Giáng sinh, cỡ mini vừa lòng bàn tay.",
+        "Gói giấy xanh kèm thẻ Merry Christmas, món quà nhỏ dễ thương.",
+      ],
+    },
+    "xmastree-poinsettia-gift": {
+      title: "Trạng nguyên quà tặng (15–20cm)",
+      name: "Trạng nguyên quà tặng",
+      points: [
+        "Lá đỏ sum suê mang không khí cuối năm ngập tràn.",
+        "Cỡ quà tặng với giấy gói xanh, ruy băng đỏ và thẻ Giáng sinh.",
       ],
     },
   },
@@ -828,5 +877,12 @@ export const vi: Messages = {
     conflict: (period: string, price: string, items: string) =>
       `Trong ${period}, chỉ đặt được sản phẩm từ ${price}. Vui lòng bỏ ${items} hoặc chọn ngày khác.`,
     server: (period: string, price: string) => `Trong ${period}, chỉ đặt được sản phẩm từ ${price}. Vui lòng chọn lại sản phẩm.`,
+  },
+  salePeriod: {
+    blocked: (month: number, day: number) => `Chỉ nhận đơn có ngày nhận đến ${day}/${month}.`,
+    conflict: (items: string, month: number, day: number) =>
+      `${items} chỉ nhận đến ngày ${day}/${month}. Vui lòng bỏ ra hoặc chọn ngày sớm hơn.`,
+    server: (name: string, month: number, day: number) =>
+      `${name} chỉ nhận đến ngày ${day}/${month}. Vui lòng chọn lại ngày hoặc sản phẩm.`,
   },
 };

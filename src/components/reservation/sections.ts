@@ -32,6 +32,7 @@ export const issueSection: Record<SelectionIssue, SectionId> = {
   items: SECTION.items,
   date: SECTION.dateTime,
   price: SECTION.items,
+  period: SECTION.items,
   time: SECTION.dateTime,
 };
 

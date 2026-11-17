@@ -106,6 +106,23 @@ export const en: Messages = {
         ],
       },
     },
+    xmastree: {
+      name: "Christmas plants",
+      tagline: "Until Dec 28 · festive plant gifts",
+      popularNote: "Araucaria mini tree · Lemon cypress pouch · Poinsettia",
+      notice: {
+        summary: [
+          "Only for pickup/delivery dates up to Dec 28. (This menu disappears from Dec 29.)",
+          "These are living plants, so shape, size and leaf color may differ slightly from the photos.",
+        ],
+        full: [
+          "Start Christmas with one little tree!",
+          "This winter, Saesoon has prepared special Christmas plant gifts.",
+          "Bright red Christmas decorations, a lovely mini tree, and a plant pouch wrapped in a Santa-belt ribbon!",
+          "We carefully chose every plant, pot and decoration so even a small space can feel full of Christmas.",
+        ],
+      },
+    },
   },
 
   products: {
@@ -310,6 +327,38 @@ export const en: Messages = {
         "50 fluffy Silva Pink roses with 10 Ferrero Rocher added.",
         "An armful of pink that will be remembered for a long time.",
         "Perfect for proposals, anniversaries and other special days.",
+      ],
+    },
+    "xmastree-araucaria": {
+      title: "Araucaria mini tree",
+      name: "Araucaria mini tree",
+      points: [
+        "Pretty tiered green branches with Christmas decorations.",
+        "A white pot with red stripes for a classic Christmas look.",
+      ],
+    },
+    "xmastree-cypress": {
+      title: "Lemon cypress pouch",
+      name: "Lemon cypress pouch",
+      points: [
+        "Fresh lime-green leaves with a gentle lemon scent!",
+        "A Christmas plant gift cutely wrapped with a Santa-belt ribbon.",
+      ],
+    },
+    "xmastree-poinsettia-mini": {
+      title: "Poinsettia mini (10–15cm)",
+      name: "Poinsettia mini",
+      points: [
+        "The classic red Christmas poinsettia in a mini size that fits in your hand.",
+        "Green wrapping and a Merry Christmas pick — an easy little gift.",
+      ],
+    },
+    "xmastree-poinsettia-gift": {
+      title: "Poinsettia gift size (15–20cm)",
+      name: "Poinsettia gift size",
+      points: [
+        "Full red leaves that fill the room with holiday mood.",
+        "Gift size with green wrapping, a red ribbon and a Christmas pick.",
       ],
     },
   },
@@ -837,5 +886,12 @@ export const en: Messages = {
     conflict: (period: string, price: string, items: string) =>
       `During ${period}, items start from ${price}. Please remove ${items} or choose another date.`,
     server: (period: string, price: string) => `During ${period}, items start from ${price}. Please choose your items again.`,
+  },
+  salePeriod: {
+    blocked: (month: number, day: number) => `Only for pickup/delivery dates up to ${month}/${day}.`,
+    conflict: (items: string, month: number, day: number) =>
+      `${items}: only for dates up to ${month}/${day}. Please remove it or choose an earlier date.`,
+    server: (name: string, month: number, day: number) =>
+      `${name}: only for dates up to ${month}/${day}. Please choose the date or items again.`,
   },
 };

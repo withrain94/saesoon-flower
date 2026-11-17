@@ -29,6 +29,7 @@ export const messageOptionsByCategory: Record<ProductCategoryId, MessageType[]> 
   basket: ["none", "ribbon", "blackboard"],
   orchid: ["blackboard"],
   doll: ["none", "memo"],
+  xmastree: ["none", "memo"],
 };
 
 /** 블랙보드 "직접 입력" 선택값 */

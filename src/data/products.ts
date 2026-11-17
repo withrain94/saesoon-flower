@@ -27,6 +27,13 @@ export type ProductCategory = {
   /** 가장 낮은 금액 (원) */
   startingPrice: number;
   products: Product[];
+  /**
+   * 기간 한정 종류 — 받는 날이 이 날짜(포함)까지인 예약만 되고, 이 날짜가 지나면(한국 시각) 탭·입구 카드가 사라짐.
+   * 규칙은 lib/salePeriod.ts. 없으면 연중 판매
+   */
+  lastDate?: string;
+  /** 졸업시즌 등 최소 금액 규칙(minPricePeriods)에서 빠지는 종류 */
+  minPriceExempt?: boolean;
 };
 
 type CategoryInfo<C extends ProductCategoryId> = Omit<ProductCategory, "id" | "products" | "startingPrice"> & {
@@ -341,10 +348,31 @@ const doll = defineKeyedCategory(
   ],
 );
 
-export const productCategories: ProductCategory[] = [bouquet, basket, orchid, doll];
+/**
+ * 탭 "크리스마스 식물트리" (2026-11-17 사용자 요청) — 네이버 예약과 같은 상품·금액.
+ * 받는 날 12/28까지만, 12/29부터 탭이 사라짐. 졸업시즌 6만원 규칙에서 빠짐(사용자 결정). 사진은 사용자가 준 원본 1장씩
+ */
+const xmastree = defineKeyedCategory(
+  {
+    id: "xmastree",
+    thumbnail: "/flowers/xmastree-araucaria-01.jpg",
+    colorChoice: false,
+    featured: false,
+    lastDate: "2026-12-28",
+    minPriceExempt: true,
+  },
+  [
+    { key: "araucaria", price: 35000, cover: 0, images: photos(["xmastree-araucaria-01.jpg"]) },
+    { key: "cypress", price: 35000, cover: 0, images: photos(["xmastree-cypress-01.jpg"]) },
+    { key: "poinsettia-mini", price: 12000, cover: 0, images: photos(["xmastree-poinsettia-mini-01.jpg"]) },
+    { key: "poinsettia-gift", price: 25000, cover: 0, images: photos(["xmastree-poinsettia-gift-01.jpg"]) },
+  ],
+);
+
+export const productCategories: ProductCategory[] = [bouquet, basket, orchid, doll, xmastree];
 
 /** 모든 상품 id — "bouquet-50000" | ... | "doll-chiikawa" (언어 파일의 products 키) */
-export type ProductId = (typeof bouquet | typeof basket | typeof orchid | typeof doll)["products"][number]["id"];
+export type ProductId = (typeof bouquet | typeof basket | typeof orchid | typeof doll | typeof xmastree)["products"][number]["id"];
 
 
 export const allProducts: Product[] = productCategories.flatMap((category) => category.products);

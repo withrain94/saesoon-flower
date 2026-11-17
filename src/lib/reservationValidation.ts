@@ -1,6 +1,6 @@
 import { getChocolate, MAX_CHOCOLATE_QUANTITY } from "@/data/chocolates";
 import { getEventOn } from "@/data/events";
-import { allProducts } from "@/data/products";
+import { allProducts, getCategory } from "@/data/products";
 import {
   BUSINESS_NUMBER_PATTERN,
   cardPayerTypes,
@@ -19,6 +19,7 @@ import { DEFAULT_LOCALE, isLocale, messages } from "@/i18n";
 import { hasFreeTopper } from "@/lib/events";
 import { getPaypalAmount } from "@/lib/payment";
 import { describeMinPricePeriod, getBlockedByMinPrice, getMinPricePeriodOn } from "@/lib/minPrice";
+import { getOutOfSalePeriod, monthDayOf } from "@/lib/salePeriod";
 import { isSlotBookable, type Now } from "@/lib/time";
 import { needsDeliveryAddress } from "@/lib/units";
 import type {
@@ -106,6 +107,17 @@ export function validateReservationRequest(input: unknown, now: Now, submittedAt
   const time = str(raw.time, 5);
   if (!DATE_KEY.test(date) || !SLOT.test(time)) return fail(validation.schedule);
   if (!isSlotBookable(time, date, now)) return fail(validation.scheduleClosed);
+  // 기간 한정 종류(크리스마스 식물트리 등) — 받는 날이 마지막 날 이후면 안 됨
+  const outOfPeriod = getOutOfSalePeriod(items, date)[0];
+  const outOfPeriodLast = outOfPeriod ? getCategory(outOfPeriod.category).lastDate : undefined;
+  if (outOfPeriod && outOfPeriodLast) {
+    return fail(
+      messages[locale].salePeriod.server(
+        messages[locale].categories[outOfPeriod.category].name,
+        ...monthDayOf(outOfPeriodLast),
+      ),
+    );
+  }
   // 졸업시즌 등 — 받는 날짜가 기간 안이면 최소 금액보다 싼 꽃 상품은 안 됨
   const minPricePeriod = getMinPricePeriodOn(date);
   if (minPricePeriod && getBlockedByMinPrice(items, date).length > 0) {

@@ -100,6 +100,23 @@ export const zh: Messages = {
         ],
       },
     },
+    xmastree: {
+      name: "圣诞植物树",
+      tagline: "12月28日前 · 节日植物礼物",
+      popularNote: "南洋杉迷你圣诞树 · 柠檬柏布袋 · 一品红",
+      notice: {
+        summary: [
+          "仅限12月28日前取花/送达的预约。（12月29日起此菜单将消失）",
+          "活体植物的形状、大小和叶色可能与照片略有不同。",
+        ],
+        full: [
+          "从一棵小树开始的圣诞节！",
+          "今年冬天，新笋花店为您准备了特别的圣诞植物礼物。",
+          "鲜红的圣诞装饰、可爱的迷你树，还有系着圣诞老人腰带缎带的植物布袋！",
+          "为了让小小的空间也充满圣诞气氛，我们从植物造型到花盆、装饰都用心挑选。",
+        ],
+      },
+    },
   },
 
   products: {
@@ -265,6 +282,38 @@ export const zh: Messages = {
         "50朵蓬松的 Silva Pink 粉色玫瑰，再加上10个费列罗。",
         "满怀粉色，令人久久难忘。",
         "适合求婚、纪念日等特别的日子。",
+      ],
+    },
+    "xmastree-araucaria": {
+      title: "南洋杉迷你圣诞树",
+      name: "南洋杉迷你圣诞树",
+      points: [
+        "层层分明的绿色枝叶，加上圣诞装饰。",
+        "红色条纹的白色花盆，营造经典圣诞氛围。",
+      ],
+    },
+    "xmastree-cypress": {
+      title: "柠檬柏布袋",
+      name: "柠檬柏布袋",
+      points: [
+        "清新的嫩绿叶子和淡淡的柠檬香！",
+        "用圣诞老人腰带缎带可爱包装的圣诞植物礼物。",
+      ],
+    },
+    "xmastree-poinsettia-mini": {
+      title: "一品红 迷你（10~15cm）",
+      name: "一品红 迷你",
+      points: [
+        "代表圣诞节的红色一品红，手掌大小的迷你款。",
+        "绿色包装加上圣诞快乐插卡，适合轻松表达心意。",
+      ],
+    },
+    "xmastree-poinsettia-gift": {
+      title: "一品红 礼品款（15~20cm）",
+      name: "一品红 礼品款",
+      points: [
+        "饱满的红色叶片让节日气氛满满。",
+        "绿色包装配红色缎带和圣诞插卡的礼品尺寸。",
       ],
     },
   },
@@ -789,5 +838,12 @@ export const zh: Messages = {
     conflict: (period: string, price: string, items: string) =>
       `${period}期间${price}起可预约。请移除${items}或选择其他日期。`,
     server: (period: string, price: string) => `${period}期间${price}起可预约。请重新选择商品。`,
+  },
+  salePeriod: {
+    blocked: (month: number, day: number) => `仅限${month}月${day}日前取花/送达的预约。`,
+    conflict: (items: string, month: number, day: number) =>
+      `${items}仅限${month}月${day}日前取花/送达。请移除或选择更早的日期。`,
+    server: (name: string, month: number, day: number) =>
+      `${name}仅限${month}月${day}日前取花/送达。请重新选择日期或商品。`,
   },
 };

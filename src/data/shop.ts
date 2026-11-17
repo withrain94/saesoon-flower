@@ -64,13 +64,14 @@ export const documentPdfPath = "/documents/pdf";
 /** 새순 소개 사이트 — 예약 탭에 없는 사진·설명을 더 보고 싶은 분께 연결 */
 export const siteUrl = "https://saesoon-jeonju.withrain94.chatgpt.site";
 
-/** 상품 종류별 사이트 안의 해당 소개 위치 */
-export const siteLinksByCategory: Record<ProductCategoryId, string> = {
+/** 상품 종류별 사이트 안의 해당 소개 위치 — 없는 종류는 "사진·설명 더 보기" 링크를 숨김 */
+export const siteLinksByCategory: Partial<Record<ProductCategoryId, string>> = {
   bouquet: `${siteUrl}/#product-01`,
   basket: `${siteUrl}/#product-02`,
   orchid: `${siteUrl}/#meeting`,
   // 치이카와 꽃다발은 소개 사이트에 따로 없어 꽃다발 소개로
   doll: `${siteUrl}/#product-01`,
+  // 크리스마스 식물트리는 소개 사이트에 없어 링크 없음
 };
 
 /** 상품 종류별 네이버 예약 페이지 — 치이카와 꽃다발은 네이버 예약에 없음(이 페이지에서만) */

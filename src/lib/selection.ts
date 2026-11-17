@@ -14,6 +14,7 @@ import { ko, type Messages } from "@/i18n/ko";
 import { formatDateLabel } from "@/lib/date";
 import { getEventCopy } from "@/lib/events";
 import { describeMinPricePeriod, getBlockedByMinPrice, getMinPricePeriodOn } from "@/lib/minPrice";
+import { getOutOfSalePeriod, monthDayOf } from "@/lib/salePeriod";
 import { formatTimeLabel, isSlotBookable, type Now } from "@/lib/time";
 import type { ProductCategoryId, Selection, SelectionIssue } from "@/types/reservation";
 
@@ -161,11 +162,23 @@ export function getMinPriceConflict(selection: Selection, t: Messages = ko): str
   );
 }
 
+/** 담은 기간 한정 상품(크리스마스 식물트리 등)을 고른 날짜에 받을 수 없으면 안내 문구, 아니면 null */
+export function getSalePeriodConflict(selection: Selection, t: Messages = ko): string | null {
+  const blocked = getOutOfSalePeriod(
+    getOrderItems(selection).map((item) => item.product),
+    selection.date,
+  );
+  const lastDate = blocked[0] ? getCategory(blocked[0].category).lastDate : undefined;
+  if (!lastDate) return null;
+  return t.salePeriod.conflict(blocked.map((product) => getItemName(product, t)).join(", "), ...monthDayOf(lastDate));
+}
+
 /** 가장 먼저 채워야 할 항목. 모두 선택됐으면 null */
 export function getSelectionIssue(selection: Selection, now: Now | null): SelectionIssue | null {
   if (getOrderItems(selection).length === 0) return "items";
   if (selection.date === null) return "date";
   if (getMinPriceConflict(selection) !== null) return "price";
+  if (getSalePeriodConflict(selection) !== null) return "period";
   if (selection.time === null || !isScheduleBookable(selection, now)) return "time";
   return null;
 }
