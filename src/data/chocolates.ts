@@ -43,9 +43,9 @@ export const chocolates = [
   { id: "doll-hachiware", price: 8000, image: "/chocolates/doll-hachiware-01.jpg", kind: "doll" },
   { id: "doll-usagi", price: 8000, image: "/chocolates/doll-usagi-01.jpg", kind: "doll" },
   // 뜨개꽃 하트 2개 + 인형 세트 (2026-11-17 사용자 요청, 2만원 — 인형 단품 아래에 같이 보임). 사진은 매장 꽃다발 사진에서 인형·하트만 확대
-  { id: "dollset-chiikawa", price: 20000, image: "/chocolates/dollset-chiikawa-01.jpg", kind: "doll" },
-  { id: "dollset-hachiware", price: 20000, image: "/chocolates/dollset-hachiware-01.jpg", kind: "doll" },
-  { id: "dollset-usagi", price: 20000, image: "/chocolates/dollset-usagi-01.jpg", kind: "doll" },
+  { id: "dollset-chiikawa", price: 20000, image: "/chocolates/dollset-chiikawa-02.jpg", kind: "doll" },
+  { id: "dollset-hachiware", price: 20000, image: "/chocolates/dollset-hachiware-02.jpg", kind: "doll" },
+  { id: "dollset-usagi", price: 20000, image: "/chocolates/dollset-usagi-02.jpg", kind: "doll" },
 ] as const satisfies readonly Chocolate[];
 
 const kindOf = (chocolate: Chocolate) => chocolate.kind;
