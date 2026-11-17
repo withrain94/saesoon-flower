@@ -314,7 +314,10 @@ function defineKeyedCategory<const C extends ProductCategoryId, const K extends 
   } satisfies ProductCategory;
 }
 
-/** 치이카와(먼작귀) 꽃다발 (2026-11-17 사용자 요청, 화면 이름은 "치이카와 꽃다발" — "인형꽃다발"에서 바꿈) — 사진은 매장 예시 1장씩 */
+/**
+ * 탭 "초콜릿 꽃다발&인형꽃다발" (2026-11-17 사용자 요청, "치이카와 꽃다발"에서 바꿈 — 패키지 상품 탭)
+ * 치이카와(먼작귀) 꽃다발이 위, 초콜릿 꽃다발이 아래. id는 저장된 예약 때문에 "doll" 그대로. 사진은 매장 예시 1장씩
+ */
 const doll = defineKeyedCategory(
   {
     id: "doll",
@@ -327,6 +330,14 @@ const doll = defineKeyedCategory(
     { key: "hachiware", price: 80000, cover: 0, images: photos(["doll-hachiware-01.jpg"]) },
     { key: "usagi", price: 80000, cover: 0, images: photos(["doll-usagi-01.jpg"]) },
     { key: "trio", price: 100000, cover: 0, images: photos(["doll-trio-01.jpg"]) },
+    // 초콜릿 꽃다발 패키지 (2026-11-17 사용자 요청 — 주문 제작했던 꽃다발을 패키지로, 치이카와 아래)
+    // 금액 = 8만원 꽃다발 + 초콜릿 단품 금액(해피히포 1,500·페레로로쉐 3,000, 사용자 확인), 실바핑크는 사용자가 정한 18만원
+    { key: "choco-hippo15", price: 102500, cover: 0, images: photos(["doll-choco-hippo15-01.jpg"]) },
+    { key: "choco-hippo20", price: 110000, cover: 0, images: photos(["doll-choco-hippo20-01.jpg"]) },
+    { key: "choco-ferrero10", price: 110000, cover: 0, images: photos(["doll-choco-ferrero10-01.jpg"]) },
+    { key: "choco-ferrero15", price: 125000, cover: 0, images: photos(["doll-choco-ferrero15-01.jpg"]) },
+    { key: "choco-ferrero20", price: 140000, cover: 0, images: photos(["doll-choco-ferrero20-01.jpg"]) },
+    { key: "choco-silvapink", price: 180000, cover: 0, images: photos(["doll-choco-silvapink-01.jpg"]) },
   ],
 );
 

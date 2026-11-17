@@ -87,20 +87,21 @@ export const en: Messages = {
       },
     },
     doll: {
-      name: "Chiikawa bouquet",
-      tagline: "A bouquet with a Chiikawa plush tucked in",
-      popularNote: "Choose Chiikawa, Hachiware or Usagi — or all three · plushies can also be added on their own",
+      name: "Chocolate & plush bouquets",
+      tagline: "Chiikawa plush bouquets and chocolate-filled bouquet packages",
+      popularNote: "Chiikawa plush bouquets · Happy Hippo & Ferrero Rocher chocolate bouquets · plushies can also be added on their own",
       notice: {
         summary: [
-          "Leave the color on “Up to the florist” and we'll wrap it in the character's recommended color.",
+          "Leave the color on “Up to the florist” and we'll wrap it in the character's or photo's color.",
           "Flowers may differ slightly from the photo depending on the season and stock.",
-          "Want an extra plush? Add one under “Add chocolates & plushies” below.",
+          "Want an extra plush or chocolate? Add it under “Add chocolates & plushies” below.",
         ],
         full: [
-          "Recommended colors by character",
+          "Chiikawa bouquets — recommended colors by character",
           "Chiikawa — pink",
           "Hachiware — light pink flowers + blue wrapping",
           "Usagi — yellow",
+          "Chocolate bouquets — an ₩80,000 bouquet with as many chocolates as the product name says. (Silva Pink: 50 Silva Pink roses + 10 Ferrero Rocher)",
           "For another color, choose it under “Preferred colors” in the form or write it in “Other”.",
         ],
       },
@@ -255,6 +256,60 @@ export const en: Messages = {
         "Chiikawa, Hachiware and Usagi, all together in one bouquet.",
         "A fan's dream — a bouquet made for photos.",
         "Give all their favorite friends at once for a birthday or anniversary.",
+      ],
+    },
+    "doll-choco-hippo15": {
+      title: "[Pink] Sweet Pink Bouquet with 15 Happy Hippos",
+      name: "Chocolate bouquet with 15 Happy Hippos",
+      points: [
+        "An ₩80,000 bouquet with 15 Kinder Happy Hippos tucked in.",
+        "Pink wrapping for a lovely, sweet mood.",
+        "Great for birthdays, anniversaries or a confession.",
+      ],
+    },
+    "doll-choco-hippo20": {
+      title: "[Yellow] Sunshine Bouquet with 20 Happy Hippos",
+      name: "Chocolate bouquet with 20 Happy Hippos",
+      points: [
+        "An ₩80,000 bouquet generously filled with 20 Kinder Happy Hippos.",
+        "Yellow and peach tones for a bright, warm mood.",
+        "Great for graduations, passing exams or cheering someone on.",
+      ],
+    },
+    "doll-choco-ferrero10": {
+      title: "[Cream] Soft Gold Bouquet with 10 Ferrero Rocher",
+      name: "Chocolate bouquet with 10 Ferrero Rocher",
+      points: [
+        "An ₩80,000 bouquet with 10 Ferrero Rocher tucked in.",
+        "Cream wrapping with yellow and white flowers — subtle and elegant.",
+        "A good first chocolate bouquet to give.",
+      ],
+    },
+    "doll-choco-ferrero15": {
+      title: "[Yellow] Sparkling Gold Bouquet with 15 Ferrero Rocher",
+      name: "Chocolate bouquet with 15 Ferrero Rocher",
+      points: [
+        "An ₩80,000 bouquet with 15 Ferrero Rocher that sparkle in gold.",
+        "Bright and full alongside yellow flowers.",
+        "Great for graduations, promotions and celebrations.",
+      ],
+    },
+    "doll-choco-ferrero20": {
+      title: "[Full] Golden Bouquet with 20 Ferrero Rocher",
+      name: "Chocolate bouquet with 20 Ferrero Rocher",
+      points: [
+        "An ₩80,000 bouquet packed with 20 Ferrero Rocher.",
+        "Big, eye-catching volume the moment it's received.",
+        "Great for special celebrations and events.",
+      ],
+    },
+    "doll-choco-silvapink": {
+      title: "[Premium] 50 Silva Pink Roses + 10 Ferrero Rocher",
+      name: "50 Silva Pink roses & Ferrero Rocher bouquet",
+      points: [
+        "50 fluffy Silva Pink roses with 10 Ferrero Rocher added.",
+        "An armful of pink that will be remembered for a long time.",
+        "Perfect for proposals, anniversaries and other special days.",
       ],
     },
   },

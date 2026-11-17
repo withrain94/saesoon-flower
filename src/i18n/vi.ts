@@ -79,20 +79,21 @@ export const vi: Messages = {
       },
     },
     doll: {
-      name: "Bó hoa Chiikawa",
-      tagline: "Bó hoa kèm thú bông Chiikawa",
-      popularNote: "Chọn Chiikawa, Hachiware, Usagi hoặc cả bộ ba · cũng có thể thêm riêng thú bông",
+      name: "Bó hoa sô-cô-la & thú bông",
+      tagline: "Bó hoa thú bông Chiikawa và gói bó hoa đầy sô-cô-la",
+      popularNote: "Bó hoa thú bông Chiikawa · bó hoa sô-cô-la Happy Hippo, Ferrero Rocher · cũng có thể thêm riêng thú bông",
       notice: {
         summary: [
-          "Nếu để tông màu là “Để tiệm chọn”, chúng tôi sẽ gói theo màu gợi ý của nhân vật.",
+          "Nếu để tông màu là “Để tiệm chọn”, chúng tôi sẽ gói theo màu gợi ý của nhân vật hoặc màu trong ảnh.",
           "Hoa có thể hơi khác ảnh tùy mùa và hàng về.",
-          "Muốn thêm thú bông, hãy chọn ở mục “Thêm sô-cô-la · thú bông” bên dưới.",
+          "Muốn thêm thú bông hoặc sô-cô-la, hãy chọn ở mục “Thêm sô-cô-la · thú bông” bên dưới.",
         ],
         full: [
-          "Màu gợi ý theo nhân vật",
+          "Bó hoa Chiikawa — màu gợi ý theo nhân vật",
           "Chiikawa — hồng",
           "Hachiware — hoa hồng nhạt + giấy gói xanh dương",
           "Usagi — vàng",
+          "Bó hoa sô-cô-la — bó hoa 80.000₩ cắm số sô-cô-la đúng như tên sản phẩm. (Silva Pink: 50 bông hồng Silva Pink + 10 Ferrero Rocher)",
           "Muốn màu khác, hãy chọn ở mục “Tông màu mong muốn” trong đơn hoặc ghi vào “Khác”.",
         ],
       },
@@ -247,6 +248,60 @@ export const vi: Messages = {
         "Chiikawa, Hachiware và Usagi cùng tụ họp trong một bó hoa.",
         "Fan nào thấy cũng phải hét lên — bó hoa sinh ra để chụp ảnh.",
         "Tặng cả nhóm bạn yêu thích một lần vào sinh nhật hay ngày kỷ niệm.",
+      ],
+    },
+    "doll-choco-hippo15": {
+      title: "[Hồng] Bó hoa hồng ngọt ngào với 15 Happy Hippo",
+      name: "Bó hoa sô-cô-la 15 Happy Hippo",
+      points: [
+        "Bó hoa 80.000₩ cắm thêm 15 Kinder Happy Hippo.",
+        "Giấy gói hồng, đáng yêu và ngọt ngào.",
+        "Hợp làm quà sinh nhật, kỷ niệm hay tỏ tình.",
+      ],
+    },
+    "doll-choco-hippo20": {
+      title: "[Vàng] Bó hoa nắng ấm với 20 Happy Hippo",
+      name: "Bó hoa sô-cô-la 20 Happy Hippo",
+      points: [
+        "Bó hoa 80.000₩ cắm đầy 20 Kinder Happy Hippo.",
+        "Tông vàng và đào, tươi sáng và ấm áp.",
+        "Hợp làm quà tốt nghiệp, thi đỗ hay cổ vũ.",
+      ],
+    },
+    "doll-choco-ferrero10": {
+      title: "[Kem] Bó hoa ánh vàng nhẹ nhàng với 10 Ferrero Rocher",
+      name: "Bó hoa sô-cô-la 10 Ferrero Rocher",
+      points: [
+        "Bó hoa 80.000₩ cắm thêm 10 Ferrero Rocher.",
+        "Giấy gói màu kem với hoa vàng, trắng — nhẹ nhàng, sang trọng.",
+        "Phù hợp nếu bạn tặng bó hoa sô-cô-la lần đầu.",
+      ],
+    },
+    "doll-choco-ferrero15": {
+      title: "[Vàng] Bó hoa vàng lấp lánh với 15 Ferrero Rocher",
+      name: "Bó hoa sô-cô-la 15 Ferrero Rocher",
+      points: [
+        "Bó hoa 80.000₩ cắm 15 Ferrero Rocher lấp lánh ánh vàng.",
+        "Hòa cùng hoa vàng, rực rỡ và đầy đặn.",
+        "Hợp làm quà tốt nghiệp, thăng chức, chúc mừng.",
+      ],
+    },
+    "doll-choco-ferrero20": {
+      title: "[Đầy đặn] Bó hoa vàng rực với 20 Ferrero Rocher",
+      name: "Bó hoa sô-cô-la 20 Ferrero Rocher",
+      points: [
+        "Bó hoa 80.000₩ cắm đầy 20 Ferrero Rocher.",
+        "Kích thước nổi bật ngay khi nhận.",
+        "Hợp cho những dịp chúc mừng, sự kiện đặc biệt.",
+      ],
+    },
+    "doll-choco-silvapink": {
+      title: "[Cao cấp] 50 hồng Silva Pink + 10 Ferrero Rocher",
+      name: "Bó hoa 50 hồng Silva Pink & Ferrero Rocher",
+      points: [
+        "50 bông hồng Silva Pink bồng bềnh kèm 10 Ferrero Rocher.",
+        "Một ôm hồng ngập tràn, đáng nhớ thật lâu.",
+        "Hợp cho cầu hôn, kỷ niệm và những ngày đặc biệt.",
       ],
     },
   },

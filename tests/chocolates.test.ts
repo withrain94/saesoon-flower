@@ -140,10 +140,28 @@ describe("초콜릿 추가 (data/chocolates · lib/selection · 서버 검사)",
 describe("치이카와 꽃다발·인형 단품 (2026-11-17)", () => {
   const dolls = allProducts.filter((product) => product.category === "doll");
 
-  it("치이카와 꽃다발 4종 — 8만원 3개(캐릭터별) + 3총사 10만원, id가 겹치지 않음", () => {
+  it("치이카와 꽃다발 4종이 위, 초콜릿 꽃다발 6종이 아래 — id가 겹치지 않음", () => {
     assert.deepEqual(
       dolls.map((product) => [product.id, product.price]),
-      [["doll-chiikawa", 80000], ["doll-hachiware", 80000], ["doll-usagi", 80000], ["doll-trio", 100000]],
+      [
+        ["doll-chiikawa", 80000],
+        ["doll-hachiware", 80000],
+        ["doll-usagi", 80000],
+        ["doll-trio", 100000],
+        // 초콜릿 꽃다발 = 8만원 꽃다발 + 초콜릿 단품 금액 (2026-11-17 사용자 확인)
+        ["doll-choco-hippo15", 80000 + 15 * 1500],
+        ["doll-choco-hippo20", 80000 + 20 * 1500],
+        ["doll-choco-ferrero10", 80000 + 10 * 3000],
+        ["doll-choco-ferrero15", 80000 + 15 * 3000],
+        ["doll-choco-ferrero20", 80000 + 20 * 3000],
+        ["doll-choco-silvapink", 180000],
+      ],
+    );
+    // 매장 화면·알림·노션에는 초콜릿 개수가 보이는 상품 이름으로
+    assert.ok(
+      formatAdminItemName({ productId: "doll-choco-ferrero15", category: "doll", price: 125000 }).startsWith(
+        "페레로로쉐 15개 초콜릿 꽃다발",
+      ),
     );
     assert.equal(new Set(allProducts.map((product) => product.id)).size, allProducts.length);
   });
