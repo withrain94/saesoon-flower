@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import ErrorText from "@/components/ui/ErrorText";
-import { buildOrdererSmsText, MAX_SMS_TEXT, smsAppLink } from "@/lib/ordererSms";
+import { buildOrdererSmsText, isAppleMobile, MAX_SMS_TEXT, smsAppLink } from "@/lib/ordererSms";
 import { sendOrdererSms, type SendSmsResult } from "@/server/actions/completion";
 import type { CompletionPhoto } from "@/server/completionPhotos";
 import type { ReservationRequest } from "@/types/reservation";
@@ -29,8 +29,11 @@ export default function OrdererSmsSender({
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [ios, setIos] = useState(false);
 
   function start() {
+    // 문자 앱 링크 모양이 아이폰·안드로이드가 달라서, 미리보기를 열 때 이 기기를 확인
+    setIos(isAppleMobile(navigator.userAgent, navigator.maxTouchPoints));
     setText(buildOrdererSmsText(id, request, { hasPhotos: photos.length > 0 }));
     // 기본: 가장 최근에 올린 완성 사진을 붙임
     setPhotoName(photos.at(-1)?.name ?? null);
@@ -146,7 +149,7 @@ export default function OrdererSmsSender({
         {configured
           ? "자동 발송이 안 될 때: "
           : "자동 발송은 매장 휴대폰에 SMS Gate 앱을 설정하면 켜져요. 지금은 "}
-        <a href={smsAppLink(request.ordererPhone, text)} className="font-semibold text-brand-dark underline">
+        <a href={smsAppLink(request.ordererPhone, text, { ios })} className="font-semibold text-brand-dark underline">
           휴대폰 문자 앱으로 보내기
         </a>
         {" "}(이 화면을 연 휴대폰의 문자 앱이 열려요 · 사진은 직접 첨부)

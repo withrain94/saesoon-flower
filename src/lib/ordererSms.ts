@@ -47,7 +47,15 @@ export function toSmsPhoneNumber(phone: string) {
   return null;
 }
 
-/** 휴대폰 기본 문자 앱을 여는 주소 (자동 발송이 안 될 때 예비용) */
-export function smsAppLink(phone: string, text: string) {
-  return `sms:${phone.replace(/[^0-9+]/g, "")}?body=${encodeURIComponent(text)}`;
+/**
+ * 휴대폰 기본 문자 앱을 여는 주소 (자동 발송이 안 될 때 예비용).
+ * 아이폰은 "sms:번호&body=내용", 안드로이드는 "sms:번호?body=내용"이라야 내용이 채워짐
+ */
+export function smsAppLink(phone: string, text: string, { ios }: { ios: boolean }) {
+  return `sms:${phone.replace(/[^0-9+]/g, "")}${ios ? "&" : "?"}body=${encodeURIComponent(text)}`;
+}
+
+/** 아이폰·아이패드인지 (아이패드는 PC처럼 "Macintosh"로 보이므로 터치 여부로 구분) */
+export function isAppleMobile(userAgent: string, maxTouchPoints: number) {
+  return /iPhone|iPad|iPod/.test(userAgent) || (/Macintosh/.test(userAgent) && maxTouchPoints > 1);
 }

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { allProducts } from "@/data/products";
-import { buildOrdererSmsText, completionPhotoPageUrl, smsAppLink, toSmsPhoneNumber } from "@/lib/ordererSms";
+import { buildOrdererSmsText, completionPhotoPageUrl, isAppleMobile, smsAppLink, toSmsPhoneNumber } from "@/lib/ordererSms";
 import type { ReservationRequest } from "@/types/reservation";
 
 const bouquet = allProducts.find((product) => product.category === "bouquet")!;
@@ -65,7 +65,16 @@ describe("예약자 안내 문자 (lib/ordererSms)", () => {
     assert.ok(!text.includes("/photo/"));
   });
 
-  it("문자 앱 링크", () => {
-    assert.equal(smsAppLink("010-1234-5678", "안녕 a&b"), `sms:01012345678?body=${encodeURIComponent("안녕 a&b")}`);
+  it("문자 앱 링크 — 안드로이드 ?body= / 아이폰 &body=", () => {
+    const body = encodeURIComponent("안녕 a&b");
+    assert.equal(smsAppLink("010-1234-5678", "안녕 a&b", { ios: false }), `sms:01012345678?body=${body}`);
+    assert.equal(smsAppLink("010-1234-5678", "안녕 a&b", { ios: true }), `sms:01012345678&body=${body}`);
+  });
+
+  it("아이폰·아이패드 구분", () => {
+    assert.equal(isAppleMobile("Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)", 5), true);
+    assert.equal(isAppleMobile("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)", 5), true);
+    assert.equal(isAppleMobile("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)", 0), false);
+    assert.equal(isAppleMobile("Mozilla/5.0 (Linux; Android 14; SM-S918N)", 5), false);
   });
 });
