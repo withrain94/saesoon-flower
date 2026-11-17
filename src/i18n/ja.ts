@@ -489,6 +489,9 @@ export const ja: Messages = {
       "doll-chiikawa": { name: "ちいかわぬいぐるみ", note: "どの花束にもお花と一緒に挿してお届けします。" },
       "doll-hachiware": { name: "ハチワレぬいぐるみ", note: "どの花束にもお花と一緒に挿してお届けします。" },
       "doll-usagi": { name: "うさぎぬいぐるみ", note: "どの花束にもお花と一緒に挿してお届けします。" },
+      "dollset-chiikawa": { name: "ちいかわぬいぐるみ + 編みハート2個", note: "赤い編み花のハート2個とぬいぐるみを一緒に挿します。" },
+      "dollset-hachiware": { name: "ハチワレぬいぐるみ + 編みハート2個", note: "赤い編み花のハート2個とぬいぐるみを一緒に挿します。" },
+      "dollset-usagi": { name: "うさぎぬいぐるみ + 編みハート2個", note: "赤い編み花のハート2個とぬいぐるみを一緒に挿します。" },
     },
     bag: {
       badge: "一緒に追加",

@@ -513,6 +513,9 @@ export const ko = {
       "doll-chiikawa": { name: "치이카와 인형", note: "어떤 꽃에도 함께 꽂아 드려요." },
       "doll-hachiware": { name: "하치와레 인형", note: "어떤 꽃에도 함께 꽂아 드려요." },
       "doll-usagi": { name: "우사기 인형", note: "어떤 꽃에도 함께 꽂아 드려요." },
+      "dollset-chiikawa": { name: "치이카와 인형 + 뜨개 하트 2개", note: "빨간 뜨개꽃 하트 2개와 인형을 함께 꽂아 드려요." },
+      "dollset-hachiware": { name: "하치와레 인형 + 뜨개 하트 2개", note: "빨간 뜨개꽃 하트 2개와 인형을 함께 꽂아 드려요." },
+      "dollset-usagi": { name: "우사기 인형 + 뜨개 하트 2개", note: "빨간 뜨개꽃 하트 2개와 인형을 함께 꽂아 드려요." },
     },
     /** 꽃다발 목록 맨 위 쇼핑백 칸 (이름은 items.shoppingbag, 금액·사진은 data/chocolates.ts) */
     bag: {

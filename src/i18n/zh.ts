@@ -449,6 +449,9 @@ export const zh: Messages = {
       "doll-chiikawa": { name: "吉伊玩偶", note: "和花一起插在花束里送出。" },
       "doll-hachiware": { name: "小八玩偶", note: "和花一起插在花束里送出。" },
       "doll-usagi": { name: "乌萨奇玩偶", note: "和花一起插在花束里送出。" },
+      "dollset-chiikawa": { name: "吉伊玩偶 + 编织爱心2个", note: "红色编织爱心2个和玩偶一起插在花束里。" },
+      "dollset-hachiware": { name: "小八玩偶 + 编织爱心2个", note: "红色编织爱心2个和玩偶一起插在花束里。" },
+      "dollset-usagi": { name: "乌萨奇玩偶 + 编织爱心2个", note: "红色编织爱心2个和玩偶一起插在花束里。" },
     },
     bag: {
       badge: "一起加购",

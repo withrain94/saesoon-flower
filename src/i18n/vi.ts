@@ -487,6 +487,9 @@ export const vi: Messages = {
       "doll-chiikawa": { name: "Thú bông Chiikawa", note: "Cắm cùng hoa trong bó hoa." },
       "doll-hachiware": { name: "Thú bông Hachiware", note: "Cắm cùng hoa trong bó hoa." },
       "doll-usagi": { name: "Thú bông Usagi", note: "Cắm cùng hoa trong bó hoa." },
+      "dollset-chiikawa": { name: "Thú bông Chiikawa + 2 trái tim len", note: "Cắm thú bông cùng 2 trái tim len đỏ vào bó hoa." },
+      "dollset-hachiware": { name: "Thú bông Hachiware + 2 trái tim len", note: "Cắm thú bông cùng 2 trái tim len đỏ vào bó hoa." },
+      "dollset-usagi": { name: "Thú bông Usagi + 2 trái tim len", note: "Cắm thú bông cùng 2 trái tim len đỏ vào bó hoa." },
     },
     bag: {
       badge: "Mua kèm",

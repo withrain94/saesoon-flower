@@ -495,6 +495,9 @@ export const en: Messages = {
       "doll-chiikawa": { name: "Chiikawa plush", note: "Tucked in with the flowers of any bouquet." },
       "doll-hachiware": { name: "Hachiware plush", note: "Tucked in with the flowers of any bouquet." },
       "doll-usagi": { name: "Usagi plush", note: "Tucked in with the flowers of any bouquet." },
+      "dollset-chiikawa": { name: "Chiikawa plush + 2 knitted hearts", note: "A plush with two red crocheted hearts, tucked in together." },
+      "dollset-hachiware": { name: "Hachiware plush + 2 knitted hearts", note: "A plush with two red crocheted hearts, tucked in together." },
+      "dollset-usagi": { name: "Usagi plush + 2 knitted hearts", note: "A plush with two red crocheted hearts, tucked in together." },
     },
     bag: {
       badge: "Add-on",

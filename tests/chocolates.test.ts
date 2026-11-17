@@ -176,12 +176,16 @@ describe("치이카와 꽃다발·인형 단품 (2026-11-17)", () => {
     assert.equal(formatAdminItemName({ productId: "bouquet-60000", category: "bouquet", price: 60000 }), "꽃다발 6만원");
   });
 
-  it("인형 단품 3종 각 8,000원 — 합계에 더해지고, 담으면 \"함께?\" 창이 안 뜸", () => {
+  it("인형 단품 3종 각 8,000원 + 뜨개 하트 2개 세트 3종 각 20,000원 — 합계에 더해지고, 담으면 \"함께?\" 창이 안 뜸", () => {
     assert.deepEqual(dollChoices.map((doll) => [doll.id, doll.price]), [
       ["doll-chiikawa", 8000],
       ["doll-hachiware", 8000],
       ["doll-usagi", 8000],
+      ["dollset-chiikawa", 20000],
+      ["dollset-hachiware", 20000],
+      ["dollset-usagi", 20000],
     ]);
+    assert.equal(getAddOnIcon("dollset-usagi"), "🧸");
     const summary = summarizeSelection(selection({ "doll-usagi": 2 }));
     assert.equal(summary.totalPrice, bouquet.price + 16000);
     // 인형을 담았으면 "초콜릿·인형도 함께?" 창은 안 뜸 (2026-11-17 사용자 요청으로 창에 인형도 보임)
