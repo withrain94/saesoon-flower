@@ -41,6 +41,7 @@ export default function ReservationPage({ tossEnabled }: { tossEnabled: boolean 
     submitFromChocolatePrompt,
     forEvent,
     setForEvent,
+    priceConflict,
     visibleIssue,
     summary,
     reservation,
@@ -68,7 +69,7 @@ export default function ReservationPage({ tossEnabled }: { tossEnabled: boolean 
     <>
       <SpecialEventBanner now={now} onBook={bookEvent} />
       {reservation === null && <BookingSteps />}
-      <CategoryEntry countByCategory={summary.countByCategory} onSelect={openCategory} />
+      <CategoryEntry countByCategory={summary.countByCategory} onSelect={openCategory} now={now} />
       <NaverOnlyBookingLinks />
       <NaverBookingBanner />
       <SectionTabs />
@@ -81,12 +82,15 @@ export default function ReservationPage({ tossEnabled }: { tossEnabled: boolean 
         addOnQuantities={chocolateQuantities}
         onAddOnChange={setChocolateQuantity}
         showError={visibleIssue === "items"}
+        date={selection.date}
+        now={now}
+        priceConflict={reservation === null ? priceConflict : null}
       />
       {/* 초콜릿 추가 — 꽃을 고른 바로 아래 (2026-10-12 사용자 요청: 신청서 안쪽은 너무 아래라 잘 안 보임) */}
       {reservation === null && (
         <div className="px-5 pb-7 pt-1">
           <div className="rounded-2xl border border-brand bg-brand-tint px-4 py-4">
-            <ChocolateField quantities={chocolateQuantities} onChange={setChocolateQuantity} />
+            <ChocolateField quantities={chocolateQuantities} onChange={setChocolateQuantity} withDolls />
           </div>
         </div>
       )}
@@ -97,6 +101,7 @@ export default function ReservationPage({ tossEnabled }: { tossEnabled: boolean 
         time={selection.time}
         onChange={setSchedule}
         issue={visibleIssue === "date" || visibleIssue === "time" ? visibleIssue : null}
+        priceConflict={reservation === null ? priceConflict : null}
       />
       <SectionDivider />
       <ReserveSection

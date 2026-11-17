@@ -65,7 +65,7 @@ export const en: Messages = {
     bouquet: { name: "Bouquet", tagline: "A gift to hand over in person" },
     basket: { name: "Flower basket", tagline: "A gift to display and enjoy longer" },
     orchid: {
-      name: "Phalaenopsis orchid",
+      name: "Orchid",
       tagline: "Bojagi-wrapped gift for meeting the families",
       popularNote: "Set of 2 · one for each family",
       notice: {
@@ -83,6 +83,43 @@ export const en: Messages = {
           "If you request white orchids,\nwhich give a clear and graceful impression like a bride,\nwe will carefully prepare\nthe finest-quality orchids to match.",
           "At Saesoon,\na florist who is also\na certified 1st-grade bojagi art expert\nwraps the flowers by hand.",
           "The bojagi color is chosen\nconsidering\n- the tone of the white orchids\n- the length of the flower stalks\n- the spread of the leaves,\nso each time we prepare\nthe wrapping cloth color that suits them best.",
+        ],
+      },
+    },
+    doll: {
+      name: "Chocolate & plush bouquets",
+      tagline: "Chiikawa plush bouquets and chocolate-filled bouquet packages",
+      popularNote: "Chiikawa plush bouquets · Happy Hippo & Ferrero Rocher chocolate bouquets · plushies can also be added on their own",
+      notice: {
+        summary: [
+          "Leave the color on “Up to the florist” and we'll wrap it in the character's or photo's color.",
+          "Flowers may differ slightly from the photo depending on the season and stock.",
+          "Want an extra plush or chocolate? Add it under “Add chocolates & plushies” below.",
+        ],
+        full: [
+          "Chiikawa bouquets — recommended colors by character",
+          "Chiikawa — pink",
+          "Hachiware — light pink flowers + blue wrapping",
+          "Usagi — yellow",
+          "Chocolate bouquets — an ₩80,000 bouquet with as many chocolates as the product name says. (Silva Pink: 50 Silva Pink roses + 10 Ferrero Rocher)",
+          "For another color, choose it under “Preferred colors” in the form or write it in “Other”.",
+        ],
+      },
+    },
+    xmastree: {
+      name: "Christmas plants",
+      tagline: "Until Dec 28 · festive plant gifts",
+      popularNote: "Araucaria mini tree · Lemon cypress pouch · Poinsettia",
+      notice: {
+        summary: [
+          "Only for pickup/delivery dates up to Dec 28. (This menu disappears from Dec 29.)",
+          "These are living plants, so shape, size and leaf color may differ slightly from the photos.",
+        ],
+        full: [
+          "Start Christmas with one little tree!",
+          "This winter, Saesoon has prepared special Christmas plant gifts.",
+          "Bright red Christmas decorations, a lovely mini tree, and a plant pouch wrapped in a Santa-belt ribbon!",
+          "We carefully chose every plant, pot and decoration so even a small space can feel full of Christmas.",
         ],
       },
     },
@@ -200,6 +237,128 @@ export const en: Messages = {
         "A set of 2, so each family receives one",
         "Free delivery to Jeonju family-meeting restaurants such as Honamgak, Gung and Gogungdam",
         "Double wrapping, so it can be kept wrapped and cared for after gifting",
+      ],
+    },
+    "doll-chiikawa": {
+      title: "[Pink] Chiikawa's Rosy Confession",
+      name: "Chiikawa bouquet",
+      points: [
+        "A Chiikawa plush tucked in among the flowers — instantly heart-melting.",
+        "Recommended wrapping: pink, the perfect match for shy Chiikawa.",
+        "The flowers fade, but the plush stays — a gift remembered for a long time.",
+      ],
+    },
+    "doll-hachiware": {
+      title: "[Light pink · Blue] Hachiware's Sky-Blue Cheer",
+      name: "Hachiware bouquet",
+      points: [
+        "Cheerful, kind-hearted Hachiware delivers your encouragement.",
+        "Recommended: light pink flowers with blue wrapping — just like Hachiware's ears.",
+        "Great for birthdays, passing an exam or a little cheering up.",
+      ],
+    },
+    "doll-usagi": {
+      title: "[Yellow] Usagi's Yellow “Ura!”",
+      name: "Usagi bouquet",
+      points: [
+        "Wild and wacky Usagi makes them burst out laughing the moment they see it.",
+        "Recommended wrapping: yellow, bright and lively.",
+        "Great for graduations, congratulations or a mood boost.",
+      ],
+    },
+    "doll-trio": {
+      title: "[Trio] All Three Chiikawa Friends",
+      name: "Chiikawa trio bouquet",
+      points: [
+        "Chiikawa, Hachiware and Usagi, all together in one bouquet.",
+        "A fan's dream — a bouquet made for photos.",
+        "Give all their favorite friends at once for a birthday or anniversary.",
+      ],
+    },
+    "doll-choco-hippo15": {
+      title: "[Pink] Sweet Pink Bouquet with 15 Happy Hippos",
+      name: "Chocolate bouquet with 15 Happy Hippos",
+      points: [
+        "An ₩80,000 bouquet with 15 Kinder Happy Hippos tucked in.",
+        "Pink wrapping for a lovely, sweet mood.",
+        "Great for birthdays, anniversaries or a confession.",
+      ],
+    },
+    "doll-choco-hippo20": {
+      title: "[Yellow] Sunshine Bouquet with 20 Happy Hippos",
+      name: "Chocolate bouquet with 20 Happy Hippos",
+      points: [
+        "An ₩80,000 bouquet generously filled with 20 Kinder Happy Hippos.",
+        "Yellow and peach tones for a bright, warm mood.",
+        "Great for graduations, passing exams or cheering someone on.",
+      ],
+    },
+    "doll-choco-ferrero10": {
+      title: "[Cream] Soft Gold Bouquet with 10 Ferrero Rocher",
+      name: "Chocolate bouquet with 10 Ferrero Rocher",
+      points: [
+        "An ₩80,000 bouquet with 10 Ferrero Rocher tucked in.",
+        "Cream wrapping with yellow and white flowers — subtle and elegant.",
+        "A good first chocolate bouquet to give.",
+      ],
+    },
+    "doll-choco-ferrero15": {
+      title: "[Yellow] Sparkling Gold Bouquet with 15 Ferrero Rocher",
+      name: "Chocolate bouquet with 15 Ferrero Rocher",
+      points: [
+        "An ₩80,000 bouquet with 15 Ferrero Rocher that sparkle in gold.",
+        "Bright and full alongside yellow flowers.",
+        "Great for graduations, promotions and celebrations.",
+      ],
+    },
+    "doll-choco-ferrero20": {
+      title: "[Full] Golden Bouquet with 20 Ferrero Rocher",
+      name: "Chocolate bouquet with 20 Ferrero Rocher",
+      points: [
+        "An ₩80,000 bouquet packed with 20 Ferrero Rocher.",
+        "Big, eye-catching volume the moment it's received.",
+        "Great for special celebrations and events.",
+      ],
+    },
+    "doll-choco-silvapink": {
+      title: "[Premium] 50 Silva Pink Roses + 10 Ferrero Rocher",
+      name: "50 Silva Pink roses & Ferrero Rocher bouquet",
+      points: [
+        "50 fluffy Silva Pink roses with 10 Ferrero Rocher added.",
+        "An armful of pink that will be remembered for a long time.",
+        "Perfect for proposals, anniversaries and other special days.",
+      ],
+    },
+    "xmastree-araucaria": {
+      title: "Araucaria mini tree",
+      name: "Araucaria mini tree",
+      points: [
+        "Pretty tiered green branches with Christmas decorations.",
+        "A white pot with red stripes for a classic Christmas look.",
+      ],
+    },
+    "xmastree-cypress": {
+      title: "Lemon cypress pouch",
+      name: "Lemon cypress pouch",
+      points: [
+        "Fresh lime-green leaves with a gentle lemon scent!",
+        "A Christmas plant gift cutely wrapped with a Santa-belt ribbon.",
+      ],
+    },
+    "xmastree-poinsettia-mini": {
+      title: "Poinsettia mini (10–15cm)",
+      name: "Poinsettia mini",
+      points: [
+        "The classic red Christmas poinsettia in a mini size that fits in your hand.",
+        "Green wrapping and a Merry Christmas pick — an easy little gift.",
+      ],
+    },
+    "xmastree-poinsettia-gift": {
+      title: "Poinsettia gift size (15–20cm)",
+      name: "Poinsettia gift size",
+      points: [
+        "Full red leaves that fill the room with holiday mood.",
+        "Gift size with green wrapping, a red ribbon and a Christmas pick.",
       ],
     },
   },
@@ -361,14 +520,18 @@ export const en: Messages = {
   },
 
   chocolate: {
-    title: "Add chocolates",
-    description: "A sweet touch to go with the flowers — add as many as you like.",
+    title: "Add chocolates & plushies",
+    description: "Something sweet or something cute to go with the flowers — add as many as you like.",
+    /** 초콜릿 칸 안 인형 단품 묶음 제목 (2026-11-17) */
+    dollHeading: "Chiikawa plushies",
+    /** "함께?" 창에서 인형 아래 초콜릿 묶음 제목 */
+    chocolateHeading: "Chocolates",
     photoAlt: (name) => `${name} photo`,
     prompt: {
-      title: "Would you like to add chocolates?",
-      description: "From 1,500 KRW. We wrap them together with the flowers.",
+      title: "Add chocolates or a plush?",
+      description: "Chocolates from 1,500 KRW, Chiikawa plushies 8,000 KRW. We wrap them together with the flowers.",
       submitWithout: "No thanks, reserve as is",
-      submitWith: (count) => `Reserve with ${count} chocolate${count === 1 ? "" : "s"}`,
+      submitWith: (count) => `Reserve with ${count} add-on${count === 1 ? "" : "s"}`,
       close: "Close",
     },
     items: {
@@ -378,6 +541,12 @@ export const en: Messages = {
       "happyhippo-10": { name: "Happy Hippo × 10", note: "For special days — 10 pieces arranged together." },
       "ferrero-10": { name: "Ferrero Rocher × 10", note: "For special days — 10 pieces arranged together." },
       shoppingbag: { name: "Bouquet carrier bag", note: "Easy to carry and to stand upright." },
+      "doll-chiikawa": { name: "Chiikawa plush", note: "Tucked in with the flowers of any bouquet." },
+      "doll-hachiware": { name: "Hachiware plush", note: "Tucked in with the flowers of any bouquet." },
+      "doll-usagi": { name: "Usagi plush", note: "Tucked in with the flowers of any bouquet." },
+      "dollset-chiikawa": { name: "Chiikawa plush + 2 knitted hearts", note: "A plush with two red crocheted hearts, tucked in together." },
+      "dollset-hachiware": { name: "Hachiware plush + 2 knitted hearts", note: "A plush with two red crocheted hearts, tucked in together." },
+      "dollset-usagi": { name: "Usagi plush + 2 knitted hearts", note: "A plush with two red crocheted hearts, tucked in together." },
     },
     bag: {
       badge: "Add-on",
@@ -751,5 +920,21 @@ export const en: Messages = {
       amountMismatch: `The payment amount doesn't match the reservation. Please contact the shop (${businessInfo.phone}).`,
       failed: `We couldn't process the payment. Please try again or contact the shop (${businessInfo.phone}).`,
     },
+  },
+  minPrice: {
+    names: { graduation: "Graduation season" },
+    period: (name: string, sm: number, sd: number, em: number, ed: number) => `${name} (${sm}/${sd}–${em}/${ed})`,
+    upcoming: (period: string, price: string) => `For pickup/delivery during ${period}, items start from ${price}.`,
+    blocked: (period: string, price: string) => `Your date falls in ${period}, so items start from ${price}.`,
+    conflict: (period: string, price: string, items: string) =>
+      `During ${period}, items start from ${price}. Please remove ${items} or choose another date.`,
+    server: (period: string, price: string) => `During ${period}, items start from ${price}. Please choose your items again.`,
+  },
+  salePeriod: {
+    blocked: (month: number, day: number) => `Only for pickup/delivery dates up to ${month}/${day}.`,
+    conflict: (items: string, month: number, day: number) =>
+      `${items}: only for dates up to ${month}/${day}. Please remove it or choose an earlier date.`,
+    server: (name: string, month: number, day: number) =>
+      `${name}: only for dates up to ${month}/${day}. Please choose the date or items again.`,
   },
 };

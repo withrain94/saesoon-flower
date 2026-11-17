@@ -39,7 +39,7 @@ src/
 │  ├─ toss.ts                토스페이먼츠 API(결제 승인·조회·취소, 비밀 키) + syncTossPayment(결제 기록 저장·상태 자동 변경·알림 한 곳)
 │  └─ actions/               "use server" 함수 — reservation(고객 신청 검사·저장), lookup(손님 조회·취소 — 매번 예약자 이름+연락처 재확인), admin(로그인·로그아웃·상태·메모·노션 다시 올리기·안내 문자 보냄 표시), payment(손님 결제창 다시 열기·결제 승인), adminPayment(토스 다시 확인·결제 취소)
 ├─ hooks/                    useNow(한국 시각), useLocale(언어·useT), useLookupT(조회 화면 문구 — i18n/lookup/), useStoreInfoT(첫 화면 매장 소개 문구 — i18n/storeInfo/), usePhotos(관리자가 바꾼 사진 반영), useActiveSection, useElementWidth
-├─ lib/                      순수 함수 (date, time, events, format, selection, units, payment, reservationRequest, reservationValidation, documents)
+├─ lib/                      순수 함수 (date, time, events, format, selection, units, payment, reservationRequest, reservationValidation, documents, minPrice — 졸업시즌 등 기간별 최소 금액은 data/reservationOptions의 minPricePeriods)
 │                            + 매장용 한국어 표시: adminFormat(관리자 화면 공용), reservationNotice(텔레그램 문구), reminderNotice(내일 예약 목록 문구), notionReservation(노션 표 칸) · supabaseUrl(Supabase 공개 설정) · reservationShare(완료 화면 카카오톡 공유 글, 카카오 키)
 ├─ i18n/                     화면 문구 — ko(기준)·en·ja·zh·vi. 모양이 ko와 다르면 타입 오류 / index.ts: 언어 목록·messages
 ├─ data/                     정적 데이터 (products, chocolates, shop — 검색 정보 searchInfo 포함, reservationOptions, events, guidePages) — 금액·사진·날짜·선택지 코드만, 문구는 i18n
@@ -66,6 +66,8 @@ public/flowers/              상품 사진 ({종류}-{금액}-{번호}.jpg — b
    새 상품 종류를 추가할 땐 아래 순서로 (타입 오류가 빠진 곳을 알려준다):
    `types`의 `ProductCategoryId` → `products.ts` (`colorChoice`, `featured`) → 각 언어 파일의 `categories`·`products` (안내는 `notice`) → `shop.ts`의 네이버 링크 → `reservationOptions.ts`의 `messageOptionsByCategory`.
    초콜릿(꽃과 함께 담는 추가 옵션)은 `data/chocolates.ts`(id·금액·사진)와 언어 파일 `chocolate.items`(이름·설명)에서만 수정한다. 받는 분·메시지 칸은 없고 금액만 합계에 더해진다. 초콜릿 칸(`ChocolateField`)은 상품 고르기 바로 아래(`ReservationPage`)에 있다.
+   치이카와 인형 단품도 같은 목록의 한 줄(`kind: "doll"`, `dollChoices`) — 초콜릿 칸 안 초콜릿 아래에 보이고(`withDolls`), "초콜릿도 함께?" 창에는 안 나온다.
+   인형꽃다발(`doll`)처럼 **금액이 같은 상품이 여러 개인 종류**는 `defineKeyedCategory`로 금액 대신 key로 id를 만들고("doll-chiikawa"), 언어 파일 `products`에 `name`을 둔다 — 담은 상품·관리자·알림·노션·서류 이름은 `getItemName`(화면 상품) / `getSavedItemName`(저장된 예약)으로만 만든다.
    꽃다발 쇼핑백도 같은 목록의 한 줄(`kind: "bag"`, `shoppingBag`)이라 저장·합계·서류·알림은 초콜릿과 같은 길을 타고, 화면만 꽃다발 목록 맨 위(`ShoppingBagOption`, 문구 `chocolate.bag`)에 따로 보인다. 초콜릿만 볼 땐 `chocolateChoices`·`hasChocolate`, 매장용 그림글자는 `getAddOnIcon`.
    **화면에 사진을 그릴 땐 data의 `images`·`image`·`thumbnail`을 직접 쓰지 않고 `usePhotos()`(hooks/usePhotos)로 꺼낸다** — 관리자 `/admin/photos`에서 바꾼 사진이 반영되게. 사진 자리 목록·검사·순서 바꾸기는 `lib/sitePhotos.ts` 하나(기본 사진은 data에서 읽고, 바꾼 자리만 `site_photos` 표가 덮어씀), DB·보관함은 `server/sitePhotos.ts`, 저장은 `server/actions/photos.ts`(맨 앞 `requireAdmin`, 저장 뒤 `revalidatePath("/")`). 첫 화면은 `app/page.tsx`가 서버에서 읽어 `PhotoOverridesProvider`로 내려주고 못 읽으면 기본 사진으로 뜬다. 새 사진 자리(예: 새 상품)는 data에 추가하면 `photoSlots`에 자동으로 생긴다.
    블랙보드 문구 선택지(예: 호접난 "알아서 써주세요" 등)는 `reservationOptions.ts`의 `blackboardPresetsByCategory`(실제 적힐 한국어)와 언어 파일 `blackboardPresets`(선택지 이름)에서 수정한다. ("직접 입력"은 자동으로 붙음) 저장된 선택지 id로 찾을 땐 `findBlackboardPreset`.

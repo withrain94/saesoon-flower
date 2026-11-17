@@ -80,6 +80,43 @@ export const zh: Messages = {
         ],
       },
     },
+    doll: {
+      name: "巧克力花束&玩偶花束",
+      tagline: "吉伊卡哇玩偶花束和满满巧克力的花束套餐",
+      popularNote: "吉伊卡哇玩偶花束 · 快乐河马·费列罗巧克力花束 · 也可以单独加购玩偶",
+      notice: {
+        summary: [
+          "色调选“交给花店”时，我们会用角色推荐色或照片中的颜色包装。",
+          "花材会因季节和到货情况与照片略有不同。",
+          "想多加玩偶或巧克力，请在下方“加购巧克力·玩偶”中选择。",
+        ],
+        full: [
+          "吉伊卡哇花束 — 各角色推荐颜色",
+          "吉伊 — 粉色",
+          "小八 — 浅粉色花 + 蓝色包装",
+          "乌萨奇 — 黄色",
+          "巧克力花束 — 在8万韩元的花束里插上商品名所写数量的巧克力。(Silva Pink 为 Silva Pink 玫瑰50朵 + 费列罗10个)",
+          "想要其他颜色，请在申请表“想要的色调”中选择，或填写在“其他”里。",
+        ],
+      },
+    },
+    xmastree: {
+      name: "圣诞植物树",
+      tagline: "12月28日前 · 节日植物礼物",
+      popularNote: "南洋杉迷你圣诞树 · 柠檬柏布袋 · 一品红",
+      notice: {
+        summary: [
+          "仅限12月28日前取花/送达的预约。（12月29日起此菜单将消失）",
+          "活体植物的形状、大小和叶色可能与照片略有不同。",
+        ],
+        full: [
+          "从一棵小树开始的圣诞节！",
+          "今年冬天，新笋花店为您准备了特别的圣诞植物礼物。",
+          "鲜红的圣诞装饰、可爱的迷你树，还有系着圣诞老人腰带缎带的植物布袋！",
+          "为了让小小的空间也充满圣诞气氛，我们从植物造型到花盆、装饰都用心挑选。",
+        ],
+      },
+    },
   },
 
   products: {
@@ -155,6 +192,128 @@ export const zh: Messages = {
         "2盆1套，两家各送一盆",
         "免费配送至湖南阁、宫、古宫潭等全州见面餐厅",
         "双层包装，送出后也能保持包装并养护",
+      ],
+    },
+    "doll-chiikawa": {
+      title: "[粉色] 吉伊的粉色告白",
+      name: "吉伊花束",
+      points: [
+        "让人心都融化的吉伊玩偶，藏在花丛之间。",
+        "推荐包装：粉色 — 最适合害羞的吉伊。",
+        "花会凋谢，玩偶却能一直留着，让礼物的回忆更长久。",
+      ],
+    },
+    "doll-hachiware": {
+      title: "[浅粉·蓝] 小八的天蓝应援",
+      name: "小八花束",
+      points: [
+        "永远积极又温柔的小八，替你送上加油的心意。",
+        "推荐：浅粉色花配蓝色包装 — 和小八的耳朵颜色一样。",
+        "适合生日、考试合格、加油打气。",
+      ],
+    },
+    "doll-usagi": {
+      title: "[黄色] 乌萨奇的黄色“呜啦！”",
+      name: "乌萨奇花束",
+      points: [
+        "古灵精怪的乌萨奇，一收到就让人笑出声。",
+        "推荐包装：黄色 — 明亮又活泼。",
+        "适合毕业、祝贺、转换心情。",
+      ],
+    },
+    "doll-trio": {
+      title: "[三人组] 吉伊卡哇三人组全员集合",
+      name: "吉伊卡哇三人组花束",
+      points: [
+        "吉伊、小八、乌萨奇三个好朋友聚在同一束花里。",
+        "粉丝看了会尖叫的颜值 — 非常适合拍照。",
+        "生日或纪念日，把最爱的朋友们一次送出。",
+      ],
+    },
+    "doll-choco-hippo15": {
+      title: "[粉色] 快乐河马15个，甜蜜粉色花束",
+      name: "快乐河马15个巧克力花束",
+      points: [
+        "在8万韩元的花束里插上15个健达快乐河马。",
+        "粉色包装，可爱又甜蜜。",
+        "适合生日、纪念日、告白。",
+      ],
+    },
+    "doll-choco-hippo20": {
+      title: "[黄色] 快乐河马20个，满满阳光花束",
+      name: "快乐河马20个巧克力花束",
+      points: [
+        "在8万韩元的花束里满满插上20个健达快乐河马。",
+        "黄色、蜜桃色调，明亮温暖。",
+        "适合毕业、考试合格、加油打气。",
+      ],
+    },
+    "doll-choco-ferrero10": {
+      title: "[奶油色] 费列罗10个，柔和金色花束",
+      name: "费列罗10个巧克力花束",
+      points: [
+        "在8万韩元的花束里插上10个费列罗。",
+        "奶油色包装配黄、白色花，低调又高级。",
+        "第一次送巧克力花束也很合适。",
+      ],
+    },
+    "doll-choco-ferrero15": {
+      title: "[黄色] 费列罗15个，闪闪金色花束",
+      name: "费列罗15个巧克力花束",
+      points: [
+        "在8万韩元的花束里插上15个费列罗，金光闪闪。",
+        "与黄色花朵相配，明亮又丰盈。",
+        "适合毕业、升职、各种庆祝。",
+      ],
+    },
+    "doll-choco-ferrero20": {
+      title: "[丰盛] 费列罗20个，满满金色花束",
+      name: "费列罗20个巧克力花束",
+      points: [
+        "在8万韩元的花束里插满20个费列罗。",
+        "收到的瞬间就很吸睛的丰盛分量。",
+        "适合特别的庆祝和活动。",
+      ],
+    },
+    "doll-choco-silvapink": {
+      title: "[高级] Silva Pink 玫瑰50朵 + 费列罗10个",
+      name: "Silva Pink 玫瑰50朵费列罗花束",
+      points: [
+        "50朵蓬松的 Silva Pink 粉色玫瑰，再加上10个费列罗。",
+        "满怀粉色，令人久久难忘。",
+        "适合求婚、纪念日等特别的日子。",
+      ],
+    },
+    "xmastree-araucaria": {
+      title: "南洋杉迷你圣诞树",
+      name: "南洋杉迷你圣诞树",
+      points: [
+        "层层分明的绿色枝叶，加上圣诞装饰。",
+        "红色条纹的白色花盆，营造经典圣诞氛围。",
+      ],
+    },
+    "xmastree-cypress": {
+      title: "柠檬柏布袋",
+      name: "柠檬柏布袋",
+      points: [
+        "清新的嫩绿叶子和淡淡的柠檬香！",
+        "用圣诞老人腰带缎带可爱包装的圣诞植物礼物。",
+      ],
+    },
+    "xmastree-poinsettia-mini": {
+      title: "一品红 迷你（10~15cm）",
+      name: "一品红 迷你",
+      points: [
+        "代表圣诞节的红色一品红，手掌大小的迷你款。",
+        "绿色包装加上圣诞快乐插卡，适合轻松表达心意。",
+      ],
+    },
+    "xmastree-poinsettia-gift": {
+      title: "一品红 礼品款（15~20cm）",
+      name: "一品红 礼品款",
+      points: [
+        "饱满的红色叶片让节日气氛满满。",
+        "绿色包装配红色缎带和圣诞插卡的礼品尺寸。",
       ],
     },
   },
@@ -315,14 +474,18 @@ export const zh: Messages = {
   },
 
   chocolate: {
-    title: "加购巧克力",
-    description: "与鲜花一起送出的甜蜜 — 想要几个就加几个。",
+    title: "加购巧克力·玩偶",
+    description: "与鲜花一起送出的甜蜜和可爱 — 想要几个就加几个。",
+    /** 초콜릿 칸 안 인형 단품 묶음 제목 (2026-11-17) */
+    dollHeading: "吉伊卡哇玩偶",
+    /** "함께?" 창에서 인형 아래 초콜릿 묶음 제목 */
+    chocolateHeading: "巧克力",
     photoAlt: (name) => `${name}照片`,
     prompt: {
-      title: "要一起送巧克力吗？",
-      description: "1,500韩元起。会和鲜花一起包装好。",
+      title: "要一起送巧克力或玩偶吗？",
+      description: "巧克力1,500韩元起，吉伊卡哇玩偶8,000韩元。会和鲜花一起包装好。",
       submitWithout: "不用了，直接预约",
-      submitWith: (count) => `加${count}个巧克力并预约`,
+      submitWith: (count) => `加${count}件并预约`,
       close: "关闭",
     },
     items: {
@@ -332,6 +495,12 @@ export const zh: Messages = {
       "happyhippo-10": { name: "快乐河马 10个", note: "纪念日推荐 — 一次插上10个。" },
       "ferrero-10": { name: "费列罗 10个", note: "纪念日推荐 — 一次插上10个。" },
       shoppingbag: { name: "花束手提袋", note: "方便携带，也可以立着放。" },
+      "doll-chiikawa": { name: "吉伊玩偶", note: "和花一起插在花束里送出。" },
+      "doll-hachiware": { name: "小八玩偶", note: "和花一起插在花束里送出。" },
+      "doll-usagi": { name: "乌萨奇玩偶", note: "和花一起插在花束里送出。" },
+      "dollset-chiikawa": { name: "吉伊玩偶 + 编织爱心2个", note: "红色编织爱心2个和玩偶一起插在花束里。" },
+      "dollset-hachiware": { name: "小八玩偶 + 编织爱心2个", note: "红色编织爱心2个和玩偶一起插在花束里。" },
+      "dollset-usagi": { name: "乌萨奇玩偶 + 编织爱心2个", note: "红色编织爱心2个和玩偶一起插在花束里。" },
     },
     bag: {
       badge: "一起加购",
@@ -703,5 +872,21 @@ export const zh: Messages = {
       amountMismatch: `支付金额与预约金额不符。请联系店铺（${businessInfo.phone}）。`,
       failed: `无法处理支付。请重试或联系店铺（${businessInfo.phone}）。`,
     },
+  },
+  minPrice: {
+    names: { graduation: "毕业季" },
+    period: (name: string, sm: number, sd: number, em: number, ed: number) => `${name}（${sm}/${sd}~${em}/${ed}）`,
+    upcoming: (period: string, price: string) => `${period}取花的预约，${price}起可预约。`,
+    blocked: (period: string, price: string) => `您选择的日期在${period}内，${price}起可预约。`,
+    conflict: (period: string, price: string, items: string) =>
+      `${period}期间${price}起可预约。请移除${items}或选择其他日期。`,
+    server: (period: string, price: string) => `${period}期间${price}起可预约。请重新选择商品。`,
+  },
+  salePeriod: {
+    blocked: (month: number, day: number) => `仅限${month}月${day}日前取花/送达的预约。`,
+    conflict: (items: string, month: number, day: number) =>
+      `${items}仅限${month}月${day}日前取花/送达。请移除或选择更早的日期。`,
+    server: (name: string, month: number, day: number) =>
+      `${name}仅限${month}月${day}日前取花/送达。请重新选择日期或商品。`,
   },
 };

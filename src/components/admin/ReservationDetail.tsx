@@ -97,7 +97,7 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
           {request.items.map((item) => (
             <li key={item.productId} className="flex justify-between gap-3 py-2 text-[14px]">
               <span className="text-ink">
-                {formatAdminItemName(item.category, item.price)} × {item.quantity}
+                {formatAdminItemName(item)} × {item.quantity}
               </span>
               <span className="text-body">{ko.format.price(item.price * item.quantity)}</span>
             </li>
@@ -117,7 +117,7 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
           </ul>
         )}
         <p className="mt-1 flex justify-between border-t-2 border-ink pt-2 text-[15px] font-extrabold text-ink">
-          <span>합계 {request.totalQuantity}개{chocolates.length > 0 ? " + 초콜릿·쇼핑백" : ""}</span>
+          <span>합계 {request.totalQuantity}개{chocolates.length > 0 ? " + 초콜릿·쇼핑백·인형" : ""}</span>
           <span>{ko.format.price(request.totalPrice)}</span>
         </p>
         <Rows className="mt-3">

@@ -13,6 +13,8 @@ import { MAX_QUANTITY } from "@/data/reservationOptions";
 import { ko, type Messages } from "@/i18n/ko";
 import { formatDateLabel } from "@/lib/date";
 import { getEventCopy } from "@/lib/events";
+import { describeMinPricePeriod, getBlockedByMinPrice, getMinPricePeriodOn } from "@/lib/minPrice";
+import { getOutOfSalePeriod, monthDayOf } from "@/lib/salePeriod";
 import { formatTimeLabel, isSlotBookable, type Now } from "@/lib/time";
 import type { ProductCategoryId, Selection, SelectionIssue } from "@/types/reservation";
 
@@ -80,7 +82,7 @@ export function getChocolateItems(selection: Selection): ChocolateItem[] {
     .filter((item) => item.quantity > 0);
 }
 
-/** 초콜릿을 하나라도 담았는지 — 쇼핑백만 담은 건 세지 않음 ("초콜릿도 함께?" 창을 띄울지) */
+/** 초콜릿·인형을 하나라도 담았는지 — 쇼핑백만 담은 건 세지 않음 ("초콜릿·인형도 함께?" 창을 띄울지) */
 export function hasChocolate(selection: Selection) {
   return getChocolateItems(selection).some((item) => item.chocolate.kind !== "bag");
 }
@@ -112,9 +114,20 @@ export function getProductCopy(product: Product, t: Messages = ko) {
   return t.products[product.id as ProductId];
 }
 
-/** "꽃다발 6만원" (언어별) */
+/** "꽃다발 6만원" (언어별). 금액이 같은 상품이 여러 개인 종류는 상품 이름으로 — "치이카와 꽃다발 8만원" */
 export function getItemName(product: Product, t: Messages = ko) {
-  return t.format.itemName(t.categories[product.category].name, t.format.priceShort(product.price));
+  const name = getProductCopy(product, t).name ?? t.categories[product.category].name;
+  return t.format.itemName(name, t.format.priceShort(product.price));
+}
+
+/** 저장된 예약 한 줄(상품 id·종류·금액)의 이름 — 지금 상품 목록에 없으면 "종류 금액" */
+export function getSavedItemName(
+  item: { productId: string; category: ProductCategoryId; price: number },
+  t: Messages = ko,
+) {
+  const product = allProducts.find((candidate) => candidate.id === item.productId);
+  if (product) return t.format.itemName(getProductCopy(product, t).name ?? t.categories[item.category].name, t.format.priceShort(item.price));
+  return t.format.itemName(t.categories[item.category].name, t.format.priceShort(item.price));
 }
 
 /** 목록 위 한 줄 안내 — 문구가 따로 없으면 인기 순위대로 "인기 금액: 6만원 · 10만원 … 순" */
@@ -133,10 +146,39 @@ export function isScheduleBookable(selection: Selection, now: Now | null) {
   return isSlotBookable(selection.time, selection.date, now);
 }
 
+/** 담은 상품 중 고른 날짜(졸업시즌 등)에 안 되는 것이 있으면 안내 문구, 없으면 null */
+export function getMinPriceConflict(selection: Selection, t: Messages = ko): string | null {
+  const period = selection.date ? getMinPricePeriodOn(selection.date) : undefined;
+  if (!period) return null;
+  const blocked = getBlockedByMinPrice(
+    getOrderItems(selection).map((item) => item.product),
+    selection.date,
+  );
+  if (blocked.length === 0) return null;
+  return t.minPrice.conflict(
+    describeMinPricePeriod(period, t),
+    t.format.price(period.minPrice),
+    blocked.map((product) => getItemName(product, t)).join(", "),
+  );
+}
+
+/** 담은 기간 한정 상품(크리스마스 식물트리 등)을 고른 날짜에 받을 수 없으면 안내 문구, 아니면 null */
+export function getSalePeriodConflict(selection: Selection, t: Messages = ko): string | null {
+  const blocked = getOutOfSalePeriod(
+    getOrderItems(selection).map((item) => item.product),
+    selection.date,
+  );
+  const lastDate = blocked[0] ? getCategory(blocked[0].category).lastDate : undefined;
+  if (!lastDate) return null;
+  return t.salePeriod.conflict(blocked.map((product) => getItemName(product, t)).join(", "), ...monthDayOf(lastDate));
+}
+
 /** 가장 먼저 채워야 할 항목. 모두 선택됐으면 null */
 export function getSelectionIssue(selection: Selection, now: Now | null): SelectionIssue | null {
   if (getOrderItems(selection).length === 0) return "items";
   if (selection.date === null) return "date";
+  if (getMinPriceConflict(selection) !== null) return "price";
+  if (getSalePeriodConflict(selection) !== null) return "period";
   if (selection.time === null || !isScheduleBookable(selection, now)) return "time";
   return null;
 }

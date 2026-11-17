@@ -4,6 +4,7 @@ import { findBlackboardPreset } from "@/data/reservationOptions";
 import { localeOptions } from "@/i18n";
 import { ko } from "@/i18n/ko";
 import { parseDateKey } from "@/lib/date";
+import { getSavedItemName } from "@/lib/selection";
 import { getSlotHour, SHOP_TIME_ZONE } from "@/lib/time";
 import type { Locale } from "@/types/i18n";
 import type { ProductCategoryId, ReservationDelivery, ReservationRequest } from "@/types/reservation";
@@ -40,22 +41,22 @@ export function formatAdminDateTime(iso: string) {
   }).format(new Date(iso));
 }
 
-/** "꽃다발 6만원" */
-export function formatAdminItemName(category: ProductCategoryId, price: number) {
-  return ko.format.itemName(ko.categories[category].name, ko.format.priceShort(price));
+/** "꽃다발 6만원" — 금액이 같은 상품이 여러 개인 종류는 상품 이름으로 ("치이카와 꽃다발 8만원") */
+export function formatAdminItemName(item: { productId: string; category: ProductCategoryId; price: number }) {
+  return getSavedItemName(item, ko);
 }
 
 /** 예약 목록 한 줄 요약 — "꽃다발 6만원 ×2 · 호접난 12만원" */
 export function summarizeItems(request: ReservationRequest) {
   return request.items
     .map((item) => {
-      const name = formatAdminItemName(item.category, item.price);
+      const name = formatAdminItemName(item);
       return item.quantity > 1 ? `${name} ×${item.quantity}` : name;
     })
     .join(" · ");
 }
 
-/** 함께 담은 초콜릿·쇼핑백 — "해피히포 1개 ×2 · 페레로로쉐 10개 · 꽃다발 쇼핑백" (없으면 "") */
+/** 함께 담은 초콜릿·쇼핑백·인형 — "해피히포 1개 ×2 · 페레로로쉐 10개 · 꽃다발 쇼핑백 · 치이카와 인형" (없으면 "") */
 export function describeChocolates(request: ReservationRequest) {
   return (request.chocolates ?? [])
     .map((chocolate) => {
@@ -85,7 +86,7 @@ export function describeDeliveryMessage(delivery: ReservationDelivery) {
 
 /** 상품 1개 이름 — "꽃다발 6만원 (1/2)" (같은 상품이 1개면 번호 없이) */
 export function describeDeliveryName(request: ReservationRequest, delivery: ReservationDelivery) {
-  const name = formatAdminItemName(delivery.category, delivery.price);
+  const name = formatAdminItemName(delivery);
   const quantity = request.items.find((item) => item.productId === delivery.productId)?.quantity ?? 1;
   return quantity > 1 ? ko.format.unitName(name, delivery.unitNo, quantity) : name;
 }

@@ -29,6 +29,8 @@ export const messageOptionsByCategory: Record<ProductCategoryId, MessageType[]> 
   bouquet: ["none", "memo"],
   basket: ["none", "ribbon", "blackboard"],
   orchid: ["blackboard"],
+  doll: ["none", "memo"],
+  xmastree: ["none", "memo"],
 };
 
 /** 블랙보드 "직접 입력" 선택값 */
@@ -152,6 +154,17 @@ export const SAME_DAY_LEAD_HOURS = 2;
  */
 export const ORDER_CLOSE_HOUR = 17;
 export const ORDER_OPEN_HOUR = 9;
+
+/**
+ * 바쁜 시기 최소 금액 — 받는 날짜가 기간 안이면 이 금액보다 싼 꽃 상품은 예약 불가 (초콜릿·쇼핑백은 상관없음).
+ * 졸업시즌: 2026-11-17 사용자 요청 (지금은 꽃다발 5만원만 해당). 이름은 언어 파일 `minPrice.names`.
+ * 새 기간은 한 줄 추가 (start·end 모두 포함되는 날).
+ */
+export const minPricePeriods = [
+  { id: "graduation", start: "2026-12-23", end: "2027-02-26", minPrice: 60000 },
+] as const satisfies { id: string; start: string; end: string; minPrice: number }[];
+
+export type MinPricePeriod = (typeof minPricePeriods)[number];
 
 /** 상품 한 종류당 최대 수량 (단체 주문은 별도 문의) */
 export const MAX_QUANTITY = 20;

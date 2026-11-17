@@ -18,6 +18,7 @@ export default function ProductPhotos({
   large?: boolean;
 }) {
   const t = useT();
+  const siteLink = siteLinksByCategory[product.category];
   const { images } = usePhotos()(productSlot(product.id));
   const total = images.length;
 
@@ -44,20 +45,22 @@ export default function ProductPhotos({
           </span>
         </li>
       ))}
-      <li className={`shrink-0 snap-start ${large ? "aspect-[4/5] w-[45%]" : "aspect-[3/4] w-[40%]"}`}>
-        <a
-          href={siteLinksByCategory[product.category]}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex h-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-brand bg-brand-tint px-3 text-center transition hover:bg-white"
-        >
-          <span aria-hidden="true" className="text-2xl">
-            📷
-          </span>
-          <span className="text-[14px] font-bold text-brand-dark">{t.productOption.morePhotos}</span>
-          <span className="text-[12px] leading-snug text-sub">{t.productOption.morePhotosSub}</span>
-        </a>
-      </li>
+      {siteLink && (
+        <li className={`shrink-0 snap-start ${large ? "aspect-[4/5] w-[45%]" : "aspect-[3/4] w-[40%]"}`}>
+          <a
+            href={siteLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-brand bg-brand-tint px-3 text-center transition hover:bg-white"
+          >
+            <span aria-hidden="true" className="text-2xl">
+              📷
+            </span>
+            <span className="text-[14px] font-bold text-brand-dark">{t.productOption.morePhotos}</span>
+            <span className="text-[12px] leading-snug text-sub">{t.productOption.morePhotosSub}</span>
+          </a>
+        </li>
+      )}
     </ul>
   );
 }

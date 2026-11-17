@@ -6,7 +6,7 @@ import { getChocolateName, type SelectionSummary } from "@/lib/selection";
 import ChocolateField from "./ChocolateField";
 
 /**
- * 초콜릿을 하나도 안 담고 [예약하기]를 눌렀을 때 한 번만 뜨는 창 (2026-10-12 사용자 요청).
+ * 초콜릿·인형을 하나도 안 담고 [예약하기]를 눌렀을 때 한 번만 뜨는 창 (2026-10-12 사용자 요청, 인형은 2026-11-17 추가).
  * 여기서 바로 담을 수 있고, 안 담아도 그대로 예약된다.
  */
 export default function ChocolatePrompt({
@@ -27,7 +27,7 @@ export default function ChocolatePrompt({
   onClose: () => void;
 }) {
   const t = useT();
-  // 쇼핑백은 초콜릿으로 세지 않음
+  // 쇼핑백은 세지 않음 (초콜릿·인형만)
   const chocolateItems = summary.chocolateItems.filter((item) => item.chocolate.kind !== "bag");
   const chocolatePrice = chocolateItems.reduce((sum, item) => sum + item.chocolate.price * item.quantity, 0);
   const added = chocolateItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -83,7 +83,7 @@ export default function ChocolatePrompt({
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
-          <ChocolateField quantities={quantities} onChange={onChange} withHeading={false} />
+          <ChocolateField quantities={quantities} onChange={onChange} withHeading={false} withDolls dollsFirst />
         </div>
 
         <div className="border-t border-line px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3">

@@ -4,6 +4,7 @@ import { ChevronIcon } from "@/components/ui/icons";
 import { useLookupT } from "@/hooks/useLookupT";
 import { useT } from "@/hooks/useLocale";
 import { parseDateKey } from "@/lib/date";
+import { getSavedItemName } from "@/lib/selection";
 import { getSlotHour } from "@/lib/time";
 import type { CustomerReservationView } from "@/types/reservation";
 
@@ -29,7 +30,7 @@ export default function LookupResultList({
           const items = request.items
             .map(
               (item) =>
-                `${t.format.itemName(t.categories[item.category].name, t.format.priceShort(item.price))} × ${item.quantity}`,
+                `${getSavedItemName(item, t)} × ${item.quantity}`,
             )
             .join(", ");
           return (

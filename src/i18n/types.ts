@@ -13,6 +13,11 @@ export type CategoryCopy = {
 export type ProductCopy = {
   title: string;
   points: string[];
+  /**
+   * 금액이 같은 상품이 여러 개인 종류(치이카와 꽃다발)만 — 담은 상품·관리자·알림·서류에 "꽃다발 8만원" 대신 쓸 이름.
+   * 예: "치이카와 꽃다발"
+   */
+  name?: string;
 };
 
 /** 특별한 날 종류 하나의 화면 문구 */

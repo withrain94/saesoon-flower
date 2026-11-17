@@ -78,6 +78,43 @@ export const vi: Messages = {
         ],
       },
     },
+    doll: {
+      name: "Bó hoa sô-cô-la & thú bông",
+      tagline: "Bó hoa thú bông Chiikawa và gói bó hoa đầy sô-cô-la",
+      popularNote: "Bó hoa thú bông Chiikawa · bó hoa sô-cô-la Happy Hippo, Ferrero Rocher · cũng có thể thêm riêng thú bông",
+      notice: {
+        summary: [
+          "Nếu để tông màu là “Để tiệm chọn”, chúng tôi sẽ gói theo màu gợi ý của nhân vật hoặc màu trong ảnh.",
+          "Hoa có thể hơi khác ảnh tùy mùa và hàng về.",
+          "Muốn thêm thú bông hoặc sô-cô-la, hãy chọn ở mục “Thêm sô-cô-la · thú bông” bên dưới.",
+        ],
+        full: [
+          "Bó hoa Chiikawa — màu gợi ý theo nhân vật",
+          "Chiikawa — hồng",
+          "Hachiware — hoa hồng nhạt + giấy gói xanh dương",
+          "Usagi — vàng",
+          "Bó hoa sô-cô-la — bó hoa 80.000₩ cắm số sô-cô-la đúng như tên sản phẩm. (Silva Pink: 50 bông hồng Silva Pink + 10 Ferrero Rocher)",
+          "Muốn màu khác, hãy chọn ở mục “Tông màu mong muốn” trong đơn hoặc ghi vào “Khác”.",
+        ],
+      },
+    },
+    xmastree: {
+      name: "Cây Giáng sinh",
+      tagline: "Đến 28/12 · quà cây xanh mùa lễ",
+      popularNote: "Cây Araucaria mini · Túi trắc bách diệp chanh · Trạng nguyên",
+      notice: {
+        summary: [
+          "Chỉ nhận đơn có ngày nhận đến 28/12. (Từ 29/12 mục này sẽ không còn)",
+          "Là cây sống nên hình dáng, kích thước và màu lá có thể hơi khác ảnh.",
+        ],
+        full: [
+          "Bắt đầu Giáng sinh với một cây thông nhỏ!",
+          "Mùa đông này, tiệm hoa Saesoon chuẩn bị những món quà cây xanh Giáng sinh đặc biệt.",
+          "Đồ trang trí Giáng sinh đỏ rực, cây thông mini đáng yêu và túi cây quấn ruy băng thắt lưng ông già Noel!",
+          "Chúng tôi chăm chút từ dáng cây, chậu đến từng món trang trí để cả không gian nhỏ cũng ngập tràn không khí Giáng sinh.",
+        ],
+      },
+    },
   },
 
   products: {
@@ -192,6 +229,128 @@ export const vi: Messages = {
         "Bộ 2 chậu để tặng mỗi bên gia đình một chậu",
         "Miễn phí giao đến các nhà hàng ra mắt ở Jeonju như Honamgak, Gung, Gogungdam",
         "Gói hai lớp, có thể giữ nguyên lớp gói và chăm sóc sau khi tặng",
+      ],
+    },
+    "doll-chiikawa": {
+      title: "[Hồng] Lời tỏ tình hồng của Chiikawa",
+      name: "Bó hoa Chiikawa",
+      points: [
+        "Thú bông Chiikawa nằm giữa những bông hoa — nhìn là tan chảy.",
+        "Gói gợi ý: hồng — hợp nhất với Chiikawa nhút nhát.",
+        "Hoa có thể héo nhưng thú bông còn mãi, món quà được nhớ lâu.",
+      ],
+    },
+    "doll-hachiware": {
+      title: "[Hồng nhạt · Xanh] Lời cổ vũ xanh trời của Hachiware",
+      name: "Bó hoa Hachiware",
+      points: [
+        "Hachiware luôn lạc quan và ấm áp, gửi trao lời cổ vũ của bạn.",
+        "Gợi ý: hoa hồng nhạt với giấy gói xanh — đúng màu tai Hachiware.",
+        "Hợp làm quà sinh nhật, thi đỗ hay động viên.",
+      ],
+    },
+    "doll-usagi": {
+      title: "[Vàng] Tiếng “Ura!” vàng rực của Usagi",
+      name: "Bó hoa Usagi",
+      points: [
+        "Usagi tinh nghịch khiến người nhận bật cười ngay khi thấy.",
+        "Gói gợi ý: vàng — tươi sáng và vui nhộn.",
+        "Hợp làm quà tốt nghiệp, chúc mừng hay đổi tâm trạng.",
+      ],
+    },
+    "doll-trio": {
+      title: "[Bộ ba] Đủ cả ba bạn Chiikawa",
+      name: "Bó hoa bộ ba Chiikawa",
+      points: [
+        "Chiikawa, Hachiware và Usagi cùng tụ họp trong một bó hoa.",
+        "Fan nào thấy cũng phải hét lên — bó hoa sinh ra để chụp ảnh.",
+        "Tặng cả nhóm bạn yêu thích một lần vào sinh nhật hay ngày kỷ niệm.",
+      ],
+    },
+    "doll-choco-hippo15": {
+      title: "[Hồng] Bó hoa hồng ngọt ngào với 15 Happy Hippo",
+      name: "Bó hoa sô-cô-la 15 Happy Hippo",
+      points: [
+        "Bó hoa 80.000₩ cắm thêm 15 Kinder Happy Hippo.",
+        "Giấy gói hồng, đáng yêu và ngọt ngào.",
+        "Hợp làm quà sinh nhật, kỷ niệm hay tỏ tình.",
+      ],
+    },
+    "doll-choco-hippo20": {
+      title: "[Vàng] Bó hoa nắng ấm với 20 Happy Hippo",
+      name: "Bó hoa sô-cô-la 20 Happy Hippo",
+      points: [
+        "Bó hoa 80.000₩ cắm đầy 20 Kinder Happy Hippo.",
+        "Tông vàng và đào, tươi sáng và ấm áp.",
+        "Hợp làm quà tốt nghiệp, thi đỗ hay cổ vũ.",
+      ],
+    },
+    "doll-choco-ferrero10": {
+      title: "[Kem] Bó hoa ánh vàng nhẹ nhàng với 10 Ferrero Rocher",
+      name: "Bó hoa sô-cô-la 10 Ferrero Rocher",
+      points: [
+        "Bó hoa 80.000₩ cắm thêm 10 Ferrero Rocher.",
+        "Giấy gói màu kem với hoa vàng, trắng — nhẹ nhàng, sang trọng.",
+        "Phù hợp nếu bạn tặng bó hoa sô-cô-la lần đầu.",
+      ],
+    },
+    "doll-choco-ferrero15": {
+      title: "[Vàng] Bó hoa vàng lấp lánh với 15 Ferrero Rocher",
+      name: "Bó hoa sô-cô-la 15 Ferrero Rocher",
+      points: [
+        "Bó hoa 80.000₩ cắm 15 Ferrero Rocher lấp lánh ánh vàng.",
+        "Hòa cùng hoa vàng, rực rỡ và đầy đặn.",
+        "Hợp làm quà tốt nghiệp, thăng chức, chúc mừng.",
+      ],
+    },
+    "doll-choco-ferrero20": {
+      title: "[Đầy đặn] Bó hoa vàng rực với 20 Ferrero Rocher",
+      name: "Bó hoa sô-cô-la 20 Ferrero Rocher",
+      points: [
+        "Bó hoa 80.000₩ cắm đầy 20 Ferrero Rocher.",
+        "Kích thước nổi bật ngay khi nhận.",
+        "Hợp cho những dịp chúc mừng, sự kiện đặc biệt.",
+      ],
+    },
+    "doll-choco-silvapink": {
+      title: "[Cao cấp] 50 hồng Silva Pink + 10 Ferrero Rocher",
+      name: "Bó hoa 50 hồng Silva Pink & Ferrero Rocher",
+      points: [
+        "50 bông hồng Silva Pink bồng bềnh kèm 10 Ferrero Rocher.",
+        "Một ôm hồng ngập tràn, đáng nhớ thật lâu.",
+        "Hợp cho cầu hôn, kỷ niệm và những ngày đặc biệt.",
+      ],
+    },
+    "xmastree-araucaria": {
+      title: "Cây Araucaria mini",
+      name: "Cây Araucaria mini",
+      points: [
+        "Cành xanh xếp tầng xinh xắn kèm đồ trang trí Giáng sinh.",
+        "Chậu trắng sọc đỏ mang không khí Giáng sinh cổ điển.",
+      ],
+    },
+    "xmastree-cypress": {
+      title: "Túi trắc bách diệp chanh",
+      name: "Túi trắc bách diệp chanh",
+      points: [
+        "Lá xanh non tươi mát và hương chanh dịu nhẹ!",
+        "Món quà cây Giáng sinh gói ruy băng thắt lưng ông già Noel đáng yêu.",
+      ],
+    },
+    "xmastree-poinsettia-mini": {
+      title: "Trạng nguyên mini (10–15cm)",
+      name: "Trạng nguyên mini",
+      points: [
+        "Cây trạng nguyên đỏ đặc trưng Giáng sinh, cỡ mini vừa lòng bàn tay.",
+        "Gói giấy xanh kèm thẻ Merry Christmas, món quà nhỏ dễ thương.",
+      ],
+    },
+    "xmastree-poinsettia-gift": {
+      title: "Trạng nguyên quà tặng (15–20cm)",
+      name: "Trạng nguyên quà tặng",
+      points: [
+        "Lá đỏ sum suê mang không khí cuối năm ngập tràn.",
+        "Cỡ quà tặng với giấy gói xanh, ruy băng đỏ và thẻ Giáng sinh.",
       ],
     },
   },
@@ -353,14 +512,18 @@ export const vi: Messages = {
   },
 
   chocolate: {
-    title: "Thêm sô-cô-la",
-    description: "Vị ngọt gửi kèm bó hoa — quý khách muốn bao nhiêu cũng được.",
+    title: "Thêm sô-cô-la · thú bông",
+    description: "Vị ngọt và sự dễ thương gửi kèm bó hoa — quý khách muốn bao nhiêu cũng được.",
+    /** 초콜릿 칸 안 인형 단품 묶음 제목 (2026-11-17) */
+    dollHeading: "Thú bông Chiikawa",
+    /** "함께?" 창에서 인형 아래 초콜릿 묶음 제목 */
+    chocolateHeading: "Sô-cô-la",
     photoAlt: (name) => `Ảnh ${name}`,
     prompt: {
-      title: "Quý khách có muốn thêm sô-cô-la không?",
-      description: "Chỉ từ 1.500 KRW. Tiệm sẽ gói cùng với hoa.",
+      title: "Quý khách có muốn thêm sô-cô-la hoặc thú bông không?",
+      description: "Sô-cô-la chỉ từ 1.500 KRW, thú bông Chiikawa 8.000 KRW. Tiệm sẽ gói cùng với hoa.",
       submitWithout: "Không cần, đặt như vậy",
-      submitWith: (count) => `Đặt kèm ${count} sô-cô-la`,
+      submitWith: (count) => `Đặt kèm ${count} món`,
       close: "Đóng",
     },
     items: {
@@ -370,6 +533,12 @@ export const vi: Messages = {
       "happyhippo-10": { name: "Happy Hippo × 10", note: "Gợi ý cho dịp đặc biệt — cắm kèm 10 cái." },
       "ferrero-10": { name: "Ferrero Rocher × 10", note: "Gợi ý cho dịp đặc biệt — cắm kèm 10 cái." },
       shoppingbag: { name: "Túi xách đựng bó hoa", note: "Dễ mang theo và có thể đặt đứng." },
+      "doll-chiikawa": { name: "Thú bông Chiikawa", note: "Cắm cùng hoa trong bó hoa." },
+      "doll-hachiware": { name: "Thú bông Hachiware", note: "Cắm cùng hoa trong bó hoa." },
+      "doll-usagi": { name: "Thú bông Usagi", note: "Cắm cùng hoa trong bó hoa." },
+      "dollset-chiikawa": { name: "Thú bông Chiikawa + 2 trái tim len", note: "Cắm thú bông cùng 2 trái tim len đỏ vào bó hoa." },
+      "dollset-hachiware": { name: "Thú bông Hachiware + 2 trái tim len", note: "Cắm thú bông cùng 2 trái tim len đỏ vào bó hoa." },
+      "dollset-usagi": { name: "Thú bông Usagi + 2 trái tim len", note: "Cắm thú bông cùng 2 trái tim len đỏ vào bó hoa." },
     },
     bag: {
       badge: "Mua kèm",
@@ -742,5 +911,21 @@ export const vi: Messages = {
       amountMismatch: `Số tiền thanh toán khác với số tiền đặt. Vui lòng liên hệ cửa hàng (${businessInfo.phone}).`,
       failed: `Không thể xử lý thanh toán. Vui lòng thử lại hoặc liên hệ cửa hàng (${businessInfo.phone}).`,
     },
+  },
+  minPrice: {
+    names: { graduation: "Mùa tốt nghiệp" },
+    period: (name: string, sm: number, sd: number, em: number, ed: number) => `${name} (${sd}/${sm}–${ed}/${em})`,
+    upcoming: (period: string, price: string) => `Đơn nhận hoa trong ${period} chỉ áp dụng từ ${price}.`,
+    blocked: (period: string, price: string) => `Ngày bạn chọn thuộc ${period}, chỉ đặt được sản phẩm từ ${price}.`,
+    conflict: (period: string, price: string, items: string) =>
+      `Trong ${period}, chỉ đặt được sản phẩm từ ${price}. Vui lòng bỏ ${items} hoặc chọn ngày khác.`,
+    server: (period: string, price: string) => `Trong ${period}, chỉ đặt được sản phẩm từ ${price}. Vui lòng chọn lại sản phẩm.`,
+  },
+  salePeriod: {
+    blocked: (month: number, day: number) => `Chỉ nhận đơn có ngày nhận đến ${day}/${month}.`,
+    conflict: (items: string, month: number, day: number) =>
+      `${items} chỉ nhận đến ngày ${day}/${month}. Vui lòng bỏ ra hoặc chọn ngày sớm hơn.`,
+    server: (name: string, month: number, day: number) =>
+      `${name} chỉ nhận đến ngày ${day}/${month}. Vui lòng chọn lại ngày hoặc sản phẩm.`,
   },
 };
