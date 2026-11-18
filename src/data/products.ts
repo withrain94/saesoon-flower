@@ -190,6 +190,7 @@ const bouquet = defineCategory(
       price: 300000,
       cover: 0,
       images: photos([
+        "bouquet-300000-03.jpg",
         "bouquet-300000-02.jpg",
         "bouquet-300000-01.jpg",
       ]),
