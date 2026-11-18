@@ -95,7 +95,6 @@ export const storeContact = {
   kakaoChannelUrl: "https://pf.kakao.com/_xcRJxkG",
   instagramUrl: "https://www.instagram.com/saesoon_jeonju",
   blogUrl: "https://blog.naver.com/saesoonflower24",
-  coupangEatsUrl: "https://web.coupangeats.com/share?storeId=931861&dishId&key=ce4a8791-8f17-44b8-b837-54d60ff17dec",
   /** 직원이 매장에 있는 시간 (월~금, 시) — 나머지 시간은 무인 운영 */
   staffedHours: { open: 9, close: 17 },
 };
