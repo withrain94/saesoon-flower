@@ -799,6 +799,8 @@ export const vi: Messages = {
 
   privacy: {
     consentLabel: "[Bắt buộc] Tôi đồng ý cho thu thập và sử dụng thông tin cá nhân",
+    consentHint: "Vui lòng đánh dấu ô này để hoàn tất đặt chỗ",
+    consentError: "Bạn chưa đánh dấu. Hãy đánh dấu ô này rồi nhấn lại nút đặt chỗ.",
     showDetails: "Xem nội dung",
     hideDetails: "Thu gọn",
     items: [

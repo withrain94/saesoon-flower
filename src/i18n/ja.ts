@@ -800,6 +800,8 @@ export const ja: Messages = {
 
   privacy: {
     consentLabel: "[必須] 個人情報の収集・利用に同意します",
+    consentHint: "チェックするとご予約いただけます",
+    consentError: "まだチェックされていません。ここにチェックして、予約ボタンをもう一度押してください。",
     showDetails: "内容を見る",
     hideDetails: "閉じる",
     items: [

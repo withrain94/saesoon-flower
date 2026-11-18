@@ -838,6 +838,8 @@ export const ko = {
 
   privacy: {
     consentLabel: "[필수] 개인정보 수집·이용에 동의합니다",
+    consentHint: "체크해야 예약할 수 있어요",
+    consentError: "아직 체크하지 않았어요. 여기를 체크한 뒤 예약 버튼을 다시 눌러 주세요.",
     showDetails: "내용 보기",
     hideDetails: "접기",
     items: [

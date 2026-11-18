@@ -760,6 +760,8 @@ export const zh: Messages = {
 
   privacy: {
     consentLabel: "[必选] 我同意收集和使用个人信息",
+    consentHint: "勾选后才能完成预约",
+    consentError: "尚未勾选。请勾选此处，然后再次点击预约按钮。",
     showDetails: "查看内容",
     hideDetails: "收起",
     items: [

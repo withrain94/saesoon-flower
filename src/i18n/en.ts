@@ -808,6 +808,8 @@ export const en: Messages = {
 
   privacy: {
     consentLabel: "[Required] I agree to the collection and use of my personal information",
+    consentHint: "Please check this box to complete your reservation",
+    consentError: "Not checked yet. Check this box, then tap the reservation button again.",
     showDetails: "Details",
     hideDetails: "Hide",
     items: [
