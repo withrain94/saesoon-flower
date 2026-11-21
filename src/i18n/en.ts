@@ -275,6 +275,15 @@ export const en: Messages = {
         "Give all their favorite friends at once for a birthday or anniversary.",
       ],
     },
+    "doll-hachiware-snack": {
+      title: "[Blue] Hachiware: Got Your Snacks?",
+      name: "Hachiware snack bouquet",
+      points: [
+        "Hachiware plus Happy Hippo and Ferrero Rocher chocolates, tucked in among the flowers.",
+        "Recommended: blue wrapping with light pink and sky-blue flowers — Hachiware's colors.",
+        "Flowers and treats in one — great for birthdays, cheering up or saying thanks.",
+      ],
+    },
     "doll-choco-hippo15": {
       title: "[Pink] Sweet Pink Bouquet with 15 Happy Hippos",
       name: "Chocolate bouquet with 15 Happy Hippos",

@@ -267,6 +267,15 @@ export const vi: Messages = {
         "Tặng cả nhóm bạn yêu thích một lần vào sinh nhật hay ngày kỷ niệm.",
       ],
     },
+    "doll-hachiware-snack": {
+      title: "[Xanh] Hachiware ơi, mang đồ ăn vặt chưa?",
+      name: "Bó hoa Hachiware kèm đồ ăn vặt",
+      points: [
+        "Hachiware cùng sô-cô-la Happy Hippo và Ferrero Rocher, cắm xen giữa những bông hoa.",
+        "Gợi ý: giấy gói xanh với hoa hồng nhạt và xanh trời — đúng màu Hachiware.",
+        "Vừa có hoa vừa có quà vặt — hợp tặng sinh nhật, cổ vũ hay cảm ơn.",
+      ],
+    },
     "doll-choco-hippo15": {
       title: "[Hồng] Bó hoa hồng ngọt ngào với 15 Happy Hippo",
       name: "Bó hoa sô-cô-la 15 Happy Hippo",
