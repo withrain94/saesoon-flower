@@ -276,6 +276,15 @@ export const vi: Messages = {
         "Vừa có hoa vừa có quà vặt — hợp tặng sinh nhật, cổ vũ hay cảm ơn.",
       ],
     },
+    "doll-trio-celebrate": {
+      title: "[Kem · Vàng] Cả ba cùng đến chúc mừng!",
+      name: "Bó hoa chúc mừng bộ ba Chiikawa",
+      points: [
+        "Chiikawa, Hachiware và Usagi cùng chúc mừng giữa những bông hoa vàng và màu kem.",
+        "Gợi ý: giấy gói màu kem với hoa vàng và trắng — tươi sáng, ấm áp.",
+        "Hợp cho những ngày muốn chúc mừng thật lớn như tốt nghiệp, sinh nhật hay thi đỗ.",
+      ],
+    },
     "doll-choco-hippo15": {
       title: "[Hồng] Bó hoa hồng ngọt ngào với 15 Happy Hippo",
       name: "Bó hoa sô-cô-la 15 Happy Hippo",

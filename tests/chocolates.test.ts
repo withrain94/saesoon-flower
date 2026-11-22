@@ -149,6 +149,7 @@ describe("치이카와 꽃다발·인형 단품 (2026-11-17)", () => {
         ["doll-usagi", 80000],
         ["doll-trio", 100000],
         ["doll-hachiware-snack", 90000],
+        ["doll-trio-celebrate", 110000],
         // 초콜릿 꽃다발 = 8만원 꽃다발 + 초콜릿 단품 금액 (2026-11-17 사용자 확인)
         ["doll-choco-hippo15", 80000 + 15 * 1500],
         ["doll-choco-hippo20", 80000 + 20 * 1500],
