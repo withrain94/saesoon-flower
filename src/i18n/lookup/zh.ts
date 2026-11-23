@@ -29,6 +29,9 @@ export const lookupZh: LookupMessages = {
     receiptMismatch: "受理编号不正确。请在预约完成页面或已保存的消息中确认8位受理编号。",
     tooMany: "连续输入错误，已暂时限制。请10分钟后再试，或致电店家。",
     failed: `处理失败。请稍后再试，或致电（+82 ${businessInfo.phone.slice(1)}）咨询。`,
+    editClosed: `目前无法在线修改收花人信息（已过修改期限或预约状态已变更）。请致电（+82 ${businessInfo.phone.slice(1)}）告知。`,
+    unchanged: "没有修改任何内容。",
+    invalid: "处理失败。请刷新页面后重试。",
   },
 
   status: {
@@ -46,6 +49,19 @@ export const lookupZh: LookupMessages = {
     total: (quantity) => `共 ${quantity} 件`,
     deliveries: "收花人·留言",
     payment: "付款",
+  },
+
+  edit: {
+    title: "修改收花人信息",
+    open: "修改收花人信息",
+    scope: "只能修改收花人的姓名、电话和配送地址。日期、时间、商品和留言请致电告知。",
+    rule: "周六、周日的预约可在周五下午5点前修改，上午9点及以前的预约可在前一天下午5点前修改，其他预约可在收花时间2小时前修改。",
+    deadline: (when: string) => `${when}之前可以修改`,
+    closedInfo: "已过修改期限。如需更改，请致电告知。",
+    submit: "保存修改",
+    saving: "保存中…",
+    close: "不修改",
+    done: "收花人信息已修改，也已通知花店。",
   },
 
   cancel: {

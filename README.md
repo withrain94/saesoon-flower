@@ -20,7 +20,7 @@ src/
 │  └─ admin/                 관리자 페이지 — login / 목록(page.tsx, ?status= 필터) / [id] 상세 / cash-receipts 현금영수증 신청 내역(접수 달별, ?month=, 발급 완료 체크 — lib/cashReceipts) / photos 사진 관리(올리기·지우기·순서·대표 — lib/sitePhotos)
 ├─ proxy.ts                  /admin 요청마다 로그인 세션 갱신 (Next 16: middleware → proxy)
 ├─ components/
-│  ├─ lookup/                손님 예약 조회·취소 — ReservationLookup(예약자 이름+연락처), LookupResultList(여러 건이면 목록), LookupReservationDetails, LookupCancelPanel(입금 전 취소 / 입금 후 환불 계좌 받고 취소 요청)
+│  ├─ lookup/                손님 예약 조회·취소 — ReservationLookup(예약자 이름+연락처), LookupResultList(여러 건이면 목록), LookupReservationDetails, LookupCancelPanel(입금 전 취소 / 입금 후 환불 계좌 받고 취소 요청), LookupRecipientEditPanel(받는 분 정보 고치기)
 │  ├─ admin/                 관리자 화면 — CancelRequestCard(손님 취소 요청·환불 계좌), AdminHeader, LoginForm, StatusFilterTabs, StatusBadge, ReservationListItem, ReservationDetail, StatusChanger, AdminMemoForm, AdminDocuments, NotionSyncButton, ReminderToggle(안내 문자 보냄 표시), PhotoSlotEditor(사진 자리 하나 고치기), CompletionPanel·CompletionPhotoList·OrdererSmsSender(완성 사진 찍기·고르기 + 지금 문자 보내기)
 │  ├─ layout/                StoreHeader(예약 조회 버튼 — /check에선 숨김 + 소개 사이트 + LanguageSwitcher 🌐), Hero([꽃 예약하기]·[매장 위치] 버튼), StoreQuickInfo(사진 아래 매장 한 줄 요약), StoreInfoSections(신청서 아래 손님 후기·매장 안내·무료배송·자주 묻는 질문 — 문구 i18n/storeInfo/, 연락처 data/shop의 storeContact), SiteFooter — 매장 공통 화면
 │  ├─ reservation/           예약 기능
@@ -75,6 +75,7 @@ public/flowers/              상품 사진 ({종류}-{금액}-{번호}.jpg — b
    받는 분·메시지는 상품 1개 단위 상태(`UnitDetail`)로 관리하고, "앞과 같음" 해석은 `lib/units.ts`의 `resolveUnits` 하나로만 한다.
 7. 고객 신청 저장은 `useReservation.ts`의 `submit` → `server/actions/reservation.ts`(`validateReservationRequest`로 다시 검사 → `insertReservation`) 한 길로만 한다. 새 예약 알림(`server/notify.ts`, 문구는 `lib/reservationNotice.ts`)도 이 서버 함수에서 저장 성공 뒤 `after()`로 보낸다 — 알림 실패가 예약을 막지 않게.
    손님 예약 조회·취소는 `server/actions/lookup.ts` 한 길로만 한다. 조회는 예약자 이름(`isSameName`)+연락처(`isSamePhone`)가 모두 맞아야 하고, 취소는 고른 예약의 접수번호까지 다시 확인한다. 규칙(누가 무엇을 할 수 있나)은 `lib/customerLookup.ts`의 `getCustomerCancelOption` 하나: 접수 → 바로 취소("이미 입금했어요"면 취소 요청) / 입금·결제 확인 → 취소 요청(계좌이체는 환불 계좌 필수) / 제작 완료 이후 → 전화. 취소 요청은 `cancel_request` 칸에만 저장하고 상태는 매장이 환불 후 관리자에서 "취소"로 바꾼다. 조회 화면 문구는 `i18n/lookup/{언어}.ts`.
+   손님 받는 분 정보 고치기(성함·연락처·배송지, 호접난 식당만)도 같은 파일의 `editRecipientsByCustomer` — 취소처럼 접수번호 직접 입력 필요. 기한·검사·텔레그램 문구는 `lib/recipientEdit.ts` 하나(토·일 예약은 금 17시 전 / 9시 이전 예약은 전날 17시 전 / 그 외 2시간 전), 저장 `saveCustomerRecipientEdit` 뒤 `after()`로 텔레그램 알림 + 노션 다시 맞춤.
    관리자 화면·텔레그램·노션에 쓰는 한국어 설명(결제 방법·호접난 받는 방법·색감·메시지 등)은 `lib/adminFormat.ts`의 `describe…` 함수를 같이 쓴다 — 곳곳에서 따로 만들지 않는다.
    노션 날짜별 예약 표는 손님 신청·손님 취소(`after()`, `syncReservationToNotionById`)와 관리자 상태·메모 저장 뒤 `server/notion.ts`의 `syncReservationToNotion` 하나로만 맞춘다 (취소가 아니면 받는 날짜 페이지 표에 추가, 접수번호 칸으로 찾아 갱신, 취소면 [취소] 표시). 표 칸·페이지 이름은 `lib/notionReservation.ts`.
 8. 견적서·거래명세표 내용은 `lib/documents.ts`의 `buildBusinessDocument` 하나로만 만든다 (화면 미리보기·PDF 다운로드 공용). 공급자 정보는 `data/shop.ts`의 `businessInfo`.

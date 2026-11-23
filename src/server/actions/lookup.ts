@@ -11,6 +11,14 @@ import {
   toRefundAccount,
 } from "@/lib/customerLookup";
 import { formatReceiptNumber } from "@/lib/format";
+import {
+  applyRecipientEdit,
+  buildRecipientEditNotice,
+  canEditRecipients,
+  type RecipientEditError,
+  type RecipientEditInput,
+} from "@/lib/recipientEdit";
+import { toNowInTimeZone } from "@/lib/time";
 import type { CustomerReservationView, StoredReservation } from "@/types/reservation";
 import { ADMIN_HOME_PATH } from "../auth";
 import { getSiteOrigin, getSupabaseEnv } from "../env";
@@ -21,6 +29,7 @@ import {
   findReservationsByPhoneEnding,
   findReservationsByReceipt,
   saveCancelRequest,
+  saveCustomerRecipientEdit,
 } from "../reservations";
 
 /**
@@ -221,5 +230,65 @@ export async function cancelReservationByCustomer(input: CancelInput): Promise<L
     return { ok: true, reservation: { ...toView(reservation), cancelRequestedAt: cancelRequest.requestedAt } };
   } catch (error) {
     return failure(error, "취소");
+  }
+}
+
+export type RecipientEditResult =
+  | { ok: true; reservation: CustomerReservationView }
+  | LookupFailure
+  | { ok: false; code: "editClosed" | RecipientEditError };
+
+/**
+ * 손님이 받는 분 정보(성함·연락처·배송지, 호접난 식당) 고치기 — 취소처럼 이름·연락처 + 접수번호 직접 입력을 확인.
+ * 기한·검사 규칙은 lib/recipientEdit. 저장 뒤 매장 텔레그램 알림 + 노션 표 다시 맞춤.
+ */
+export async function editRecipientsByCustomer(input: {
+  receipt: string;
+  typedReceipt: string;
+  name: string;
+  phone: string;
+  edit: RecipientEditInput;
+}): Promise<RecipientEditResult> {
+  if (!getSupabaseEnv()) return { ok: false, code: "unavailable" };
+  const key = throttleKey(input?.phone);
+  if (isBlocked(key)) return slowFail("tooMany");
+  try {
+    const reservation = await findOwnReservation(input?.receipt, input?.name, input?.phone);
+    if (!reservation) {
+      countFail(key);
+      return slowFail("notFound");
+    }
+    if (normalizeReceiptNumber(String(input?.typedReceipt ?? "")) !== formatReceiptNumber(reservation.id)) {
+      countFail(key);
+      return slowFail("receiptMismatch");
+    }
+    clearFails(key);
+
+    const editable = canEditRecipients(
+      {
+        status: reservation.status,
+        cancelRequested: reservation.cancelRequest !== null,
+        date: reservation.request.date,
+        time: reservation.request.time,
+      },
+      toNowInTimeZone(new Date()),
+    );
+    if (!editable) return { ok: false, code: "editClosed" };
+
+    const applied = applyRecipientEdit(reservation.request, input?.edit);
+    if (!applied.ok) return applied;
+    if (!(await saveCustomerRecipientEdit(reservation.id, applied.request))) return { ok: false, code: "editClosed" };
+
+    const origin = getSiteOrigin();
+    const adminUrl = origin ? `${origin}${ADMIN_HOME_PATH}/${reservation.id}` : null;
+    after(() =>
+      sendTelegramMessage(
+        buildRecipientEditNotice(reservation.id, reservation.request, applied.request, reservation.status, adminUrl),
+      ),
+    );
+    after(() => syncReservationToNotionById(reservation.id));
+    return { ok: true, reservation: toView({ ...reservation, request: applied.request }) };
+  } catch (error) {
+    return failure(error, "받는 분 고치기");
   }
 }

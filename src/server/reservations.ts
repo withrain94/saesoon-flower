@@ -268,6 +268,22 @@ export async function cancelUnpaidReservation(id: string, cancelRecord: CancelRe
 }
 
 /** 손님 취소 요청 저장 (입금·결제 후) — 허용된 상태가 아니거나 이미 요청했으면 false */
+/**
+ * 손님이 조회 화면에서 받는 분 정보를 고친 예약 내용 저장 (server/actions/lookup — 이름·연락처·접수번호 확인 뒤).
+ * 취소·전달 완료·취소 요청 중인 예약은 바꾸지 않음. 바뀌었으면 true
+ */
+export async function saveCustomerRecipientEdit(id: string, request: ReservationRequest): Promise<boolean> {
+  const { data, error } = await createDatabaseClient()
+    .from(TABLE)
+    .update({ request, updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .in("status", ["received", "confirmed", "made"])
+    .is("cancel_request", null)
+    .select("id");
+  if (error) throw error;
+  return data.length > 0;
+}
+
 export async function saveCancelRequest(
   id: string,
   cancelRequest: CancelRequest,
