@@ -855,6 +855,7 @@ export const en: Messages = {
   },
 
   footer: {
+    business: { tradeName: "Business name", representative: "CEO", businessNumber: "Business registration no.", phone: "Phone" },
     /** 배달 지역 한 줄 (구글 검색에도 쓰임) */
     area: "Flower delivery in Jeonju & Wanju · Local Government Officials Development Institute (promotion & graduation ceremonies) · 24-hour self-service florist in Jeonju Innovation City",
     /** 상황별 꽃 한 줄 (구글 검색에도 쓰임) */
@@ -899,6 +900,7 @@ export const en: Messages = {
   },
 
   toss: {
+    testNotice: "🧪 This is a Toss Payments review test checkout. No real payment is made and the shop will not process this reservation.",
     bankDescription: "Your own account · auto-confirmed",
     cardDescription: "Personal card now · corporate card",
     bankGuide: [

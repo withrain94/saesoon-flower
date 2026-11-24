@@ -847,6 +847,7 @@ export const ja: Messages = {
   },
 
   footer: {
+    business: { tradeName: "商号", representative: "代表", businessNumber: "事業者登録番号", phone: "電話" },
     /** 배달 지역 한 줄 (구글 검색에도 쓰임) */
     area: "全州・完州の花配達 · 地方自治人材開発院（昇進式・修了式）への花配達 · 全州革新都市の24時間無人花屋",
     /** 상황별 꽃 한 줄 (구글 검색에도 쓰임) */
@@ -891,6 +892,7 @@ export const ja: Messages = {
   },
 
   toss: {
+    testNotice: "🧪 トスペイメンツ審査用のテスト決済画面です。実際には決済されず、店舗でも予約として扱いません。",
     bankDescription: "専用口座・自動確認",
     cardDescription: "個人カードは即時決済・法人カード",
     bankGuide: [

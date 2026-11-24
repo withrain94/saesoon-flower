@@ -60,7 +60,8 @@ export type UnitActions = {
 };
 
 /** 예약 페이지의 모든 상태와 동작을 한 곳에서 관리 */
-export function useReservation() {
+/** tossReview: 토스 심사용 주소(?toss=test)로 들어와 시험 결제창을 쓰는지 — 서버가 시험 키일 때만 온라인 결제를 켜는 데 씀 */
+export function useReservation(tossReview = false) {
   const now = useNow();
   const locale = useLocale();
   const t = useT();
@@ -193,7 +194,7 @@ export function useReservation() {
     const request = buildReservationRequest(selection, units, formData, submittedAt, locale);
     setSubmitting(true);
     try {
-      const result = await submitReservation(request);
+      const result = await submitReservation(tossReview ? { ...request, tossReview: true } : request);
       if (!result.ok) {
         setSubmitError(result.message);
         return;

@@ -23,7 +23,15 @@ import { scrollToNaverLinks } from "./sections";
  *   / (PayPal) paypalEmail
  * 온라인 결제(tossEnabled)가 켜져 있으면 계좌이체 = 예약 전용 입금 계좌(현금영수증은 결제창에서), 카드 = 개인카드 결제창 / 법인카드 키인
  */
-export default function PaymentMethodField({ totalPrice, tossEnabled }: { totalPrice: number; tossEnabled: boolean }) {
+export default function PaymentMethodField({
+  totalPrice,
+  tossEnabled,
+  tossTestMode = false,
+}: {
+  totalPrice: number;
+  tossEnabled: boolean;
+  tossTestMode?: boolean;
+}) {
   const t = useT();
   const locale = useLocale();
   const [method, setMethod] = useState<PaymentMethod>(paymentMethodOptions[0].value);
@@ -85,6 +93,11 @@ export default function PaymentMethodField({ totalPrice, tossEnabled }: { totalP
       </div>
 
       <div className="mt-3 space-y-3 rounded-2xl bg-panel p-3">
+        {tossTestMode && (
+          <p role="note" className="rounded-xl border border-danger/40 bg-white px-3 py-2 text-[13px] font-bold text-danger">
+            {t.toss.testNotice}
+          </p>
+        )}
         {method === "bank" && tossEnabled && <GuideList lines={t.toss.bankGuide} />}
         {method === "bank" && !tossEnabled && (
           <>

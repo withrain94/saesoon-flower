@@ -33,7 +33,8 @@ export async function submitReservation(input: unknown): Promise<SubmitReservati
   const submittedAt = new Date();
   const toss = getTossEnv();
   const result = validateReservationRequest(input, toNowInTimeZone(submittedAt), submittedAt, {
-    tossEnabled: toss !== null,
+    // 시험 키(토스 심사 중)는 심사용 주소에서 보낸 신청에만 켬 — 일반 손님이 돈이 안 나가는 시험 결제를 하지 않게
+    tossEnabled: toss !== null && (!toss.testMode || (input as { tossReview?: unknown } | null)?.tossReview === true),
   });
   if (!result.ok) return result;
 

@@ -38,7 +38,17 @@ export default function SiteFooter() {
       <p className="mt-3 leading-relaxed">{t.footer.area}</p>
       <p className="mt-1 leading-relaxed">{t.footer.occasions}</p>
       <p className="mt-1 leading-relaxed">{t.footer.seasons}</p>
+      <p className="mt-1">
+        {t.footer.business.tradeName} {businessInfo.tradeName} · {t.footer.business.representative} {businessInfo.representative} ·{" "}
+        {t.footer.business.businessNumber} {businessInfo.businessNumber}
+      </p>
       <p className="mt-1">{businessInfo.address}</p>
+      <p className="mt-1">
+        {t.footer.business.phone}{" "}
+        <a href={`tel:${businessInfo.phone.replaceAll("-", "")}`} className="underline underline-offset-2">
+          {businessInfo.phone}
+        </a>
+      </p>
       <p className="mt-1">© {t.shop.name}</p>
     </footer>
   );

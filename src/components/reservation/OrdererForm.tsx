@@ -36,6 +36,7 @@ export default function OrdererForm({
   onForEventChange,
   onSubmit,
   tossEnabled,
+  tossTestMode = false,
 }: {
   summary: SelectionSummary;
   units: ResolvedUnit[];
@@ -51,6 +52,8 @@ export default function OrdererForm({
   onSubmit: (formData: FormData) => void;
   /** 토스페이먼츠 온라인 결제가 켜져 있는지 (서버 환경변수) */
   tossEnabled: boolean;
+  /** 토스 심사용 시험 결제 화면인지 (결제 칸에 "시험 결제" 안내) */
+  tossTestMode?: boolean;
 }) {
   const t = useT();
   const hasOrchid = summary.items.some((item) => item.product.category === "orchid");
@@ -115,7 +118,7 @@ export default function OrdererForm({
 
       <div className="h-px bg-line" />
 
-      <PaymentMethodField totalPrice={summary.totalPrice} tossEnabled={tossEnabled} />
+      <PaymentMethodField totalPrice={summary.totalPrice} tossEnabled={tossEnabled} tossTestMode={tossTestMode} />
 
       <div className="h-px bg-line" />
 

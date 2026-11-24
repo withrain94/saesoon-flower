@@ -846,6 +846,7 @@ export const vi: Messages = {
   },
 
   footer: {
+    business: { tradeName: "Tên cửa hàng", representative: "Đại diện", businessNumber: "Mã số đăng ký kinh doanh", phone: "Điện thoại" },
     /** 배달 지역 한 줄 (구글 검색에도 쓰임) */
     area: "Giao hoa tại Jeonju, Wanju · Giao hoa đến Viện Phát triển Nhân lực Chính quyền Địa phương (lễ thăng chức, lễ tốt nghiệp) · Tiệm hoa tự phục vụ 24 giờ tại Thành phố Đổi mới Jeonju",
     /** 상황별 꽃 한 줄 (구글 검색에도 쓰임) */
@@ -890,6 +891,7 @@ export const vi: Messages = {
   },
 
   toss: {
+    testNotice: "🧪 Đây là trang thanh toán thử để Toss Payments xét duyệt. Không trừ tiền thật và cửa hàng sẽ không xử lý đặt hoa này.",
     bankDescription: "Tài khoản riêng · tự xác nhận",
     cardDescription: "Thẻ cá nhân trả ngay · thẻ công ty",
     bankGuide: [

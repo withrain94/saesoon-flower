@@ -807,6 +807,7 @@ export const zh: Messages = {
   },
 
   footer: {
+    business: { tradeName: "商号", representative: "代表", businessNumber: "营业执照号", phone: "电话" },
     /** 배달 지역 한 줄 (구글 검색에도 쓰임) */
     area: "全州·完州鲜花配送 · 地方自治人才开发院（晋升仪式·结业典礼）鲜花配送 · 全州革新城市24小时无人花店",
     /** 상황별 꽃 한 줄 (구글 검색에도 쓰임) */
@@ -851,6 +852,7 @@ export const zh: Messages = {
   },
 
   toss: {
+    testNotice: "🧪 这是 Toss Payments 审核用的测试支付页面。不会实际扣款，花店也不会处理此预约。",
     bankDescription: "专属账户·自动确认",
     cardDescription: "个人卡即时支付·公司卡",
     bankGuide: [

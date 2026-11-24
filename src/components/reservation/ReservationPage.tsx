@@ -20,9 +20,15 @@ import SectionTabs from "./SectionTabs";
 import SpecialEventBanner from "./SpecialEventBanner";
 import SubmitBar from "./SubmitBar";
 import { useReservation } from "./useReservation";
+import { useTossReviewParam } from "./useTossReviewParam";
 
-/** tossEnabled: 토스페이먼츠 온라인 결제가 켜져 있는지 (app/page.tsx가 서버 환경변수로 정함) */
-export default function ReservationPage({ tossEnabled }: { tossEnabled: boolean }) {
+/**
+ * tossMode: 토스페이먼츠 키 종류 (app/page.tsx가 서버 환경변수로 정함) — live = 모든 손님에게 온라인 결제,
+ * test(시험 키, 토스 심사 중) = 심사용 주소(?toss=test)로 들어온 화면에서만 켬. 일반 손님은 예전 결제 방식 그대로
+ */
+export default function ReservationPage({ tossMode }: { tossMode: "off" | "test" | "live" }) {
+  const tossReview = useTossReviewParam() && tossMode === "test";
+  const tossEnabled = tossMode === "live" || tossReview;
   const {
     now,
     selection,
@@ -48,7 +54,7 @@ export default function ReservationPage({ tossEnabled }: { tossEnabled: boolean 
     submitting,
     submitError,
     submit,
-  } = useReservation();
+  } = useReservation(tossReview);
   const [categoryId, setCategoryId] = useState<ProductCategoryId>(productCategories[0].id);
 
   /** 첫 화면 입구 카드 → 해당 종류 목록으로 이동 */
@@ -118,6 +124,7 @@ export default function ReservationPage({ tossEnabled }: { tossEnabled: boolean 
         onForEventChange={setForEvent}
         onSubmit={submit}
         tossEnabled={tossEnabled}
+        tossTestMode={tossReview}
       />
       {reservation === null && <SubmitBar summary={summary} submitting={submitting} error={submitError} />}
       <ChocolatePrompt

@@ -885,6 +885,8 @@ export const ko = {
   },
 
   footer: {
+    /** 사업자 정보 한 줄 (전자결제 심사 요건 — 값은 data/shop의 businessInfo) */
+    business: { tradeName: "상호", representative: "대표", businessNumber: "사업자등록번호", phone: "전화" },
     /** 배달 지역 한 줄 (구글 검색에도 쓰임) */
     area: "전주·완주 꽃배달 · 지방자치인재개발원(승진식·수료식) 꽃배달 · 전주혁신도시 24시 무인꽃집",
     /** 상황별 꽃 한 줄 (구글 검색에도 쓰임) */
@@ -931,6 +933,7 @@ export const ko = {
 
   /** 토스페이먼츠 온라인 결제 (계좌이체 = 예약 전용 입금 계좌, 개인카드 = 카드 결제창) — 켜져 있을 때만 보임 */
   toss: {
+    testNotice: "🧪 토스페이먼츠 심사용 시험 결제 화면이에요. 실제로 돈이 나가지 않고, 예약도 매장에서 처리하지 않아요.",
     bankDescription: "전용 계좌 · 자동 확인",
     cardDescription: "개인카드 바로 결제 · 법인카드",
     bankGuide: [

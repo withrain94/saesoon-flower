@@ -24,6 +24,7 @@ export default function ReserveSection({
   onForEventChange,
   onSubmit,
   tossEnabled,
+  tossTestMode = false,
 }: {
   /** null = 아직 제출 전 */
   reservation: SubmittedReservation | null;
@@ -39,6 +40,8 @@ export default function ReserveSection({
   onForEventChange: (value: boolean) => void;
   onSubmit: (formData: FormData) => void;
   tossEnabled: boolean;
+  /** 토스 심사용 시험 결제 화면인지 (결제 칸에 "시험 결제" 안내) */
+  tossTestMode?: boolean;
 }) {
   const t = useT();
 
@@ -62,6 +65,7 @@ export default function ReserveSection({
           onForEventChange={onForEventChange}
           onSubmit={onSubmit}
           tossEnabled={tossEnabled}
+          tossTestMode={tossTestMode}
         />
       )}
     </section>
