@@ -71,8 +71,6 @@ export const storeInfoEn: StoreInfoMessages = {
     kakao: "Chat on KakaoTalk",
     instagram: "Instagram",
     blog: "Naver Blog",
-    coupang: "Same-day order on Coupang Eats",
-    coupangNote: "Subject to stock",
   },
 
   delivery: {
@@ -114,7 +112,7 @@ export const storeInfoEn: StoreInfoMessages = {
       },
       {
         q: "Can I buy without booking?",
-        a: "Yes, displayed flowers can be bought any time at our 24-hour self-service shop. Same-day delivery is also available on Coupang Eats (subject to stock).",
+        a: "Yes, displayed flowers can be bought any time at our 24-hour self-service shop.",
       },
     ],
   },

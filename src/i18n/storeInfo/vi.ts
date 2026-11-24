@@ -71,8 +71,6 @@ export const storeInfoVi: StoreInfoMessages = {
     kakao: "Tư vấn KakaoTalk",
     instagram: "Instagram",
     blog: "Naver Blog",
-    coupang: "Đặt trong ngày qua Coupang Eats",
-    coupangNote: "Tùy hàng có sẵn",
   },
 
   delivery: {
@@ -114,7 +112,7 @@ export const storeInfoVi: StoreInfoMessages = {
       },
       {
         q: "Có thể mua không cần đặt trước không?",
-        a: "Có, hoa trưng bày ở tiệm tự phục vụ 24 giờ có thể mua bất cứ lúc nào. Giao trong ngày cũng có thể đặt qua Coupang Eats (tùy hàng có sẵn).",
+        a: "Có, hoa trưng bày ở tiệm tự phục vụ 24 giờ có thể mua bất cứ lúc nào.",
       },
     ],
   },

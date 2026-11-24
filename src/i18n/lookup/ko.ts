@@ -33,6 +33,9 @@ export const lookupKo = {
     receiptMismatch: "접수번호가 맞지 않아요. 예약 완료 화면이나 카카오톡으로 받은 메시지에서 8자리 접수번호를 확인해 주세요.",
     tooMany: "여러 번 틀려서 잠시 막았어요. 10분 뒤에 다시 시도하거나 전화로 문의해 주세요.",
     failed: `처리하지 못했어요. 잠시 후 다시 시도하거나 전화(${businessInfo.phone})로 문의해 주세요.`,
+    editClosed: `지금은 온라인으로 받는 분 정보를 고칠 수 없어요(고칠 수 있는 시간이 지났거나 예약 상태가 바뀌었어요). 전화(${businessInfo.phone})로 알려주세요.`,
+    unchanged: "바뀐 내용이 없어요.",
+    invalid: `처리하지 못했어요. 화면을 새로고침한 뒤 다시 시도해 주세요.`,
   },
 
   status: {
@@ -50,6 +53,20 @@ export const lookupKo = {
     total: (quantity: number) => `합계 ${quantity}개`,
     deliveries: "받는 분·메시지",
     payment: "결제",
+  },
+
+  /** 받는 분 정보 고치기 (2026-11-24) — 칸 이름·검사 문구는 신청서 문구(i18n/ko.ts recipient·orchidDelivery·validation)를 같이 씀 */
+  edit: {
+    title: "받는 분 정보 고치기",
+    open: "받는 분 정보 고치기",
+    scope: "받는 분 성함·연락처·배송지만 고칠 수 있어요. 날짜·시간·상품·메시지는 전화로 알려주세요.",
+    rule: "토·일 예약은 금요일 오후 5시 전, 오전 9시 이전 예약은 전날 오후 5시 전, 그 외는 받는 시간 2시간 전까지 고칠 수 있어요.",
+    deadline: (when: string) => `${when} 전까지 고칠 수 있어요`,
+    closedInfo: "고칠 수 있는 시간이 지났어요. 바꿀 내용이 있으면 전화로 알려주세요.",
+    submit: "고친 내용 저장",
+    saving: "저장하는 중…",
+    close: "고치지 않기",
+    done: "받는 분 정보를 고쳤어요. 매장에도 바로 알렸어요.",
   },
 
   cancel: {

@@ -29,6 +29,9 @@ export const lookupEn: LookupMessages = {
     receiptMismatch: "That receipt number doesn't match. Check the 8-character number on your confirmation screen or the message you saved.",
     tooMany: "Too many failed attempts, so this is paused for a moment. Please try again in 10 minutes or call the shop.",
     failed: `Something went wrong. Please try again shortly or call us (+82 ${businessInfo.phone.slice(1)}).`,
+    editClosed: `Recipient details can't be changed online right now (the deadline has passed or the reservation status changed). Please call us (+82 ${businessInfo.phone.slice(1)}).`,
+    unchanged: "Nothing was changed.",
+    invalid: "Something went wrong. Please refresh the page and try again.",
   },
 
   status: {
@@ -46,6 +49,19 @@ export const lookupEn: LookupMessages = {
     total: (quantity) => `Total ${quantity} item${quantity === 1 ? "" : "s"}`,
     deliveries: "Recipients & messages",
     payment: "Payment",
+  },
+
+  edit: {
+    title: "Edit recipient details",
+    open: "Edit recipient details",
+    scope: "Only the recipient's name, phone and delivery address can be changed. For date, time, items or messages, please call us.",
+    rule: "Weekend (Sat·Sun) reservations can be edited until 5 PM Friday, reservations at 9 AM or earlier until 5 PM the day before, and all others until 2 hours before the time.",
+    deadline: (when: string) => `You can edit until ${when}`,
+    closedInfo: "The editing deadline has passed. Please call us if anything needs to change.",
+    submit: "Save changes",
+    saving: "Saving…",
+    close: "Cancel editing",
+    done: "Recipient details updated. We've let the shop know.",
   },
 
   cancel: {

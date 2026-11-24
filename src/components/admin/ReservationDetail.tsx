@@ -19,9 +19,11 @@ import {
 } from "@/lib/adminFormat";
 import { formatReceiptNumber } from "@/lib/format";
 import { notionPageTitle } from "@/lib/notionReservation";
+import type { CompletionPhoto } from "@/server/completionPhotos";
 import type { StoredReservation } from "@/types/reservation";
 import AdminDocuments from "./AdminDocuments";
 import CancelRequestCard from "./CancelRequestCard";
+import CompletionPanel from "./CompletionPanel";
 import AdminMemoForm from "./AdminMemoForm";
 import NotionSyncButton from "./NotionSyncButton";
 import CashReceiptIssuedCheckbox from "./CashReceiptIssuedCheckbox";
@@ -31,7 +33,19 @@ import StatusChanger from "./StatusChanger";
 import TossPaymentPanel from "./TossPaymentPanel";
 
 /** 관리자 예약 상세 — 신청서에 적힌 내용 전부 + 상태·메모 변경 */
-export default function ReservationDetail({ reservation }: { reservation: StoredReservation }) {
+export default function ReservationDetail({
+  reservation,
+  completionPhotos,
+  maxCompletionPhotos,
+  smsConfigured,
+}: {
+  reservation: StoredReservation;
+  /** 완성 사진 (못 읽었으면 빈 목록) */
+  completionPhotos: CompletionPhoto[];
+  maxCompletionPhotos: number;
+  /** 자동 문자 발송(SMS Gate) 설정이 있는지 */
+  smsConfigured: boolean;
+}) {
   const { id, request, status, adminMemo, createdAt } = reservation;
   const payment = ko.payment;
   const color = describeColor(request);
@@ -75,6 +89,18 @@ export default function ReservationDetail({ reservation }: { reservation: Stored
       </section>
 
       <CancelRequestCard reservation={reservation} />
+
+      <section className="rounded-2xl bg-white p-4 print:hidden">
+        <h2 className="mb-2 text-[15px] font-extrabold text-ink">완성 사진·안내 문자</h2>
+        <CompletionPanel
+          id={id}
+          request={request}
+          initialPhotos={completionPhotos}
+          maxPhotos={maxCompletionPhotos}
+          smsConfigured={smsConfigured}
+          canceled={status === "canceled"}
+        />
+      </section>
 
       <Card title="예약자">
         <Rows>

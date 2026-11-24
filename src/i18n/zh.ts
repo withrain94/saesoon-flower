@@ -230,6 +230,24 @@ export const zh: Messages = {
         "生日或纪念日，把最爱的朋友们一次送出。",
       ],
     },
+    "doll-hachiware-snack": {
+      title: "[蓝] 小八，零食也带上了吗？",
+      name: "小八零食花束",
+      points: [
+        "小八和健达开心河马、费列罗巧克力一起插在花间送出。",
+        "推荐：蓝色包装配浅粉、天蓝色的花 — 和小八的颜色一样。",
+        "鲜花零食一次送到 — 适合生日、加油打气、表达感谢。",
+      ],
+    },
+    "doll-trio-celebrate": {
+      title: "[奶油·黄] 三个都来祝贺啦！",
+      name: "吉伊卡哇三人组祝贺花束",
+      points: [
+        "吉伊、小八、乌萨奇三个好朋友在黄色和奶油色的花间一起送上祝贺。",
+        "推荐：奶油色包装配黄、白色的花 — 明亮又温暖。",
+        "适合毕业、生日、考试合格等想隆重庆祝的日子。",
+      ],
+    },
     "doll-choco-hippo15": {
       title: "[粉色] 快乐河马15个，甜蜜粉色花束",
       name: "快乐河马15个巧克力花束",
@@ -760,6 +778,8 @@ export const zh: Messages = {
 
   privacy: {
     consentLabel: "[必选] 我同意收集和使用个人信息",
+    consentHint: "勾选后才能完成预约",
+    consentError: "尚未勾选。请勾选此处，然后再次点击预约按钮。",
     showDetails: "查看内容",
     hideDetails: "收起",
     items: [

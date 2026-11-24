@@ -1,4 +1,5 @@
 import { timingSafeEqual } from "node:crypto";
+import { autoDeliverOldReservations } from "@/server/autoStatus";
 import { getCronSecret } from "@/server/env";
 import { sendTomorrowReminderList } from "@/server/reminders";
 
@@ -16,6 +17,11 @@ function isAuthorized(request: Request) {
 
 export async function GET(request: Request) {
   if (!isAuthorized(request)) return new Response("Unauthorized", { status: 401 });
+
+  // 받는 날 7일 지난 예약 → 전달 완료. 10분마다 도는 자동 문자 실행에서도 하지만, 그쪽이 꺼져 있어도 하루 1번은 되게
+  await autoDeliverOldReservations().catch((error) => {
+    console.error("[cron] 자동 전달 완료 실패", error instanceof Error ? error.message : "unknown");
+  });
 
   try {
     const result = await sendTomorrowReminderList();

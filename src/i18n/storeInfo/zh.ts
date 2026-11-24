@@ -71,8 +71,6 @@ export const storeInfoZh: StoreInfoMessages = {
     kakao: "KakaoTalk咨询",
     instagram: "Instagram",
     blog: "NAVER博客",
-    coupang: "Coupang Eats当日下单",
-    coupangNote: "视店内库存",
   },
 
   delivery: {
@@ -114,7 +112,7 @@ export const storeInfoZh: StoreInfoMessages = {
       },
       {
         q: "不预约可以直接买吗?",
-        a: "可以在24小时无人店随时购买陈列的花。当日配送也可以通过Coupang Eats下单(视店内库存)。",
+        a: "可以在24小时无人店随时购买陈列的花。",
       },
     ],
   },

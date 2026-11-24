@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import AdminHeader from "@/components/admin/AdminHeader";
 import ReservationDetail from "@/components/admin/ReservationDetail";
 import { isReservationId, requireAdmin } from "@/server/auth";
+import { listCompletionPhotos, MAX_COMPLETION_PHOTOS } from "@/server/completionPhotos";
+import { getSmsGateEnv } from "@/server/env";
 import { getReservation } from "@/server/reservations";
 
 export default async function AdminReservationPage({ params }: PageProps<"/admin/[id]">) {
@@ -13,6 +15,7 @@ export default async function AdminReservationPage({ params }: PageProps<"/admin
   // undefined = 불러오기 실패 / null = 없는 예약
   const reservation = await getReservation(id).catch(() => undefined);
   if (reservation === null) notFound();
+  const completionPhotos = reservation ? await listCompletionPhotos(id).catch(() => []) : [];
 
   return (
     <>
@@ -22,7 +25,12 @@ export default async function AdminReservationPage({ params }: PageProps<"/admin
           ← 예약 목록
         </Link>
         {reservation ? (
-          <ReservationDetail reservation={reservation} />
+          <ReservationDetail
+            reservation={reservation}
+            completionPhotos={completionPhotos}
+            maxCompletionPhotos={MAX_COMPLETION_PHOTOS}
+            smsConfigured={getSmsGateEnv() !== null}
+          />
         ) : (
           <p className="rounded-xl bg-white px-4 py-5 text-[14px] text-danger">
             예약을 불러오지 못했어요. 잠시 후 새로고침해 주세요.

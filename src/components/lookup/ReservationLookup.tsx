@@ -9,6 +9,7 @@ import { useLookupT } from "@/hooks/useLookupT";
 import { lookupReservations } from "@/server/actions/lookup";
 import type { CustomerReservationView } from "@/types/reservation";
 import LookupCancelPanel from "./LookupCancelPanel";
+import LookupRecipientEditPanel from "./LookupRecipientEditPanel";
 import LookupReservationDetails from "./LookupReservationDetails";
 import LookupResultList from "./LookupResultList";
 
@@ -22,7 +23,7 @@ export default function ReservationLookup() {
   /** 자세히 보는 예약의 접수번호 (결과가 1건이면 바로 그 예약) */
   const [selected, setSelected] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [done, setDone] = useState<"canceled" | "requested" | null>(null);
+  const [done, setDone] = useState<"canceled" | "requested" | "edited" | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const reservation = results?.find((item) => item.receiptNumber === selected) ?? null;
@@ -136,10 +137,23 @@ export default function ReservationLookup() {
           )}
           {done && (
             <p role="status" className="rounded-xl bg-brand px-4 py-3 text-[14px] font-bold text-white">
-              {done === "canceled" ? l.cancel.canceledDone : l.cancel.requestedDone}
+              {done === "canceled" ? l.cancel.canceledDone : done === "edited" ? l.edit.done : l.cancel.requestedDone}
             </p>
           )}
           <LookupReservationDetails reservation={reservation} phone={phone} />
+          <LookupRecipientEditPanel
+            key={`edit-${reservation.receiptNumber}-${reservation.status}-${reservation.cancelRequestedAt}-${JSON.stringify([reservation.request.deliveries, reservation.request.orchidDelivery])}`}
+            reservation={reservation}
+            name={name}
+            phone={phone}
+            onChange={(next) => {
+              setResults((current) =>
+                (current ?? []).map((item) => (item.receiptNumber === next.receiptNumber ? next : item)),
+              );
+              setDone("edited");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          />
           <LookupCancelPanel
             key={`${reservation.receiptNumber}-${reservation.status}-${reservation.cancelRequestedAt}`}
             reservation={reservation}

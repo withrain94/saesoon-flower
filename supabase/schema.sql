@@ -78,5 +78,32 @@ notify pgrst, 'reload schema';
 -- 예약마다 토스 결제 기록(주문번호·결제 상태·전용 입금 계좌·현금영수증·영수증 주소)을 저장 (온라인 결제가 아니면 null).
 -- 카드번호 등 카드 정보는 저장하지 않음(토스 결제창에만 입력). 토스 키를 넣기 전에 꼭 실행. 여러 번 실행해도 안전
 alter table public.reservations add column if not exists payment jsonb;
+-- ── 2026-11-18 추가: 자동 문자 보낸 기록 ─────────────────────────────────
+-- 같은 예약·같은 종류·같은 번호로는 한 번만 보내려고 적어 둠 (server/autoSms.ts). 여러 번 실행해도 안전
+create table if not exists public.auto_sms_log (
+  reservation_id uuid not null references public.reservations (id) on delete cascade,
+  kind text not null,
+  phone text not null,
+  state text not null check (state in ('sending', 'sent', 'failed', 'nophoto')),
+  error text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  primary key (reservation_id, kind, phone)
+);
+alter table public.auto_sms_log enable row level security;
+revoke all on table public.auto_sms_log from anon, authenticated;
+grant select, insert, update, delete on table public.auto_sms_log to service_role;
+
+-- 10분마다 자동 문자 실행 (pg_cron + pg_net — Supabase 무료 기능).
+-- 아래 <CRON_SECRET> 자리에는 Vercel·.env.local의 CRON_SECRET 값을 넣음 (Claude가 값을 채운 파일을 따로 만들어 줌 — 이 파일에는 적지 않음)
+-- create extension if not exists pg_cron;
+-- create extension if not exists pg_net;
+-- select cron.schedule('saesoon-auto-sms', '*/10 * * * *', $$
+--   select net.http_get(
+--     url := 'https://saesoon-flower.vercel.app/cron/auto-sms',
+--     headers := jsonb_build_object('Authorization', 'Bearer <CRON_SECRET>'),
+--     timeout_milliseconds := 60000
+--   );
+-- $$);
 
 notify pgrst, 'reload schema';

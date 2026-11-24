@@ -29,6 +29,9 @@ export const lookupVi: LookupMessages = {
     receiptMismatch: "Mã tiếp nhận không khớp. Vui lòng kiểm tra mã 8 ký tự trên màn hình hoàn tất đặt hoa hoặc tin nhắn đã lưu.",
     tooMany: "Đã nhập sai nhiều lần nên tạm khóa. Vui lòng thử lại sau 10 phút hoặc gọi cho tiệm.",
     failed: `Không xử lý được. Vui lòng thử lại sau hoặc gọi điện (+82 ${businessInfo.phone.slice(1)}).`,
+    editClosed: `Hiện không thể sửa thông tin người nhận trực tuyến (đã quá hạn sửa hoặc trạng thái đặt hoa đã thay đổi). Vui lòng gọi điện (+82 ${businessInfo.phone.slice(1)}).`,
+    unchanged: "Không có gì thay đổi.",
+    invalid: "Không xử lý được. Vui lòng tải lại trang rồi thử lại.",
   },
 
   status: {
@@ -46,6 +49,19 @@ export const lookupVi: LookupMessages = {
     total: (quantity) => `Tổng ${quantity} sản phẩm`,
     deliveries: "Người nhận · lời nhắn",
     payment: "Thanh toán",
+  },
+
+  edit: {
+    title: "Sửa thông tin người nhận",
+    open: "Sửa thông tin người nhận",
+    scope: "Chỉ có thể sửa tên, số điện thoại và địa chỉ giao của người nhận. Ngày, giờ, sản phẩm và lời nhắn vui lòng gọi điện.",
+    rule: "Đặt hoa thứ Bảy·Chủ nhật được sửa đến trước 5 giờ chiều thứ Sáu, đặt hoa lúc 9 giờ sáng hoặc sớm hơn được sửa đến trước 5 giờ chiều hôm trước, còn lại được sửa đến 2 tiếng trước giờ nhận.",
+    deadline: (when: string) => `Có thể sửa đến trước ${when}`,
+    closedInfo: "Đã quá hạn sửa. Nếu cần thay đổi, vui lòng gọi điện.",
+    submit: "Lưu thay đổi",
+    saving: "Đang lưu…",
+    close: "Không sửa",
+    done: "Đã sửa thông tin người nhận và đã báo cho cửa hàng.",
   },
 
   cancel: {

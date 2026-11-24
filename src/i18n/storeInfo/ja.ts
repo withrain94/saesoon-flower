@@ -71,8 +71,6 @@ export const storeInfoJa: StoreInfoMessages = {
     kakao: "カカオトークで相談",
     instagram: "Instagram",
     blog: "NAVERブログ",
-    coupang: "クーパンイーツで当日注文",
-    coupangNote: "店舗在庫による",
   },
 
   delivery: {
@@ -114,7 +112,7 @@ export const storeInfoJa: StoreInfoMessages = {
       },
       {
         q: "予約なしで買えますか?",
-        a: "24時間無人店舗で陳列中の花をいつでも購入できます。当日配達はクーパンイーツ(店舗在庫による)でも注文できます。",
+        a: "24時間無人店舗で陳列中の花をいつでも購入できます。",
       },
     ],
   },

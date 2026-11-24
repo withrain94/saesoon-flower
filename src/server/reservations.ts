@@ -18,6 +18,7 @@ const TABLE = "reservations";
 type ReservationRow = {
   id: string;
   created_at: string;
+  updated_at?: string;
   status: string;
   admin_memo: string | null;
   request: ReservationRequest;
@@ -157,6 +158,42 @@ export async function listCashReceiptReservations(): Promise<StoredReservation[]
 }
 
 /**
+ * 자동 문자(server/autoSms)가 살펴볼 예약 — 받는 날짜가 dateKeys인 예약(취소 제외) + canceledSince 뒤에 취소된 예약.
+ * 호출하는 쪽(app/cron)이 CRON_SECRET을 먼저 확인
+ */
+export async function listAutoSmsReservations(
+  dateKeys: string[],
+  canceledSince: Date,
+): Promise<(StoredReservation & { updatedAt: string })[]> {
+  const client = createDatabaseClient();
+  const [upcoming, canceled] = await Promise.all([
+    client.from(TABLE).select(COLUMNS).in("reservation_date", dateKeys).neq("status", "canceled").limit(1000),
+    client.from(TABLE).select(COLUMNS).eq("status", "canceled").gte("updated_at", canceledSince.toISOString()).limit(200),
+  ]);
+  if (upcoming.error) throw upcoming.error;
+  if (canceled.error) throw canceled.error;
+  return [...(upcoming.data as ReservationRow[]), ...(canceled.data as ReservationRow[])].map((row) => ({
+    ...fromRow(row),
+    updatedAt: row.updated_at ?? row.created_at,
+  }));
+}
+
+/**
+ * 받는 날짜가 cutoffKey 이전·같은 "입금·결제 확인"·"제작 완료" 예약 — 7일 지나 자동 전달 완료(server/autoStatus)용.
+ * 호출하는 쪽(app/cron)이 CRON_SECRET을 먼저 확인
+ */
+export async function listPaidReservationsUntil(cutoffKey: string): Promise<StoredReservation[]> {
+  const { data, error } = await createDatabaseClient()
+    .from(TABLE)
+    .select(COLUMNS)
+    .in("status", ["confirmed", "made"])
+    .lte("reservation_date", cutoffKey)
+    .limit(500);
+  if (error) throw error;
+  return (data as ReservationRow[]).map(fromRow);
+}
+
+/**
  * 받는 날짜 하루치 예약 (취소 제외, 시간 순) — 전날 "내일 예약 목록" 텔레그램(server/reminders)용.
  * 호출하는 쪽(app/cron)이 CRON_SECRET을 먼저 확인
  */
@@ -260,6 +297,22 @@ export async function cancelUnpaidReservation(id: string, cancelRecord: CancelRe
 }
 
 /** 손님 취소 요청 저장 (입금·결제 후) — 허용된 상태가 아니거나 이미 요청했으면 false */
+/**
+ * 손님이 조회 화면에서 받는 분 정보를 고친 예약 내용 저장 (server/actions/lookup — 이름·연락처·접수번호 확인 뒤).
+ * 취소·전달 완료·취소 요청 중인 예약은 바꾸지 않음. 바뀌었으면 true
+ */
+export async function saveCustomerRecipientEdit(id: string, request: ReservationRequest): Promise<boolean> {
+  const { data, error } = await createDatabaseClient()
+    .from(TABLE)
+    .update({ request, updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .in("status", ["received", "confirmed", "made"])
+    .is("cancel_request", null)
+    .select("id");
+  if (error) throw error;
+  return data.length > 0;
+}
+
 export async function saveCancelRequest(
   id: string,
   cancelRequest: CancelRequest,

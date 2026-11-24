@@ -275,6 +275,24 @@ export const en: Messages = {
         "Give all their favorite friends at once for a birthday or anniversary.",
       ],
     },
+    "doll-hachiware-snack": {
+      title: "[Blue] Hachiware: Got Your Snacks?",
+      name: "Hachiware snack bouquet",
+      points: [
+        "Hachiware plus Happy Hippo and Ferrero Rocher chocolates, tucked in among the flowers.",
+        "Recommended: blue wrapping with light pink and sky-blue flowers — Hachiware's colors.",
+        "Flowers and treats in one — great for birthdays, cheering up or saying thanks.",
+      ],
+    },
+    "doll-trio-celebrate": {
+      title: "[Cream · Yellow] All Three Came to Celebrate!",
+      name: "Chiikawa trio celebration bouquet",
+      points: [
+        "Chiikawa, Hachiware and Usagi celebrate together among yellow and cream flowers.",
+        "Recommended: cream wrapping with yellow and white flowers — bright and warm.",
+        "Perfect for big celebrations like graduations, birthdays or passing an exam.",
+      ],
+    },
     "doll-choco-hippo15": {
       title: "[Pink] Sweet Pink Bouquet with 15 Happy Hippos",
       name: "Chocolate bouquet with 15 Happy Hippos",
@@ -808,6 +826,8 @@ export const en: Messages = {
 
   privacy: {
     consentLabel: "[Required] I agree to the collection and use of my personal information",
+    consentHint: "Please check this box to complete your reservation",
+    consentError: "Not checked yet. Check this box, then tap the reservation button again.",
     showDetails: "Details",
     hideDetails: "Hide",
     items: [

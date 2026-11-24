@@ -74,8 +74,6 @@ export const storeInfoKo = {
     kakao: "카카오톡 상담",
     instagram: "인스타그램",
     blog: "네이버 블로그",
-    coupang: "쿠팡이츠로 당일 주문",
-    coupangNote: "매장 재고 기준",
   },
 
   delivery: {
@@ -117,7 +115,7 @@ export const storeInfoKo = {
       },
       {
         q: "예약 없이 바로 살 수도 있나요?",
-        a: "24시 무인매장에서 진열된 꽃을 언제든 바로 살 수 있어요. 당일 배달은 쿠팡이츠(매장 재고 기준)로도 주문할 수 있어요.",
+        a: "24시 무인매장에서 진열된 꽃을 언제든 바로 살 수 있어요.",
       },
     ],
   },

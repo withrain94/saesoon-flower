@@ -138,14 +138,6 @@ function StoreDetails() {
             💬 {s.store.kakao}
           </a>
         </div>
-        <a
-          href={storeContact.coupangEatsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={`mt-2 block ${outlineButton}`}
-        >
-          🛵 {s.store.coupang} <span className="text-[12px] font-normal text-sub">({s.store.coupangNote})</span>
-        </a>
         <div className="mt-3 flex justify-center gap-4 text-[13px] font-semibold text-sub">
           <a href={storeContact.instagramUrl} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-brand-dark">
             {s.store.instagram}
