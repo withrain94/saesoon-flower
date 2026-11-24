@@ -4,7 +4,7 @@ import { businessInfo } from "@/data/shop";
  * 개인정보 처리방침 (/privacy 페이지, 한국어).
  * 신청서의 [필수] 동의 칸 문구는 언어 파일(i18n)의 privacy — 수집 항목을 바꾸면 두 곳을 함께 바꾼다.
  */
-export const PRIVACY_EFFECTIVE_DATE = "2026년 9월 14일";
+export const PRIVACY_EFFECTIVE_DATE = "2026년 11월 24일";
 
 export const privacyPolicySections: { title: string; paragraphs: string[] }[] = [
   {
