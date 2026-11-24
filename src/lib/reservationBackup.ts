@@ -4,6 +4,7 @@ import {
   describeChocolates,
   describeColor,
   describeDeliveryAddress,
+  describeDeliveryTopper,
   describeDeliveryMessage,
   describeDeliveryName,
   describeDeliveryRecipient,
@@ -54,11 +55,11 @@ function describeDeliveries({ request }: StoredReservation) {
   return request.deliveries
     .map((delivery) => {
       const address = describeDeliveryAddress(request, delivery);
-      const topper = delivery.topperSender;
+      const topper = describeDeliveryTopper(delivery);
       const parts = [
         `받는 분 ${describeDeliveryRecipient(request, delivery)}`,
         address && `배송지 ${address}`,
-        topper && `토퍼(보내는 분) ${topper}`,
+        topper && (delivery.topperCourse ? `토퍼 ${topper}` : `토퍼(보내는 분) ${topper}`),
         `메시지 ${describeDeliveryMessage(delivery)}`,
       ].filter(Boolean);
       return `${describeDeliveryName(request, delivery)}: ${parts.join(" | ")}`;

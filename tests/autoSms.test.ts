@@ -46,6 +46,7 @@ function reservation({
         recipientPhone,
         recipientAddress: receiveMethod === "delivery" ? "전주시 어딘가" : "",
         topperSender: "",
+        topperCourse: "",
         messageType: "none",
         memo: "",
         ribbonLeft: "",

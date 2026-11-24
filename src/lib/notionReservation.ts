@@ -3,7 +3,13 @@ import { getEventOn, type SpecialEvent } from "@/data/events";
 import { findBlackboardPreset } from "@/data/reservationOptions";
 import type { ProductId } from "@/data/products";
 import { ko } from "@/i18n/ko";
-import { describeColor, describeDeliveryAddress, describePayment, describeReceiveMethod } from "@/lib/adminFormat";
+import {
+  describeColor,
+  describeDeliveryAddress,
+  describeDeliveryTopper,
+  describePayment,
+  describeReceiveMethod,
+} from "@/lib/adminFormat";
 import { parseDateKey } from "@/lib/date";
 import { formatReceiptNumber } from "@/lib/format";
 import { getSlotHour } from "@/lib/time";
@@ -174,7 +180,8 @@ export function buildNotionRows({ id, status, adminMemo, request }: StoredReserv
       "받는 방법": receiveMethod,
       // 꽃다발·꽃바구니는 적은 주소, 호접난은 배송 식당
       배송지: describeDeliveryAddress(request, delivery) ?? "",
-      토퍼: delivery.topperSender,
+      // 수료식이면 "수료 과정 … · 보내는 분 …" (표 칸 수는 그대로)
+      토퍼: describeDeliveryTopper(delivery) ?? "",
       "결제 방법": `${paidMark}${payment}`,
       접수번호: receipt,
       "매장 메모": adminMemo,

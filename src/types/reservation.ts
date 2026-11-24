@@ -84,6 +84,8 @@ export type UnitMessage = {
  */
 export type Topper = {
   sender: string;
+  /** 수료 과정 — 장기과정 수료식만 (필수, 2026-11-24 사용자 요청). 다른 날은 "" */
+  course: string;
 };
 
 /**
@@ -130,6 +132,8 @@ export type ReservationDelivery = {
   recipientAddress: string;
   /** 특별한 날 무료 토퍼에 넣을 보내는 분 이름 또는 팀 이름 — 토퍼가 없는 날·상품이면 "" */
   topperSender: string;
+  /** 토퍼에 넣을 수료 과정 — 장기과정 수료식만, 그 외 "" */
+  topperCourse: string;
 } & Omit<UnitMessage, "type"> & { messageType: MessageType };
 
 /**

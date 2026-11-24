@@ -395,14 +395,14 @@ export const vi: Messages = {
       title: () => "Lễ bế giảng khóa dài hạn – Viện Phát triển Nhân lực Chính quyền Địa phương",
       highlights: [
         "Tặng kèm miễn phí thẻ cắm (topper) chúc mừng hoàn thành khóa học.",
-        "Mỗi khóa có thẻ cắm khác nhau, nên tiệm có thể liên hệ để xác nhận khóa học quý khách đã hoàn thành.",
+        "Mỗi khóa có thẻ cắm khác nhau, vui lòng ghi rõ khóa học đã hoàn thành trong đơn.",
         "Giờ nhận hoa là 8:00 sáng.",
       ],
       forEventYes: "Đúng, cho lễ bế giảng",
       forEventHint: "Hoa cho lễ bế giảng được tặng kèm thẻ cắm miễn phí.",
       topperTitle: "🎓 Thẻ cắm bế giảng (miễn phí)",
       topperDescription:
-        "Nhập tên hoặc tên nhóm của người tặng hoa để in lên thẻ cắm. Mỗi khóa có thẻ cắm khác nhau nên tiệm sẽ liên hệ để xác nhận khóa học đã hoàn thành.",
+        "Mỗi khóa có thẻ cắm khác nhau, vui lòng nhập khóa học đã hoàn thành và tên hoặc tên nhóm của người tặng hoa để in lên thẻ cắm.",
     },
     pepero: {
       calendarLabel: "Pepero Day",
@@ -662,7 +662,9 @@ export const vi: Messages = {
     senderAria: "Tên hoặc tên nhóm của người tặng trên thẻ cắm",
     senderPlaceholder: "Tên hoặc nhóm người tặng (VD: 총무과 일동)",
     senderWarning: "⚠️ Không phải tên · chức vụ của người nhận hoa!",
-    describe: (sender) => `Thẻ cắm · ${sender || "Chưa nhập (tiệm sẽ liên hệ)"}`,
+    describe: (sender, course = "") => `Thẻ cắm · ${[course, sender].filter(Boolean).join(" · ") || "Chưa nhập (tiệm sẽ liên hệ)"}`,
+    courseAria: "Khóa học đã hoàn thành, in lên thẻ cắm",
+    coursePlaceholder: "Khóa học đã hoàn thành (bắt buộc, VD: 고위정책과정)",
   },
 
   message: {
@@ -824,7 +826,7 @@ export const vi: Messages = {
     items: [
       {
         title: "Thông tin thu thập",
-        body: "Tên và số điện thoại người đặt (bắt buộc); tên, số điện thoại và địa chỉ giao hàng của người nhận, nội dung lời nhắn, tên hoặc tên nhóm của người tặng trên thẻ cắm thăng chức · bế giảng, nhà hàng giao lan và tên đặt bàn, số hóa đơn tiền mặt, liên hệ người thanh toán thẻ, email nhận yêu cầu PayPal, tên công ty và mã số kinh doanh, tên ngân hàng, số tài khoản và chủ tài khoản nhận hoàn tiền khi hủy sau khi đã thanh toán (nếu có)",
+        body: "Tên và số điện thoại người đặt (bắt buộc); tên, số điện thoại và địa chỉ giao hàng của người nhận, nội dung lời nhắn, tên hoặc tên nhóm của người tặng và khóa học đã hoàn thành trên thẻ cắm thăng chức · bế giảng, nhà hàng giao lan và tên đặt bàn, số hóa đơn tiền mặt, liên hệ người thanh toán thẻ, email nhận yêu cầu PayPal, tên công ty và mã số kinh doanh, tên ngân hàng, số tài khoản và chủ tài khoản nhận hoàn tiền khi hủy sau khi đã thanh toán (nếu có)",
       },
       {
         title: "Mục đích sử dụng",
@@ -880,6 +882,7 @@ export const vi: Messages = {
     recipientName: "Vui lòng nhập tên người nhận hàng.",
     recipientPhone: "Vui lòng kiểm tra số điện thoại người nhận.",
     recipientAddress: "Vui lòng nhập địa chỉ giao hàng.",
+    topperCourse: "Vui lòng nhập khóa học đã hoàn thành để in lên thẻ cắm bế giảng.",
     orchidRestaurant: "Vui lòng nhập tên nhà hàng (hoặc địa chỉ) để giao lan.",
     orchidReservationName: "Vui lòng nhập tên đặt bàn tại nhà hàng.",
     cashReceiptPhone: "Vui lòng kiểm tra số di động cho hóa đơn tiền mặt.",

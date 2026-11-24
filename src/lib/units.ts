@@ -67,7 +67,7 @@ export function needsDeliveryAddress(receiveMethod: ReceiveMethod, category: Pro
   return receiveMethod === "delivery" && category !== "orchid";
 }
 
-export const emptyTopper: Topper = { sender: "" };
+export const emptyTopper: Topper = { sender: "", course: "" };
 
 export function emptyMessage(product: Product): UnitMessage {
   return {
@@ -85,7 +85,7 @@ export function isEmptyRecipient(recipient: Recipient) {
 }
 
 export function isEmptyTopper(topper: Topper) {
-  return !topper.sender.trim();
+  return !topper.sender.trim() && !topper.course.trim();
 }
 
 /** 메시지를 아직 한 번도 고르거나 적지 않은 상태(= 상품 종류의 기본값 그대로)인지 */
@@ -202,9 +202,9 @@ export function describeRecipient(recipient: Recipient, t: Messages = ko, withAd
   return text || t.recipient.describeEmpty;
 }
 
-/** "토퍼 · 총무과 일동" (보내는 분 이름 또는 팀) */
+/** "토퍼 · 총무과 일동" (보내는 분 이름 또는 팀) — 수료식이면 수료 과정도 */
 export function describeTopper(topper: Topper, t: Messages = ko) {
-  return t.topper.describe(topper.sender.trim());
+  return t.topper.describe(topper.sender.trim(), topper.course.trim());
 }
 
 /** "메모지 · 생일 축하해" (언어별) */

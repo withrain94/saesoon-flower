@@ -33,6 +33,7 @@ function request(product: typeof b50, date: string): ReservationRequest {
         recipientPhone: "",
         recipientAddress: "",
         topperSender: "",
+        topperCourse: "",
         messageType: "none",
         memo: "",
         ribbonLeft: "",

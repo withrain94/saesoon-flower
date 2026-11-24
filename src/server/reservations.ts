@@ -60,6 +60,8 @@ function withReceiveDefaults(request: ReservationRequest): ReservationRequest {
       ...delivery,
       recipientAddress: delivery.recipientAddress ?? "",
       topperSender: delivery.topperSender ?? oldTopperText(delivery),
+      // 수료 과정 칸(2026-11-24)이 생기기 전 기록은 "" — 2026-09-29 전 기록의 옛 과정 칸은 위 topperSender에 이미 합쳐짐
+      topperCourse: delivery.topperSender === undefined ? "" : (delivery.topperCourse ?? ""),
     })),
   };
 }

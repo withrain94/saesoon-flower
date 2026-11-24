@@ -403,14 +403,14 @@ export const en: Messages = {
       title: () => "Local Government Officials Development Institute — Long-term Course Graduation Ceremony",
       highlights: [
         "A free graduation topper is included.",
-        "Toppers differ by course, so the shop may contact you to confirm which course you completed.",
+        "Toppers differ by course, so please enter the course completed in the form.",
         "The pickup time is 8 AM.",
       ],
       forEventYes: "Yes, for the graduation",
       forEventHint: "For the graduation, we add a free graduation topper.",
       topperTitle: "🎓 Graduation topper (free)",
       topperDescription:
-        "Enter the name or team name of the sender (the person giving the flowers) for the topper. Toppers differ by course, so the shop will contact you to confirm the course completed.",
+        "Toppers differ by course, so please enter the course completed, plus the name or team name of the sender (the person giving the flowers) for the topper.",
     },
     pepero: {
       calendarLabel: "Pepero Day",
@@ -671,7 +671,9 @@ export const en: Messages = {
     senderAria: "Sender name or team name for the topper",
     senderPlaceholder: "Sender's name or team (e.g. General Affairs Team)",
     senderWarning: "⚠️ Not the recipient's name or job title!",
-    describe: (sender) => `Topper · ${sender || "Not entered (the shop will contact you)"}`,
+    describe: (sender, course = "") => `Topper · ${[course, sender].filter(Boolean).join(" · ") || "Not entered (the shop will contact you)"}`,
+    courseAria: "Course completed, for the topper",
+    coursePlaceholder: "Course completed (required, e.g. 고위정책과정)",
   },
 
   message: {
@@ -833,7 +835,7 @@ export const en: Messages = {
     items: [
       {
         title: "Information collected",
-        body: "Your name and phone number (required); recipient names, phone numbers and delivery addresses, message text, the sender's name or team name for a promotion/graduation topper, orchid delivery restaurant and booking name, cash receipt number, card payer's contact, PayPal request email, company name and business number for documents, and your refund bank name, account number and holder if you cancel after paying (where applicable)",
+        body: "Your name and phone number (required); recipient names, phone numbers and delivery addresses, message text, the sender's name or team name and the course completed for a promotion/graduation topper, orchid delivery restaurant and booking name, cash receipt number, card payer's contact, PayPal request email, company name and business number for documents, and your refund bank name, account number and holder if you cancel after paying (where applicable)",
       },
       {
         title: "Purpose",
@@ -889,6 +891,7 @@ export const en: Messages = {
     recipientName: "Please enter the recipient's name for delivery.",
     recipientPhone: "Please check the recipient's phone number.",
     recipientAddress: "Please enter the delivery address.",
+    topperCourse: "Please enter the course completed for the graduation topper.",
     orchidRestaurant: "Please enter the restaurant name (or address) for the orchid delivery.",
     orchidReservationName: "Please enter the name on the restaurant reservation.",
     cashReceiptPhone: "Please check the mobile number for the cash receipt.",
