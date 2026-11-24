@@ -35,6 +35,7 @@ function request(extra: Partial<ReservationRequest> = {}): ReservationRequest {
         recipientPhone: "",
         recipientAddress: "",
         topperSender: "",
+        topperCourse: "",
         messageType: "none",
         memo: "",
         ribbonLeft: "",
