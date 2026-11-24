@@ -4,6 +4,7 @@ import { ko } from "@/i18n/ko";
 import {
   describeColor,
   describeDeliveryAddress,
+  describeDeliveryTopper,
   describeDeliveryMessage,
   describeDeliveryName,
   describeDeliveryRecipient,
@@ -149,7 +150,7 @@ export default function ReservationDetail({
       <Card title="받는 분·메시지">
         <ul className="space-y-2">
           {request.deliveries.map((delivery) => {
-            const topper = delivery.topperSender;
+            const topper = describeDeliveryTopper(delivery);
             const address = describeDeliveryAddress(request, delivery);
             return (
               <li key={`${delivery.productId}-${delivery.unitNo}`} className="rounded-xl bg-soft px-3 py-2.5">
@@ -158,7 +159,7 @@ export default function ReservationDetail({
                   <Row label="받는 분">{describeDeliveryRecipient(request, delivery)}</Row>
                   {address && <Row label="배송지">{address}</Row>}
                   <Row label="메시지">{describeDeliveryMessage(delivery)}</Row>
-                  {topper && <Row label="토퍼(보내는 분)">{topper}</Row>}
+                  {topper && <Row label={delivery.topperCourse ? "토퍼" : "토퍼(보내는 분)"}>{topper}</Row>}
                 </Rows>
               </li>
             );

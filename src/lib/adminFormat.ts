@@ -102,6 +102,12 @@ export function describeReceiveMethod(request: ReservationRequest) {
   return ko.receive.methods[request.receiveMethod].label;
 }
 
+/** 토퍼 — "총무과 일동" / 수료식이면 "수료 과정 고위정책과정 · 보내는 분 총무과 일동". 토퍼가 없으면 null */
+export function describeDeliveryTopper(delivery: ReservationDelivery) {
+  if (!delivery.topperCourse) return delivery.topperSender || null;
+  return [`수료 과정 ${delivery.topperCourse}`, `보내는 분 ${delivery.topperSender || "미입력"}`].join(" · ");
+}
+
 /** 상품 1개의 배송지 — 꽃다발·꽃바구니는 적은 주소, 호접난은 배송 식당. 픽업이면 null */
 export function describeDeliveryAddress(request: ReservationRequest, delivery: ReservationDelivery) {
   if (request.receiveMethod !== "delivery") return null;

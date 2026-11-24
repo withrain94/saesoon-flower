@@ -27,6 +27,7 @@ const reservation: StoredReservation = {
         recipientPhone: "010-3333-4444",
         recipientAddress: "전주시 덕진구 1",
         topperSender: "",
+        topperCourse: "",
         messageType: "none",
         memo: "",
         ribbonLeft: "",

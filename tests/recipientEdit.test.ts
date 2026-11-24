@@ -24,6 +24,7 @@ function request(receiveMethod: ReservationRequest["receiveMethod"] = "delivery"
         recipientPhone: "010-3333-4444",
         recipientAddress: receiveMethod === "delivery" ? "전주시 기지로 1" : "",
         topperSender: "",
+        topperCourse: "",
         messageType: "memo",
         memo: "축하해",
         ribbonLeft: "",

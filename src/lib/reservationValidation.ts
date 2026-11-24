@@ -154,6 +154,9 @@ export function validateReservationRequest(input: unknown, now: Now, submittedAt
     const messageTypes = messageOptionsByCategory[item.category];
     const messageType = oneOf(d.messageType, messageTypes, messageTypes[0]);
     const topper = forEvent && hasFreeTopper(date, item.category);
+    // 장기과정 수료식은 과정마다 토퍼가 달라서 수료 과정 필수
+    const topperCourse = topper && getEventOn(date)?.topperAsksCourse ? str(d.topperCourse, 40) : "";
+    if (topper && getEventOn(date)?.topperAsksCourse && !topperCourse) return fail(validation.topperCourse);
     deliveries.push({
       productId: item.productId,
       category: item.category,
@@ -163,6 +166,7 @@ export function validateReservationRequest(input: unknown, now: Now, submittedAt
       recipientPhone,
       recipientAddress,
       topperSender: topper ? str(d.topperSender, 40) : "",
+      topperCourse,
       messageType,
       memo: messageType === "memo" ? str(d.memo) : "",
       ribbonLeft: messageType === "ribbon" ? str(d.ribbonLeft, 50) : "",

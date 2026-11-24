@@ -357,14 +357,14 @@ export const zh: Messages = {
       title: () => "地方自治人才开发院 长期课程结业式",
       highlights: [
         "免费赠送结业插牌。",
-        "每个课程的插牌不同，预约后店家可能会联系您确认结业课程。",
+        "每个课程的插牌不同，请务必在申请表中填写结业课程。",
         "取花时间为上午8点。",
       ],
       forEventYes: "是，结业式用",
       forEventHint: "结业式用花可免费附赠结业插牌。",
       topperTitle: "🎓 结业插牌（免费）",
       topperDescription:
-        "请填写插牌上送花人（赠送方）的姓名或团队名称。每个课程的插牌不同，结业课程由店家另行联系确认。",
+        "每个课程的插牌不同，请务必填写结业课程，并填写插牌上送花人（赠送方）的姓名或团队名称。",
     },
     pepero: {
       calendarLabel: "巧克力棒节",
@@ -623,7 +623,9 @@ export const zh: Messages = {
     senderAria: "插牌上送花人的姓名或团队名称",
     senderPlaceholder: "送花人姓名或团队名称（例：총무과 일동）",
     senderWarning: "⚠️ 不是收花人的姓名·职级！",
-    describe: (sender) => `插牌 · ${sender || "未填写（店家会联系您）"}`,
+    describe: (sender, course = "") => `插牌 · ${[course, sender].filter(Boolean).join(" · ") || "未填写（店家会联系您）"}`,
+    courseAria: "插牌上的结业课程",
+    coursePlaceholder: "结业课程（必填，例：고위정책과정）",
   },
 
   message: {
@@ -785,7 +787,7 @@ export const zh: Messages = {
     items: [
       {
         title: "收集项目",
-        body: "预约人姓名·电话（必填），收花人姓名·电话·配送地址、留言内容、晋升·结业插牌上送花人的姓名或团队名称、蝴蝶兰配送餐厅·餐厅预约人姓名、现金收据号码、刷卡付款人联系方式、PayPal 付款请求邮箱、文件上填写的公司名称·营业执照号、付款后取消预约时的退款银行名称·账号·户名（如适用）",
+        body: "预约人姓名·电话（必填），收花人姓名·电话·配送地址、留言内容、晋升·结业插牌上送花人的姓名或团队名称·结业课程、蝴蝶兰配送餐厅·餐厅预约人姓名、现金收据号码、刷卡付款人联系方式、PayPal 付款请求邮箱、文件上填写的公司名称·营业执照号、付款后取消预约时的退款银行名称·账号·户名（如适用）",
       },
       {
         title: "使用目的",
@@ -840,6 +842,7 @@ export const zh: Messages = {
     recipientName: "请填写收花人姓名。",
     recipientPhone: "请确认收花人电话。",
     recipientAddress: "请填写配送地址。",
+    topperCourse: "请填写结业插牌上的结业课程。",
     orchidRestaurant: "请填写配送蝴蝶兰的餐厅名称（或地址）。",
     orchidReservationName: "请填写餐厅预约人姓名。",
     cashReceiptPhone: "请确认现金收据的手机号码。",

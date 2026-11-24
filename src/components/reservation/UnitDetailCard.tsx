@@ -142,6 +142,20 @@ export default function UnitDetailCard({
             <div className="mt-3 rounded-lg bg-brand-tint px-3 py-3">
               <p className="text-[14px] font-bold text-brand-dark">{getEventCopy(topperEvent, t).topperTitle}</p>
               <p className="mt-0.5 text-[12.5px] text-sub">{getEventCopy(topperEvent, t).topperDescription}</p>
+              {/* 장기과정 수료식 — 과정마다 토퍼가 달라서 수료 과정 필수 (2026-11-24) */}
+              {topperEvent.topperAsksCourse && (
+                <input
+                  id={`${idPrefix}-topper-course`}
+                  type="text"
+                  required
+                  maxLength={40}
+                  value={own.topper.course}
+                  onChange={(event) => actions.setTopper(target, { course: event.target.value })}
+                  aria-label={t.topper.courseAria}
+                  placeholder={t.topper.coursePlaceholder}
+                  className={`mt-2 ${inputClassName}`}
+                />
+              )}
               {/* 받는 분 이름·직급을 적는 분이 많아서 한 칸(보내는 분 이름 또는 팀)으로 합치고 크게 알림 (2026-09-29) */}
               <p className="mt-1 text-[12.5px] font-bold text-danger">{t.topper.senderWarning}</p>
               <input

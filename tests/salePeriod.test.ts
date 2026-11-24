@@ -32,6 +32,7 @@ function request(product: typeof mini, date: string): ReservationRequest {
         recipientPhone: "",
         recipientAddress: "",
         topperSender: "",
+        topperCourse: "",
         messageType: "none",
         memo: "",
         ribbonLeft: "",

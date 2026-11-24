@@ -122,7 +122,9 @@ export default function LookupReservationDetails({ reservation }: { reservation:
                 {delivery.recipientAddress && (
                   <p className="text-body">{t.complete.address(delivery.recipientAddress)}</p>
                 )}
-                {delivery.topperSender && <p className="text-body">{t.topper.describe(delivery.topperSender)}</p>}
+                {(delivery.topperSender || delivery.topperCourse) && (
+                  <p className="text-body">{t.topper.describe(delivery.topperSender, delivery.topperCourse)}</p>
+                )}
                 <p className="text-body">{t.complete.message(describeMessage(delivery))}</p>
               </li>
             );

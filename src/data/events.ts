@@ -26,6 +26,8 @@ export type SpecialEvent = {
   bannerCategories: ProductCategoryId[];
   /** 무료 토퍼를 넣어주는 상품 종류 — "행사 꽃이에요"를 고르면 상품 칸에 토퍼 입력칸이 생김 */
   topperCategories: ProductCategoryId[];
+  /** 토퍼 칸에 "수료 과정"(필수)도 받는지 — 장기과정 수료식 (과정마다 토퍼가 달라서, 2026-11-24 사용자 요청) */
+  topperAsksCourse: boolean;
 };
 
 /** 지방자치인재개발원 승진식 — 토퍼: 보내는 분 이름 또는 팀 이름 한 칸 */
@@ -40,10 +42,11 @@ function institutePromotion(term: number, date: string): SpecialEvent {
     recommendedCategory: "basket",
     bannerCategories: ["bouquet", "basket"],
     topperCategories: ["bouquet", "basket"],
+    topperAsksCourse: false,
   };
 }
 
-/** 지방자치인재개발원 장기과정 수료식 — 토퍼: 보내는 분 이름 또는 팀 이름 (수료 과정은 매장에서 확인) */
+/** 지방자치인재개발원 장기과정 수료식 — 토퍼: 수료 과정(필수) + 보내는 분 이름 또는 팀 이름 */
 function instituteLongCourse(date: string): SpecialEvent {
   return {
     id: `institute-long-course-${date}`,
@@ -55,6 +58,7 @@ function instituteLongCourse(date: string): SpecialEvent {
     recommendedCategory: "basket",
     bannerCategories: ["bouquet", "basket"],
     topperCategories: ["bouquet", "basket"],
+    topperAsksCourse: true,
   };
 }
 
@@ -73,6 +77,7 @@ function pepero(date: string): SpecialEvent {
     recommendedCategory: "bouquet",
     bannerCategories: ["bouquet", "basket"],
     topperCategories: [],
+    topperAsksCourse: false,
   };
 }
 
@@ -91,6 +96,7 @@ function christmas(kind: "christmasEve" | "christmas", date: string): SpecialEve
     recommendedCategory: "bouquet",
     bannerCategories: ["bouquet", "basket"],
     topperCategories: [],
+    topperAsksCourse: false,
   };
 }
 

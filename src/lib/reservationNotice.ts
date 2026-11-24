@@ -5,6 +5,7 @@ import {
   describeChocolates,
   describeColor,
   describeDeliveryAddress,
+  describeDeliveryTopper,
   describeDeliveryMessage,
   describeDeliveryName,
   describeDeliveryRecipient,
@@ -24,12 +25,12 @@ import type { ReservationDelivery, ReservationRequest } from "@/types/reservatio
 /** 상품 1개 — 받는 분·배송지·토퍼·메시지 */
 function describeDelivery(request: ReservationRequest, delivery: ReservationDelivery, index: number) {
   const address = describeDeliveryAddress(request, delivery);
-  const topper = delivery.topperSender;
+  const topper = describeDeliveryTopper(delivery);
   return [
     `${index + 1}. ${describeDeliveryName(request, delivery)}`,
     `  · 받는 분: ${describeDeliveryRecipient(request, delivery)}`,
     address && `  · 배송지: ${address}`,
-    topper && `  · 토퍼(보내는 분): ${topper}`,
+    topper && (delivery.topperCourse ? `  · 토퍼: ${topper}` : `  · 토퍼(보내는 분): ${topper}`),
     `  · 메시지: ${describeDeliveryMessage(delivery)}`,
   ]
     .filter(Boolean)

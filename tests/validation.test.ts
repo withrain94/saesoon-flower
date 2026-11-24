@@ -18,6 +18,7 @@ const delivery = (extra: Partial<ReservationRequest["deliveries"][number]> = {})
   recipientPhone: "",
   recipientAddress: "",
   topperSender: "",
+  topperCourse: "",
   messageType: "none" as const,
   memo: "",
   ribbonLeft: "",
@@ -118,20 +119,48 @@ describe("서버에서 다시 검사 (lib/reservationValidation)", () => {
     if (no.ok) assert.equal(no.request.deliveries[0].topperSender, "");
   });
 
-  it("수료식 날에도 토퍼는 보내는 분 이름·팀 한 칸", () => {
+  it("장기과정 수료식 토퍼는 수료 과정(필수) + 보내는 분 이름·팀", () => {
     const graduationNow = toNowInTimeZone(new Date("2026-11-20T10:00+09:00"));
+    const graduation = (topperCourse: string, forEvent = true) =>
+      validateReservationRequest(
+        request({
+          date: "2026-11-27",
+          time: "08:00",
+          forEvent,
+          deliveries: [delivery({ topperSender: "총무과 동기 일동", topperCourse })],
+        }),
+        graduationNow,
+        submittedAt,
+      );
+
+    const result = graduation("고위정책과정");
+    assert.equal(result.ok, true);
+    if (result.ok) {
+      assert.equal(result.request.deliveries[0].topperSender, "총무과 동기 일동");
+      assert.equal(result.request.deliveries[0].topperCourse, "고위정책과정");
+    }
+    // 수료 과정이 비면 거절
+    assert.equal(graduation("  ").ok, false);
+    // 수료식 꽃이 아니면 과정 없어도 되고 저장 안 함
+    const notEvent = graduation("", false);
+    assert.equal(notEvent.ok, true);
+    if (notEvent.ok) assert.equal(notEvent.request.deliveries[0].topperCourse, "");
+  });
+
+  it("승진식 날에는 수료 과정을 받지 않음 (보내도 버림)", () => {
+    const eventNow = toNowInTimeZone(new Date("2026-10-20T10:00+09:00"));
     const result = validateReservationRequest(
       request({
-        date: "2026-11-27",
+        date: "2026-10-23",
         time: "08:00",
         forEvent: true,
-        deliveries: [delivery({ topperSender: "고위정책과정 동기 일동" })],
+        deliveries: [delivery({ topperSender: "총무과 일동", topperCourse: "고위정책과정" })],
       }),
-      graduationNow,
+      eventNow,
       submittedAt,
     );
     assert.equal(result.ok, true);
-    if (result.ok) assert.equal(result.request.deliveries[0].topperSender, "고위정책과정 동기 일동");
+    if (result.ok) assert.equal(result.request.deliveries[0].topperCourse, "");
   });
 
   it("지난 시간·마감된 시간은 거절", () => {

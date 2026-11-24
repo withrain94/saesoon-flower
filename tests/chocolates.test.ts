@@ -35,6 +35,7 @@ function request(chocolateOrders: ReservationRequest["chocolates"]): Reservation
         recipientPhone: "",
         recipientAddress: "",
         topperSender: "",
+        topperCourse: "",
         messageType: "none",
         memo: "",
         ribbonLeft: "",
