@@ -343,7 +343,7 @@ const doll = defineKeyedCategory(
     { key: "hachiware", taxableAmount: 8000, price: 80000, cover: 0, images: photos(["doll-hachiware-01.jpg"]) },
     { key: "usagi", taxableAmount: 8000, price: 80000, cover: 0, images: photos(["doll-usagi-01.jpg"]) },
     { key: "trio", taxableAmount: 24000, price: 100000, cover: 0, images: photos(["doll-trio-01.jpg"]) },
-    // 과세 부분(taxableAmount): 인형 1개 8,000 · 3총사 24,000 · 간식도 챙겼어? = 인형 8,000 + 사진 속 해피히포 4개 6,000 + 페레로로쉐 2개 6,000(Claude가 사진으로 셈 — 사용자 확인 전)
+    // 과세 부분(taxableAmount): 인형 1개 8,000 · 3총사 24,000 · 간식도 챙겼어? = 인형 8,000 + 사진 속 해피히포 4개 6,000 + 페레로로쉐 2개 6,000(2026-11-24 사용자 확인)
     // 하치와레 + 초콜릿(해피히포·페레로로쉐) 꽃다발 (2026-11-21 사용자 요청 — 제목·금액 사용자, 설명 Claude)
     { key: "hachiware-snack", taxableAmount: 20000, price: 90000, cover: 0, images: photos(["doll-hachiware-snack-01.jpg"]) },
     // 치이카와·하치와레·우사기 셋 + 크림 포장 축하 꽃다발 (2026-11-22 사용자 요청 — 제목·금액 사용자, 설명 Claude)
