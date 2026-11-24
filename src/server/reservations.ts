@@ -165,6 +165,21 @@ export async function listAutoSmsReservations(
 }
 
 /**
+ * 받는 날짜가 cutoffKey 이전·같은 "입금·결제 확인"·"제작 완료" 예약 — 7일 지나 자동 전달 완료(server/autoStatus)용.
+ * 호출하는 쪽(app/cron)이 CRON_SECRET을 먼저 확인
+ */
+export async function listPaidReservationsUntil(cutoffKey: string): Promise<StoredReservation[]> {
+  const { data, error } = await createDatabaseClient()
+    .from(TABLE)
+    .select(COLUMNS)
+    .in("status", ["confirmed", "made"])
+    .lte("reservation_date", cutoffKey)
+    .limit(500);
+  if (error) throw error;
+  return (data as ReservationRow[]).map(fromRow);
+}
+
+/**
  * 받는 날짜 하루치 예약 (취소 제외, 시간 순) — 전날 "내일 예약 목록" 텔레그램(server/reminders)용.
  * 호출하는 쪽(app/cron)이 CRON_SECRET을 먼저 확인
  */

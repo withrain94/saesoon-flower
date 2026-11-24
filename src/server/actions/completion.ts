@@ -1,6 +1,7 @@
 "use server";
 
 import { refresh } from "next/cache";
+import { statusAfterCompletionPhoto } from "@/lib/autoStatus";
 import { MAX_SMS_TEXT, toSmsPhoneNumber } from "@/lib/ordererSms";
 import { isReservationId, requireAdmin } from "../auth";
 import {
@@ -12,6 +13,7 @@ import {
   uploadCompletionPhoto,
   type CompletionPhoto,
 } from "../completionPhotos";
+import { syncReservationToNotionById } from "../notion";
 import { getReservation, updateReservation } from "../reservations";
 import { sendSms } from "../sms";
 
@@ -34,7 +36,10 @@ async function readJpeg(formData: FormData, key: string, maxBytes: number) {
   return isJpeg(bytes) ? bytes : null;
 }
 
-/** 완성 사진 한 장 올리기 (화면용 "full" + 문자용 "mms" 두 크기) */
+/**
+ * 완성 사진 한 장 올리기 (화면용 "full" + 문자용 "mms" 두 크기).
+ * "입금·결제 확인" 예약이면 진행 상태를 "제작 완료"로 자동으로 바꿈 (lib/autoStatus, 2026-11-24 사용자 요청)
+ */
 export async function addCompletionPhoto(id: string, formData: FormData): Promise<CompletionPhotoResult> {
   await requireAdmin();
   if (!isReservationId(id)) return { error: "잘못된 요청이에요." };
@@ -42,17 +47,33 @@ export async function addCompletionPhoto(id: string, formData: FormData): Promis
   const mms = await readJpeg(formData, "mms", MAX_MMS_BYTES);
   if (!full || !mms) return { error: "사진을 읽지 못했어요. 다른 사진으로 시도해 주세요." };
 
+  let nextStatus: ReturnType<typeof statusAfterCompletionPhoto> = null;
+  let photos: CompletionPhoto[];
   try {
-    if (!(await getReservation(id))) return { error: "예약을 찾지 못했어요." };
+    const reservation = await getReservation(id);
+    if (!reservation) return { error: "예약을 찾지 못했어요." };
     const current = await listCompletionPhotos(id);
     if (current.length >= MAX_COMPLETION_PHOTOS) {
       return { error: `완성 사진은 ${MAX_COMPLETION_PHOTOS}장까지 올릴 수 있어요. 먼저 한 장을 지워 주세요.` };
     }
     await uploadCompletionPhoto(id, full, mms);
-    return { error: null, photos: await listCompletionPhotos(id) };
+    photos = await listCompletionPhotos(id);
+    nextStatus = statusAfterCompletionPhoto(reservation.status);
   } catch {
     return { error: "사진을 저장하지 못했어요. 잠시 후 다시 시도해 주세요." };
   }
+
+  if (nextStatus) {
+    // 사진은 이미 저장됨 — 상태 저장이 실패해도 사진 올리기는 성공으로 둠 (관리자가 상태 버튼으로 직접 바꿀 수 있음)
+    try {
+      await updateReservation(id, { status: nextStatus });
+      await syncReservationToNotionById(id);
+      refresh();
+    } catch {
+      console.error("[completion] 제작 완료 자동 변경 실패");
+    }
+  }
+  return { error: null, photos };
 }
 
 export async function removeCompletionPhoto(id: string, name: string): Promise<CompletionPhotoResult> {
