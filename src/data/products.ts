@@ -14,6 +14,11 @@ export type Product = {
   /** 대표 사진 인덱스 */
   cover: number;
   images: string[];
+  /**
+   * 금액 중 과세 부분 (원) — 꽃은 면세, 함께 든 초콜릿·인형은 과세(2026-11-24 사용자 결정, 토스 부분과세).
+   * 없으면 0 (전부 면세). 단품 금액 기준: 해피히포 1,500 · 페레로로쉐 3,000 · 치이카와 인형 8,000
+   */
+  taxableAmount?: number;
 };
 
 export type ProductCategory = {
@@ -334,22 +339,23 @@ const doll = defineKeyedCategory(
     featured: false,
   },
   [
-    { key: "chiikawa", price: 80000, cover: 0, images: photos(["doll-chiikawa-01.jpg"]) },
-    { key: "hachiware", price: 80000, cover: 0, images: photos(["doll-hachiware-01.jpg"]) },
-    { key: "usagi", price: 80000, cover: 0, images: photos(["doll-usagi-01.jpg"]) },
-    { key: "trio", price: 100000, cover: 0, images: photos(["doll-trio-01.jpg"]) },
+    { key: "chiikawa", taxableAmount: 8000, price: 80000, cover: 0, images: photos(["doll-chiikawa-01.jpg"]) },
+    { key: "hachiware", taxableAmount: 8000, price: 80000, cover: 0, images: photos(["doll-hachiware-01.jpg"]) },
+    { key: "usagi", taxableAmount: 8000, price: 80000, cover: 0, images: photos(["doll-usagi-01.jpg"]) },
+    { key: "trio", taxableAmount: 24000, price: 100000, cover: 0, images: photos(["doll-trio-01.jpg"]) },
+    // 과세 부분(taxableAmount): 인형 1개 8,000 · 3총사 24,000 · 간식도 챙겼어? = 인형 8,000 + 사진 속 해피히포 4개 6,000 + 페레로로쉐 2개 6,000(Claude가 사진으로 셈 — 사용자 확인 전)
     // 하치와레 + 초콜릿(해피히포·페레로로쉐) 꽃다발 (2026-11-21 사용자 요청 — 제목·금액 사용자, 설명 Claude)
-    { key: "hachiware-snack", price: 90000, cover: 0, images: photos(["doll-hachiware-snack-01.jpg"]) },
+    { key: "hachiware-snack", taxableAmount: 20000, price: 90000, cover: 0, images: photos(["doll-hachiware-snack-01.jpg"]) },
     // 치이카와·하치와레·우사기 셋 + 크림 포장 축하 꽃다발 (2026-11-22 사용자 요청 — 제목·금액 사용자, 설명 Claude)
-    { key: "trio-celebrate", price: 110000, cover: 0, images: photos(["doll-trio-celebrate-01.jpg"]) },
+    { key: "trio-celebrate", taxableAmount: 24000, price: 110000, cover: 0, images: photos(["doll-trio-celebrate-01.jpg"]) },
     // 초콜릿 꽃다발 패키지 (2026-11-17 사용자 요청 — 주문 제작했던 꽃다발을 패키지로, 치이카와 아래)
     // 금액 = 8만원 꽃다발 + 초콜릿 단품 금액(해피히포 1,500·페레로로쉐 3,000, 사용자 확인), 실바핑크는 사용자가 정한 18만원
-    { key: "choco-hippo15", price: 102500, cover: 0, images: photos(["doll-choco-hippo15-01.jpg"]) },
-    { key: "choco-hippo20", price: 110000, cover: 0, images: photos(["doll-choco-hippo20-01.jpg"]) },
-    { key: "choco-ferrero10", price: 110000, cover: 0, images: photos(["doll-choco-ferrero10-01.jpg"]) },
-    { key: "choco-ferrero15", price: 125000, cover: 0, images: photos(["doll-choco-ferrero15-01.jpg"]) },
-    { key: "choco-ferrero20", price: 140000, cover: 0, images: photos(["doll-choco-ferrero20-01.jpg"]) },
-    { key: "choco-silvapink", price: 180000, cover: 0, images: photos(["doll-choco-silvapink-01.jpg"]) },
+    { key: "choco-hippo15", taxableAmount: 22500, price: 102500, cover: 0, images: photos(["doll-choco-hippo15-01.jpg"]) },
+    { key: "choco-hippo20", taxableAmount: 30000, price: 110000, cover: 0, images: photos(["doll-choco-hippo20-01.jpg"]) },
+    { key: "choco-ferrero10", taxableAmount: 30000, price: 110000, cover: 0, images: photos(["doll-choco-ferrero10-01.jpg"]) },
+    { key: "choco-ferrero15", taxableAmount: 45000, price: 125000, cover: 0, images: photos(["doll-choco-ferrero15-01.jpg"]) },
+    { key: "choco-ferrero20", taxableAmount: 60000, price: 140000, cover: 0, images: photos(["doll-choco-ferrero20-01.jpg"]) },
+    { key: "choco-silvapink", taxableAmount: 30000, price: 180000, cover: 0, images: photos(["doll-choco-silvapink-01.jpg"]) },
   ],
 );
 

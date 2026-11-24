@@ -167,6 +167,22 @@ describe("토스 결제 규칙 (lib/tossPayment)", () => {
     assert.equal(checkout.taxFreeAmount, bouquet.price * 2);
   });
 
+  it("면세 금액: 초콜릿·치이카와 패키지는 꽃 부분만 면세 (초콜릿·인형은 과세)", () => {
+    const item = (id: string, quantity = 1) => {
+      const product = allProducts.find((candidate) => candidate.id === id)!;
+      return { productId: product.id, category: product.category, price: product.price, quantity };
+    };
+    const items = [item("doll-choco-hippo15"), item("doll-trio", 2), item(bouquet.id)];
+    const totalPrice = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    const checkout = buildTossCheckout(ID, request({ items, totalPrice }), "k", "o", submittedAt);
+    // 해피히포 15개 102,500 → 꽃 80,000 / 3총사 100,000 × 2 → 꽃 76,000 × 2 / 일반 꽃다발은 전부 면세
+    assert.equal(checkout.taxFreeAmount, 80000 + 76000 * 2 + bouquet.price);
+    // 모든 패키지: 과세 부분은 0보다 크고 금액보다 작음
+    for (const product of allProducts.filter((candidate) => candidate.category === "doll")) {
+      assert.ok((product.taxableAmount ?? 0) > 0 && (product.taxableAmount ?? 0) < product.price, product.id);
+    }
+  });
+
   it("토스 Payment 응답 → 저장 기록 (가상계좌·현금영수증·영수증)", () => {
     const record = toTossPaymentRecord(
       {

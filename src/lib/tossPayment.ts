@@ -1,3 +1,4 @@
+import { allProducts } from "@/data/products";
 import { VIRTUAL_ACCOUNT_BEFORE_SLOT_HOURS, VIRTUAL_ACCOUNT_MAX_HOURS } from "@/data/reservationOptions";
 import { tossBankName } from "@/data/tossBanks";
 import { ko } from "@/i18n/ko";
@@ -89,8 +90,12 @@ export function canStartTossPayment(reservation: Pick<StoredReservation, "reques
 }
 
 /** 면세 금액 — 꽃 상품(꽃다발·꽃바구니·호접난)은 면세, 초콜릿·쇼핑백은 과세 (2026-11-17 사용자 확인) */
+/** 면세 금액 = 꽃 상품 금액 − 패키지에 든 초콜릿·인형(과세) 부분. 초콜릿·인형·쇼핑백 추가(chocolates)는 전부 과세 */
 export function taxFreeAmountOf(request: Pick<ReservationRequest, "items">) {
-  return request.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  return request.items.reduce((sum, item) => {
+    const taxable = Math.min(allProducts.find((product) => product.id === item.productId)?.taxableAmount ?? 0, item.price);
+    return sum + (item.price - taxable) * item.quantity;
+  }, 0);
 }
 
 export function buildTossCheckout(
