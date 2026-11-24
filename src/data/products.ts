@@ -158,7 +158,7 @@ const bouquet = defineCategory(
         "bouquet-100000-02.jpg",
         "bouquet-100000-04.jpg",
         "bouquet-100000-08.jpg",
-        "bouquet-100000-11.jpg",
+        "bouquet-100000-17.jpg",
         "bouquet-100000-16.jpg",
         "bouquet-100000-10.jpg",
         "bouquet-100000-13.jpg",
