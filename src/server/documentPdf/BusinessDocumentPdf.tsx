@@ -156,8 +156,9 @@ export function buildDocumentsPdf(documents: BusinessDocument[], seal: SealImage
             ))}
             {doc.tax && (
               <>
-                <SumRow label="공급가액" value={doc.tax.supplyAmount} />
-                <SumRow label="세액" value={doc.tax.vat} />
+                {doc.tax.taxFree > 0 && <SumRow label="면세 금액" value={doc.tax.taxFree} />}
+                <SumRow label="과세 공급가액" value={doc.tax.supplyAmount} />
+                <SumRow label="부가세" value={doc.tax.vat} />
               </>
             )}
             <SumRow label="합계" value={doc.total} bold />

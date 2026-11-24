@@ -5,6 +5,7 @@ import { businessInfo } from "@/data/shop";
 import { ko } from "@/i18n/ko";
 import { formatDateLabel } from "@/lib/date";
 import { formatKoreanAmount } from "@/lib/format";
+import { taxFreeAmountOf } from "@/lib/tossPayment";
 import { getItemName } from "@/lib/selection";
 import { formatTimeLabel, toNowInTimeZone } from "@/lib/time";
 import type { BusinessDocumentType, ReservationRequest } from "@/types/reservation";
@@ -38,8 +39,11 @@ export type BusinessDocument = {
   total: number;
   /** "일금 이십이만원정" */
   totalText: string;
-  /** 과세일 때만 */
-  tax: { supplyAmount: number; vat: number } | null;
+  /**
+   * 과세 부분이 있을 때만 — taxFree: 면세 금액(꽃), supplyAmount·vat: 과세 부분(부가세 포함 금액)을 나눈 값.
+   * 2026-11-24 사용자 결정: 꽃은 면세, 초콜릿·인형(추가 칸·패키지 안)은 과세 — 토스 결제창과 같은 기준(lib/tossPayment)
+   */
+  tax: { taxFree: number; supplyAmount: number; vat: number } | null;
   notes: string[];
 };
 
@@ -68,10 +72,14 @@ export function buildBusinessDocument(
   const schedule = `${formatDateLabel(reservation.date)} ${formatTimeLabel(reservation.time)}`;
   const payment = paymentMethodOptions.find((option) => option.value === reservation.paymentMethod);
 
+  const won = (value: number) => value.toLocaleString("ko-KR");
   const rows = reservation.items.map((item) => {
     const product = allProducts.find((candidate) => candidate.id === item.productId);
+    const name = product ? getItemName(product) : item.productId;
+    const taxable = Math.min(product?.taxableAmount ?? 0, item.price);
     return {
-      name: product ? getItemName(product) : item.productId,
+      // 초콜릿·인형이 든 패키지는 과세 부분(초콜릿·인형 값)을 이름 옆에 (1개 기준)
+      name: taxable > 0 ? `${name} (과세 ${won(taxable)}원 포함)` : name,
       quantity: item.quantity,
       unitPrice: item.price,
       amount: item.price * item.quantity,
@@ -81,7 +89,7 @@ export function buildBusinessDocument(
   // 함께 담은 초콜릿도 한 줄씩 (합계가 결제 금액과 같아야 함)
   for (const chocolate of reservation.chocolates ?? []) {
     rows.push({
-      name: ko.chocolate.items[chocolate.chocolateId as ChocolateId]?.name ?? chocolate.chocolateId,
+      name: `${ko.chocolate.items[chocolate.chocolateId as ChocolateId]?.name ?? chocolate.chocolateId} (과세)`,
       quantity: chocolate.quantity,
       unitPrice: chocolate.price,
       amount: chocolate.price * chocolate.quantity,
@@ -89,16 +97,23 @@ export function buildBusinessDocument(
   }
   const total = rows.reduce((sum, row) => sum + row.amount, 0);
 
-  // 과세면 가격을 부가세 포함으로 보고 공급가액·세액을 나눔
-  const supplyAmount = Math.round(total / 1.1);
+  // 과세 부분은 가격을 부가세 포함으로 보고 공급가액·세액을 나눔
+  // (매장 전체가 과세(taxType "taxable")면 전부 과세, 면세 매장이면 꽃은 면세·초콜릿·인형만 과세)
+  const taxFree = businessInfo.taxType === "taxable" ? 0 : Math.min(taxFreeAmountOf(reservation), total);
+  const taxableTotal = total - taxFree;
+  const supplyAmount = Math.round(taxableTotal / 1.1);
   const tax =
-    businessInfo.taxType === "taxable" ? { supplyAmount, vat: total - supplyAmount } : null;
+    businessInfo.taxType === "taxable" || (businessInfo.taxType === "exempt" && taxableTotal > 0)
+      ? { taxFree, supplyAmount, vat: taxableTotal - supplyAmount }
+      : null;
 
   const taxNote =
-    businessInfo.taxType === "exempt"
-      ? "부가세 면세 품목입니다."
-      : businessInfo.taxType === "taxable"
-        ? "금액은 부가세 포함입니다."
+    businessInfo.taxType === "taxable"
+      ? "금액은 부가세 포함입니다."
+      : businessInfo.taxType === "exempt"
+        ? taxableTotal > 0
+          ? "꽃은 부가세 면세, 초콜릿·인형은 과세 품목입니다(과세 금액은 부가세 포함)."
+          : "부가세 면세 품목입니다."
         : `부가세 구분: ${MISSING_INFO}`;
 
   const notes =

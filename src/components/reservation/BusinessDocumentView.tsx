@@ -58,8 +58,9 @@ export default function BusinessDocumentView({ document }: { document: BusinessD
         <tfoot>
           {document.tax && (
             <>
-              <SumRow label="공급가액" value={document.tax.supplyAmount} />
-              <SumRow label="세액" value={document.tax.vat} />
+              {document.tax.taxFree > 0 && <SumRow label="면세 금액" value={document.tax.taxFree} />}
+              <SumRow label="과세 공급가액" value={document.tax.supplyAmount} />
+              <SumRow label="부가세" value={document.tax.vat} />
             </>
           )}
           <SumRow label="합계" value={document.total} bold />

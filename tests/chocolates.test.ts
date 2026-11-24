@@ -219,8 +219,12 @@ describe("치이카와 꽃다발·인형 단품 (2026-11-17)", () => {
       assert.equal(result.request.chocolates[0].price, 8000);
       assert.equal(result.request.totalPrice, 108000);
       const document = buildBusinessDocument("quote", result.request);
-      assert.equal(document.rows[0].name, "먼작귀 3총사 꽃다발 10만원");
+      assert.equal(document.rows[0].name, "먼작귀 3총사 꽃다발 10만원 (과세 24,000원 포함)");
+      assert.equal(document.rows[1].name, "치이카와 인형 (과세)");
       assert.equal(document.total, 108000);
+      // 꽃 76,000 면세 + 과세 32,000(인형 3개 24,000 + 단품 8,000) = 공급가액 29,091 + 부가세 2,909 (2026-11-24 사용자 결정)
+      assert.deepEqual(document.tax, { taxFree: 76000, supplyAmount: 29091, vat: 2909 });
+      assert.match(document.notes.at(-1)!, /꽃은 부가세 면세, 초콜릿·인형은 과세/);
     }
   });
 });
