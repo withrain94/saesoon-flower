@@ -1,4 +1,5 @@
 import type { ProductCategoryId } from "@/types/reservation";
+import { BOOKING_SITE_URL } from "./siteAddress";
 
 /** 매장 이름·한 줄 소개는 언어 파일(i18n)의 shop 에 있음 */
 export const shop = {
@@ -101,8 +102,8 @@ export const storeContact = {
   staffedHours: { open: 9, close: 17 },
 };
 
-/** 이 예약 사이트의 주소 — 구글 검색용 정보(sitemap·robots·대표 주소)에 씀. 주소가 바뀌면 여기만 */
-export const bookingSiteUrl = "https://saesoon-flower.vercel.app";
+/** 이 예약 사이트의 주소 — 구글 검색용 정보(sitemap·robots·대표 주소)·사진 문자 링크에 씀. 바꿀 땐 data/siteAddress.ts */
+export const bookingSiteUrl = BOOKING_SITE_URL;
 
 /**
  * 구글 검색 노출용 정보 (한국어 — 검색 결과 제목·설명, 지도 정보).

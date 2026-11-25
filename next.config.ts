@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { BOOKING_SITE_URL, VERCEL_SITE_URL } from "./src/data/siteAddress";
 
 const nextConfig: NextConfig = {
   /**
@@ -20,6 +21,21 @@ const nextConfig: NextConfig = {
   /** 사진 올리기 — 브라우저에서 줄여 보내지만 기본 1MB보다는 넉넉히 */
   experimental: {
     serverActions: { bodySizeLimit: "3mb" },
+  },
+  /**
+   * 전용 도메인으로 옮기면(data/siteAddress.ts) 예전 vercel.app 주소로 온 손님을 새 주소로 넘김.
+   * /api(토스 입금 알림)·/cron(자동 실행)은 넘기지 않음 — 예전 주소로 등록돼 있어도 그대로 동작.
+   */
+  async redirects() {
+    if (BOOKING_SITE_URL === VERCEL_SITE_URL) return [];
+    return [
+      {
+        source: "/:path((?!api/|cron/).*)",
+        has: [{ type: "host", value: new URL(VERCEL_SITE_URL).host }],
+        destination: `${BOOKING_SITE_URL}/:path`,
+        permanent: true,
+      },
+    ];
   },
   outputFileTracingIncludes: {
     "/**": ["./src/server/documentPdf/fonts/*.ttf", "./public/documents/*.png"],
