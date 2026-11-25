@@ -12,6 +12,12 @@ describe("예약 가능한 시간 (lib/time)", () => {
     assert.equal(isSlotBookable("15:00", "2026-11-10", at("2026-11-10T13:01")), false);
   });
 
+  it("오늘부터 6주(42일) 뒤까지만 고를 수 있음 (토스페이먼츠 정책)", () => {
+    const today = at("2026-11-25T10:00");
+    assert.equal(isSlotBookable("15:00", "2027-01-06", today), true);
+    assert.equal(isSlotBookable("15:00", "2027-01-07", today), false);
+  });
+
   it("지난 날짜는 고를 수 없음", () => {
     assert.equal(isSlotBookable("15:00", "2026-11-09", at("2026-11-10T09:00")), false);
   });

@@ -8,7 +8,7 @@ import { afternoonSlots, morningSlots } from "@/data/reservationOptions";
 import { useT } from "@/hooks/useLocale";
 import { formatDateLabel } from "@/lib/date";
 import { getEventCopy, getOpenEvents } from "@/lib/events";
-import { formatTimeLabel, hasBookableSlot, isSlotBookable, type Now } from "@/lib/time";
+import { formatTimeLabel, getLastBookableDate, hasBookableSlot, isSlotBookable, type Now } from "@/lib/time";
 import type { Selection } from "@/types/reservation";
 import Calendar from "./Calendar";
 import EventDayNotice from "./EventDayNotice";
@@ -91,6 +91,7 @@ export default function DateTimeSection({
           // 다른 달의 날짜를 바깥(특별한 날 버튼 등)에서 고르면 그 달을 보여주도록 다시 그림
           key={date ? date.slice(0, 7) : "none"}
           todayKey={now.dateKey}
+          lastKey={getLastBookableDate(now)}
           selected={date}
           isDateDisabled={(dateKey) => !hasBookableSlot(dateKey, now)}
           getDayLabel={(dateKey) => {

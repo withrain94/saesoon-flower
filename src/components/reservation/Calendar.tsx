@@ -2,18 +2,20 @@
 
 import { useState } from "react";
 import { ChevronIcon } from "@/components/ui/icons";
-import { MAX_MONTHS_AHEAD } from "@/data/reservationOptions";
 import { useT } from "@/hooks/useLocale";
 import { getMonthGrid, monthsBetween, toDateKey } from "@/lib/date";
 
 export default function Calendar({
   todayKey,
+  lastKey,
   selected,
   isDateDisabled,
   getDayLabel,
   onSelect,
 }: {
   todayKey: string;
+  /** 예약할 수 있는 마지막 날짜 — 그 달까지만 넘길 수 있음 */
+  lastKey: string;
   /** 처음 보여줄 달도 이 날짜 기준 (다른 달 날짜를 바깥에서 고르면 key를 바꿔 다시 그리기) */
   selected: string | null;
   /** 지난 날짜, 예약 가능한 시간이 남지 않은 당일 등 */
@@ -23,8 +25,9 @@ export default function Calendar({
   onSelect: (dateKey: string) => void;
 }) {
   const t = useT();
+  const maxMonthOffset = monthsBetween(todayKey, lastKey);
   const [monthOffset, setMonthOffset] = useState(() =>
-    selected ? Math.min(MAX_MONTHS_AHEAD, Math.max(0, monthsBetween(todayKey, selected))) : 0,
+    selected ? Math.min(maxMonthOffset, Math.max(0, monthsBetween(todayKey, selected))) : 0,
   );
   const { year, month, cells } = getMonthGrid(todayKey, monthOffset);
 
@@ -43,7 +46,7 @@ export default function Calendar({
         <MonthButton
           direction="right"
           label={t.dateTime.nextMonth}
-          disabled={monthOffset >= MAX_MONTHS_AHEAD}
+          disabled={monthOffset >= maxMonthOffset}
           onClick={() => setMonthOffset(monthOffset + 1)}
         />
       </div>

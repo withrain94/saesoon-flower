@@ -1,6 +1,7 @@
 import { getEventOn } from "@/data/events";
 import {
   allSlots,
+  MAX_DAYS_AHEAD,
   ORDER_CLOSE_HOUR,
   ORDER_OPEN_HOUR,
   SAME_DAY_LEAD_HOURS,
@@ -71,6 +72,11 @@ export function getBlockedUntil(now: Now): Moment | null {
   return null;
 }
 
+/** 예약할 수 있는 마지막 날짜 — 오늘(한국 날짜)부터 MAX_DAYS_AHEAD일 뒤 */
+export function getLastBookableDate(now: Now) {
+  return addDaysToKey(now.dateKey, MAX_DAYS_AHEAD);
+}
+
 /** 그 날짜에 고를 수 있는 시간대 — 특별한 날(data/events)은 그날 정해진 시간만 */
 export function getSlotsForDate(dateKey: string) {
   return getEventOn(dateKey)?.slots ?? allSlots;
@@ -79,13 +85,13 @@ export function getSlotsForDate(dateKey: string) {
 /**
  * 예약 가능한 시간대인지.
  * - 그 날짜의 시간대(getSlotsForDate)가 아니면: 불가
- * - 지난 날짜: 불가
+ * - 지난 날짜·MAX_DAYS_AHEAD일(6주)보다 먼 날짜: 불가
  * - 당일: 현재 시각 + SAME_DAY_LEAD_HOURS 이후 시간대만 가능
  * - 예약 마감 중: 막히는 마지막 시각(getBlockedUntil)까지의 시간대 불가
  */
 export function isSlotBookable(slot: string, dateKey: string, now: Now) {
   if (!getSlotsForDate(dateKey).includes(slot)) return false;
-  if (dateKey < now.dateKey) return false;
+  if (dateKey < now.dateKey || dateKey > getLastBookableDate(now)) return false;
 
   const slotMoment: Moment = { dateKey, minutes: getSlotHour(slot) * 60 };
   if (dateKey === now.dateKey && slotMoment.minutes < now.minutes + SAME_DAY_LEAD_HOURS * 60) {

@@ -134,8 +134,11 @@ export const orchidRestaurants = ["호남각", "궁", "고궁담"] as const;
 /** 식당 목록에 없을 때 고르는 값 → 직접 입력 칸이 열림 */
 export const RESTAURANT_OTHER = "other";
 
-/** 오늘 기준 몇 달 뒤까지 예약 가능한지 */
-export const MAX_MONTHS_AHEAD = 3;
+/**
+ * 오늘 기준 며칠 뒤까지 예약 가능한지 — 토스페이먼츠 정책: 결제일부터 받는 날까지 최대 6주
+ * (2026-11-25 토스 심사 보완 요청, 그전엔 3달)
+ */
+export const MAX_DAYS_AHEAD = 42;
 
 export const morningSlots = ["08:00", "09:00", "10:00", "11:00"];
 
