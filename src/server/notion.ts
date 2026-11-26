@@ -2,9 +2,14 @@ import "server-only";
 
 import {
   buildContactLists,
+  buildMakeChecklist,
+  buildNameTags,
   buildNotionRows,
   CONTACT_LIST_TITLES,
   hasContactLists,
+  MAKE_CHECK_TITLE,
+  makeCheckKey,
+  NAME_TAG_TITLE,
   NOTION_RECEIPT_COLUMN,
   NOTION_SYNC_STATUSES,
   NOTION_TABLE_HEADERS,
@@ -35,6 +40,8 @@ type NotionBlock = {
   table_row?: { cells: { plain_text: string }[][] };
   heading_3?: { rich_text: { plain_text: string }[] };
   paragraph?: { rich_text: { plain_text: string }[] };
+  quote?: { rich_text: { plain_text: string }[] };
+  to_do?: { rich_text: { plain_text: string }[]; checked: boolean };
 };
 
 class NotionError extends Error {
@@ -120,7 +127,8 @@ export type NotionSyncResult =
 
 /** 노션 블록 글자 (여러 조각을 이어 붙임) */
 function blockText(block: NotionBlock) {
-  const content = block.type === "heading_3" ? block.heading_3 : block.type === "paragraph" ? block.paragraph : undefined;
+  const content =
+    block.type === "heading_3" ? block.heading_3 : block.type === "paragraph" ? block.paragraph : block.type === "quote" ? block.quote : block.type === "to_do" ? block.to_do : undefined;
   return content?.rich_text.map((text) => text.plain_text).join("") ?? "";
 }
 
@@ -166,6 +174,80 @@ async function refreshContactLists(token: string, pageId: string) {
 }
 
 /**
+ * 표 바로 아래 받는분 이름표 목록(상품 1개당 이름 1줄)을 표 내용에 맞게 새로 씀 — 모든 날짜 페이지 (2026-11-26 사용자 요청).
+ * 이전에 만든 목록(제목이 NAME_TAG_TITLE로 시작하는 소제목 + 바로 뒤 인용 블록들)만 지우고 다시 넣음
+ */
+async function refreshNameTags(token: string, pageId: string) {
+  const blocks = await listChildren(token, pageId);
+  const table = blocks.find((block) => block.type === "table");
+  if (!table) return;
+
+  const oldBlocks: NotionBlock[] = [];
+  let inList = false;
+  for (const block of blocks) {
+    if (block.type === "heading_3") inList = blockText(block).startsWith(NAME_TAG_TITLE);
+    else if (block.type !== "quote") inList = false;
+    if (inList) oldBlocks.push(block);
+  }
+  for (const block of oldBlocks) await notionFetch(token, `/blocks/${block.id}`, "DELETE");
+
+  const rows = (await listChildren(token, table.id)).filter((block) => block.type === "table_row").slice(1).map(cellTexts);
+  const { title, lines } = buildNameTags(rows);
+  const children = [
+    { object: "block", type: "heading_3", heading_3: { rich_text: textContent(title) } },
+    ...(lines.length ? lines : ["(없음)"]).map((line) => ({ object: "block", type: "quote", quote: { rich_text: textContent(line) } })),
+  ];
+  await notionFetch(token, `/blocks/${pageId}/children`, "PATCH", { children, after: table.id });
+}
+
+/** 노션은 한 번에 블록 100개까지 — 나눠서 차례로 이어 붙임 */
+async function appendAfter(token: string, pageId: string, afterId: string, children: unknown[]) {
+  let after = afterId;
+  for (let index = 0; index < children.length; index += 90) {
+    const result = await notionFetch<{ results: { id: string }[] }>(token, `/blocks/${pageId}/children`, "PATCH", {
+      children: children.slice(index, index + 90),
+      after,
+    });
+    after = result.results.at(-1)?.id ?? after;
+  }
+}
+
+/**
+ * 표 아래 제작 체크 목록(누르면 체크되는 줄, 상품 1개당 한 줄)을 표 내용에 맞게 새로 씀 — 모든 날짜 페이지.
+ * 이전 목록(제목이 MAKE_CHECK_TITLE로 시작하는 소제목 + 바로 뒤 체크 줄들)을 지우기 전에 체크한 줄을 기억해 두고 이어감
+ */
+async function refreshMakeChecklist(token: string, pageId: string) {
+  const blocks = await listChildren(token, pageId);
+  const table = blocks.find((block) => block.type === "table");
+  if (!table) return;
+
+  const oldBlocks: NotionBlock[] = [];
+  const checked = new Set<string>();
+  let inList = false;
+  for (const block of blocks) {
+    if (block.type === "heading_3") inList = blockText(block).startsWith(MAKE_CHECK_TITLE);
+    else if (block.type !== "to_do") inList = false;
+    if (!inList) continue;
+    oldBlocks.push(block);
+    const key = block.type === "to_do" ? makeCheckKey(blockText(block)) : null;
+    if (key && block.to_do?.checked) checked.add(key);
+  }
+  for (const block of oldBlocks) await notionFetch(token, `/blocks/${block.id}`, "DELETE");
+
+  const rows = (await listChildren(token, table.id)).filter((block) => block.type === "table_row").slice(1).map(cellTexts);
+  const { title, items } = buildMakeChecklist(rows);
+  const doneCount = items.filter((item) => checked.has(item.key)).length;
+  await appendAfter(token, pageId, table.id, [
+    { object: "block", type: "heading_3", heading_3: { rich_text: textContent(`${title.replace(/\)$/, "")} · 완료 ${doneCount})`) } },
+    ...items.map((item) => ({
+      object: "block",
+      type: "to_do",
+      to_do: { rich_text: textContent(item.text), checked: checked.has(item.key) },
+    })),
+  ]);
+}
+
+/**
  * 예약 한 건을 노션 표에 맞춤 — 여러 번 불러도 줄이 겹치지 않음 (접수번호 칸으로 찾음).
  * - 접수 이후 상태: 받는 날짜 페이지(없으면 만듦)의 표에 줄 추가, 이미 있으면 내용 갱신
  * - 취소: 이미 올라간 줄만 갱신 (예약종류 앞에 [취소])
@@ -184,6 +266,9 @@ export async function syncReservationToNotion(reservation: StoredReservation): P
     const title = notionPageTitle(reservation.request.date);
     if (kind === "skipped" || !pageId) return { kind: "skipped" };
     if (hasContactLists(reservation.request.date)) await refreshContactLists(token, pageId);
+    // 표 바로 아래 순서: 이름표 → 제작 체크 → 연락처 모음 (나중에 넣은 것이 표 바로 아래에 옴)
+    await refreshMakeChecklist(token, pageId);
+    await refreshNameTags(token, pageId);
     return { kind, title };
   } catch (error) {
     // 고객 정보는 남기지 않고 오류 종류만

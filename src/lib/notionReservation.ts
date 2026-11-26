@@ -44,6 +44,11 @@ export const NOTION_RECEIPT_COLUMN = NOTION_TABLE_HEADERS.indexOf("접수번호"
 const ORDERER_PHONE_COLUMN = NOTION_TABLE_HEADERS.indexOf("보내는분 연락처");
 const RECIPIENT_PHONE_COLUMN = NOTION_TABLE_HEADERS.indexOf("받는분 연락처");
 const KIND_COLUMN = NOTION_TABLE_HEADERS.indexOf("예약종류");
+const RECIPIENT_NAME_COLUMN = NOTION_TABLE_HEADERS.indexOf("받는분 성함");
+const RECEIVE_COLUMN = NOTION_TABLE_HEADERS.indexOf("받는 방법");
+const PRICE_COLUMN = NOTION_TABLE_HEADERS.indexOf("금액");
+const SCHEDULE_COLUMN = NOTION_TABLE_HEADERS.indexOf("날짜/시간대");
+const ORDERER_NAME_COLUMN = NOTION_TABLE_HEADERS.indexOf("보내는분 성함");
 
 /** 이 상태면 노션 표에 올림 (접수되자마자 — 취소만 새로 올리지 않음) */
 export const NOTION_SYNC_STATUSES: ReservationStatus[] = ["received", "confirmed", "made", "delivered"];
@@ -121,6 +126,64 @@ export function buildContactLists(tableRows: string[][]) {
     { title: `${CONTACT_LIST_TITLES.orderer} (중복 제외 ${orderer.count}개)`, lines: orderer.chunks },
     { title: `${CONTACT_LIST_TITLES.recipient} (중복 제외 ${recipient.count}개)`, lines: recipient.chunks },
   ];
+}
+
+/** 이름표 목록 제목 앞부분 — 노션에서 이 글자로 시작하는 제목을 찾아 새로 고침 */
+export const NAME_TAG_TITLE = "받는분 이름표";
+
+/** 이름표 한 덩어리(노션 인용 블록 하나)에 넣는 이름 수 — 글자 수 제한 때문에 나눔 */
+export const NAME_TAG_CHUNK = 60;
+
+/**
+ * 노션 표 줄(머리글 제외) → 받는분 이름표 목록 (2026-11-26 사용자 요청 — 제작이 끝나면 이름표를 프린트해 붙임).
+ * 상품 1개당 이름 1줄(같은 분이 여러 개면 그만큼), 표 순서 그대로. 취소·매장 픽업은 뺌, 이름이 없으면 "(성함 미입력)"
+ */
+export function buildNameTags(tableRows: string[][]) {
+  const names = tableRows
+    .filter((cells) => !cells[KIND_COLUMN]?.startsWith(CANCELED_MARK.trim()))
+    .filter((cells) => cells[RECEIVE_COLUMN] !== ko.receive.methods.pickup.label)
+    .map((cells) => {
+      const name = (cells[RECIPIENT_NAME_COLUMN] ?? "").trim();
+      return !name || name.startsWith("(") ? "(성함 미입력)" : name;
+    });
+  const lines: string[] = [];
+  for (let index = 0; index < names.length; index += NAME_TAG_CHUNK) {
+    lines.push(names.slice(index, index + NAME_TAG_CHUNK).join("\n"));
+  }
+  return { title: `${NAME_TAG_TITLE} (${names.length}장 · 상품 1개당 1장)`, lines };
+}
+
+/** 제작 체크 목록 제목 앞부분 */
+export const MAKE_CHECK_TITLE = "제작 체크";
+
+/** 제작 체크 한 줄 끝의 표시 — "(A1B2C3D4-2)" = 접수번호 + 그 예약의 몇 번째 상품. 다시 쓸 때 체크한 줄을 찾는 열쇠 */
+export function makeCheckKey(text: string) {
+  return /\(([0-9A-Z]{8}-\d+)\)\s*$/.exec(text)?.[1] ?? null;
+}
+
+/**
+ * 노션 표 줄(머리글 제외) → 제작 체크 목록 (2026-11-26 사용자 요청 — 노션에서 만든 꽃을 눌러 체크).
+ * 상품 1개당 한 줄, 취소는 뺌. 줄 끝 (접수번호-순번)으로 다시 쓸 때도 체크를 이어감
+ */
+export function buildMakeChecklist(tableRows: string[][]) {
+  const counts = new Map<string, number>();
+  const items = tableRows
+    .filter((cells) => !cells[KIND_COLUMN]?.startsWith(CANCELED_MARK.trim()))
+    .map((cells) => {
+      const receipt = (cells[NOTION_RECEIPT_COLUMN] ?? "").trim();
+      const unitNo = (counts.get(receipt) ?? 0) + 1;
+      counts.set(receipt, unitNo);
+      const time = /\)\s*(\S+\s*\S+)/.exec(cells[SCHEDULE_COLUMN] ?? "")?.[1] ?? "";
+      const recipient = (cells[RECIPIENT_NAME_COLUMN] ?? "").trim() || "(성함 미입력)";
+      const text = [
+        [time, cells[KIND_COLUMN], cells[PRICE_COLUMN]].filter(Boolean).join(" "),
+        `받는분 ${recipient}`,
+        `보내는분 ${(cells[ORDERER_NAME_COLUMN] ?? "").trim()}`,
+      ].join(" · ");
+      const key = `${receipt}-${unitNo}`;
+      return { key, text: `${text} (${key})` };
+    });
+  return { title: `${MAKE_CHECK_TITLE} (${items.length}개)`, items };
 }
 
 /** "2026-10-30" → "인재개발원 26/10/30" (특별한 날) / "예약 26/10/15" */
