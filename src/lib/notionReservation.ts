@@ -172,7 +172,7 @@ export function buildNotionRows({ id, status, adminMemo, request }: StoredReserv
       "날짜/시간대": schedule,
       "보내는분 성함": request.ordererName,
       "보내는분 연락처": request.ordererPhone,
-      "받는분 성함": delivery.recipientName || "(예약자 픽업)",
+      "받는분 성함": delivery.recipientName || (request.receiveMethod === "delivery" ? "(성함 미입력)" : "(예약자 픽업)"),
       "받는분 연락처": delivery.recipientPhone,
       메시지: formatMessage(delivery),
       // 치이카와 꽃다발은 캐릭터마다 금액이 같아 상품 이름("하치와레 꽃다발")으로

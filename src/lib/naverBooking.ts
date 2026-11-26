@@ -26,6 +26,8 @@ export type NaverDraftItem = {
   label: string;
 };
 
+export type NaverRecipient = { name: string; phone: string; address: string };
+
 /** 관리자 화면에서 고치는 칸 */
 export type NaverDraft = {
   bookingNumber: string;
@@ -38,9 +40,8 @@ export type NaverDraft = {
   items: NaverDraftItem[];
   shoppingBags: number;
   receiveMethod: ReceiveMethod;
-  recipientName: string;
-  recipientPhone: string;
-  recipientAddress: string;
+  /** 받는 분 — 상품 1개마다 다른 분이면 여러 명 (상품 순서대로, 모자라면 마지막 분을 따라감). 1명 이상 */
+  recipients: NaverRecipient[];
   /** 보내는 분 이름 또는 팀 — 특별한 날 토퍼 */
   sender: string;
   /** 수료 과정 — 장기과정 수료식 날만 */
@@ -143,21 +144,51 @@ function findPhone(text: string, exclude: string) {
 /** "고급(4급) 과정" · "여성리더 과정" — 못 찾으면 "" */
 function findCourse(...texts: string[]) {
   for (const text of texts) {
-    const match = /([가-힣A-Za-z0-9]+(?:\([^)]*\))?)\s?과정/.exec(text);
+    // "수료 과정명 수정" 같은 말은 건너뜀, 화살표(→)로 바꿔 달라고 했으면 뒤 과정
+    const found = [...text.matchAll(/([가-힣A-Za-z0-9]+(?:\([^)]*\))?)\s?과정/g)].filter((match) => !/^(수료|교육|해당)$/.test(match[1]));
+    const match = /→/.test(text) ? found.at(-1) : found[0];
     if (match) return `${match[1]} 과정`;
   }
   return "";
 }
 
-/** 받는 분 칸 — "받는분: 홍길동(010-…) 주소: …" / "받는분: 홍길동 연락처: 010-… 주소: …" / 주소만 */
-function parseRecipient(text: string, ordererPhone: string, requestNote: string) {
-  const nameMatch = /받는\s*분\s*[:：]\s*([^(,，/\d\s]+(?:\s[^(,，/\d\s:：]+)?)/.exec(text);
-  let name = nameMatch ? nameMatch[1].trim() : "";
-  name = name.replace(/\s*(연락처|주소|전화).*$/, "");
-  const phone = findPhone(text, ordererPhone) || findPhone(requestNote, ordererPhone);
-  const addressMatch = /주소\s*[:：]\s*([\s\S]+)$/.exec(text);
-  const address = addressMatch ? addressMatch[1].trim() : nameMatch ? "" : text.trim();
-  return { name, phone, address };
+const NOT_NAMES = new Set(["받는분", "받는", "성함", "주소", "연락처", "전화", "번호", "배송지", "수령인", "수령자"]);
+const SEPARATORS = /^[\s)(,，/·:：-]+|[\s(,，/·:：-]+$/g;
+
+/**
+ * 받는 분 칸 → 받는 분 목록. 손님마다 쓰는 모양이 달라서(2026-11-26 실제 예약):
+ * "받는분: 홍길동(010-…) 주소: …" / "홍길동(010-…) 주소" / "홍길동 / 010-… / 주소" / "홍길동, 010-…, 주소" /
+ * 여러 명이면 "홍길동 / 010-… / 주소 김철수 / 010-… / 주소" — 연락처마다 바로 앞 이름과 뒤 주소를 한 사람으로 봄
+ */
+export function parseRecipients(text: string, ordererPhone: string, requestNote: string): NaverRecipient[] {
+  const labeled = /받는\s*분\s*[:：]\s*([^(,，/\d\s]+(?:\s[^(,，/\d\s:：]+)?)/.exec(text);
+  if (labeled) {
+    const name = labeled[1].trim().replace(/\s*(연락처|주소|전화).*$/, "");
+    const phone = findPhone(text, ordererPhone) || findPhone(requestNote, ordererPhone);
+    const addressMatch = /주소\s*[:：]\s*([\s\S]+)$/.exec(text);
+    return [{ name, phone, address: addressMatch ? addressMatch[1].trim() : "" }];
+  }
+
+  const phones = [...text.matchAll(PHONE_PATTERN)];
+  if (phones.length === 0) {
+    return [{ name: "", phone: findPhone(requestNote, ordererPhone), address: text.trim() }];
+  }
+
+  // 연락처마다 바로 앞 낱말(2~4글자 한글)을 이름으로
+  const people = phones.map((match, index) => {
+    const from = index === 0 ? 0 : phones[index - 1].index! + phones[index - 1][0].length;
+    const before = text.slice(from, match.index);
+    const nameMatch = /(?:^|[\s(,，/·:：])([가-힣]{2,4})(?:\s*님)?[\s(,，/·:：-]*$/.exec(before);
+    const name = nameMatch && !NOT_NAMES.has(nameMatch[1]) ? nameMatch[1] : "";
+    const nameStart = name ? from + before.lastIndexOf(name) : match.index!;
+    return { name, phone: match[0].trim(), nameStart, end: match.index! + match[0].length };
+  });
+  const prefix = text.slice(0, people[0].nameStart).replace(SEPARATORS, "");
+  return people.map((person, index) => {
+    const until = index + 1 < people.length ? people[index + 1].nameStart : text.length;
+    const address = text.slice(person.end, until).replace(SEPARATORS, "") || (index === 0 ? prefix : "");
+    return { name: person.name, phone: person.phone, address };
+  });
 }
 
 /**
@@ -232,7 +263,7 @@ export function parseNaverBooking(text: string): NaverDraft {
     .filter((item) => !/^(보내는\s*분|원하는\s*색|배송\s*정보|받는\s*분\s*정보)/.test(item.question) && item.answer)
     .map((item) => `${item.question.replace(/\(.*$/, "").trim()}: ${item.answer}`);
 
-  const recipient = parseRecipient(deliveryText, ordererPhone, requestNote);
+  const recipients = parseRecipients(deliveryText, ordererPhone, requestNote);
   const event = date ? getEventOn(date) : undefined;
 
   return {
@@ -244,9 +275,7 @@ export function parseNaverBooking(text: string): NaverDraft {
     items,
     shoppingBags,
     receiveMethod: deliveryText ? "delivery" : "pickup",
-    recipientName: recipient.name,
-    recipientPhone: recipient.phone,
-    recipientAddress: recipient.address,
+    recipients,
     sender,
     course: event?.topperAsksCourse ? findCourse(requestNote, deliveryText) : "",
     forEvent: !!event && event.topperCategories.length > 0,
@@ -287,15 +316,25 @@ export function buildNaverReservationRequest(draft: NaverDraft, submittedAt: str
   if (bags < 0 || bags > NAVER_MAX_QUANTITY) return { ok: false, error: "쇼핑백 수량을 확인해 주세요." };
 
   const receiveMethod: ReceiveMethod = draft.receiveMethod === "delivery" ? "delivery" : "pickup";
-  const address = receiveMethod === "delivery" ? clip(draft.recipientAddress) : "";
-  if (receiveMethod === "delivery" && !address) return { ok: false, error: "배송이면 배송지를 적어 주세요." };
+  const recipients = (draft.recipients?.length ? draft.recipients : [{ name: "", phone: "", address: "" }]).map(
+    (recipient) => ({
+      name: clip(recipient.name, 40),
+      phone: clip(recipient.phone, 30),
+      address: receiveMethod === "delivery" ? clip(recipient.address) : "",
+    }),
+  );
+  if (recipients.length > NAVER_MAX_QUANTITY) return { ok: false, error: "받는 분이 너무 많아요." };
+  // 주소를 비운 분은 앞 분 주소를 따라감 (같은 곳에 여러 명)
+  for (let index = 1; index < recipients.length; index += 1) {
+    if (!recipients[index].address) recipients[index].address = recipients[index - 1].address;
+  }
+  if (receiveMethod === "delivery" && !recipients[0].address) return { ok: false, error: "배송이면 배송지를 적어 주세요." };
+  const recipientFor = (unitIndex: number) => recipients[Math.min(unitIndex, recipients.length - 1)];
   const paidAmount = Math.floor(Number(draft.paidAmount) || 0);
   if (paidAmount < 0) return { ok: false, error: "결제 금액을 확인해 주세요." };
 
   const event = getEventOn(draft.date);
   const forEvent = !!event && event.topperCategories.length > 0 && !!draft.forEvent;
-  const recipientName = clip(draft.recipientName, 40);
-  const recipientPhone = clip(draft.recipientPhone, 30);
   const sender = clip(draft.sender, 40);
   // 토퍼가 없는 예약이면 보내는 분은 메시지 칸 앞에 적어 둠
   const requestNote = [!forEvent && sender ? `보내는 분: ${sender}` : "", clip(draft.requestNote, NOTE_MAX)]
@@ -315,9 +354,9 @@ export function buildNaverReservationRequest(draft: NaverDraft, submittedAt: str
         category: product.category,
         price: product.price,
         unitNo,
-        recipientName,
-        recipientPhone,
-        recipientAddress: product.category === "orchid" ? "" : address,
+        recipientName: recipientFor(deliveries.length).name,
+        recipientPhone: recipientFor(deliveries.length).phone,
+        recipientAddress: product.category === "orchid" ? "" : recipientFor(deliveries.length).address,
         topperSender: topper ? sender : "",
         topperCourse: topper && event?.topperAsksCourse ? course : "",
         messageType: requestNote ? "memo" : "none",
@@ -355,7 +394,7 @@ export function buildNaverReservationRequest(draft: NaverDraft, submittedAt: str
       forEvent,
       orchidDelivery: hasOrchid
         ? receiveMethod === "delivery"
-          ? { method: "restaurant", restaurant: address, reservationName: recipientName }
+          ? { method: "restaurant", restaurant: recipients[0].address, reservationName: recipients[0].name }
           : { method: "pickup", restaurant: "", reservationName: "" }
         : null,
       // 결제는 네이버에서 끝남 — 표시는 naver 칸으로 (describePayment)

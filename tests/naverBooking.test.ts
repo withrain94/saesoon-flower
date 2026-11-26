@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { describePayment } from "@/lib/adminFormat";
 import { planAutoSms } from "@/lib/autoSms";
-import { buildNaverReservationRequest, parseNaverBooking, parseNaverBookings as parseNaverBookingsForTest } from "@/lib/naverBooking";
+import { buildNaverReservationRequest, parseNaverBooking, parseNaverBookings as parseNaverBookingsForTest, parseRecipients as parseNaverRecipientsForTest } from "@/lib/naverBooking";
 
 // 네이버 예약 상세 화면을 복사한 글 모양 (이름·번호는 가짜)
 const basketText = `예약자\t홍길동
@@ -52,9 +52,7 @@ describe("네이버 예약 글 읽기", () => {
     assert.equal(draft.time, "07:00");
     assert.deepEqual(draft.items, [{ productId: "basket-100000", quantity: 2, label: "BEST)이벤트형 꽃바구니" }]);
     assert.equal(draft.receiveMethod, "delivery");
-    assert.equal(draft.recipientName, "김수료");
-    assert.equal(draft.recipientPhone, "010-3333-4444");
-    assert.equal(draft.recipientAddress, "지방자치인재개발원 고급(4급) 과정 수료식");
+    assert.deepEqual(draft.recipients, [{ name: "김수료", phone: "010-3333-4444", address: "지방자치인재개발원 고급(4급) 과정 수료식" }]);
     assert.equal(draft.sender, "총무과 일동");
     assert.equal(draft.course, "고급(4급) 과정");
     assert.equal(draft.forEvent, true);
@@ -106,7 +104,7 @@ describe("네이버 예약 저장 모양", () => {
     const draft = parseNaverBooking(basketText);
     const noProduct = buildNaverReservationRequest({ ...draft, items: [{ productId: "", quantity: 1, label: "화분" }] }, "x");
     assert.equal(noProduct.ok, false);
-    const noAddress = buildNaverReservationRequest({ ...draft, recipientAddress: "" }, "x");
+    const noAddress = buildNaverReservationRequest({ ...draft, recipients: [{ name: "", phone: "", address: "" }] }, "x");
     assert.equal(noAddress.ok, false);
   });
 });
@@ -123,5 +121,31 @@ describe("여러 건 한 번에", () => {
   });
   it("1건만 붙여넣어도 1건", () => {
     assert.equal(parseNaverBookingsForTest(basketText).length, 1);
+  });
+});
+
+describe("받는 분 적는 모양이 여러 가지", () => {
+  const read = (text: string) => parseNaverRecipientsForTest(text, "010-0000-0000", "");
+  it("이름(연락처) 주소 / 이름 / 연락처 / 주소 / 이름, 연락처, 주소 / 주소 먼저", () => {
+    assert.deepEqual(read("김하나(010-1111-1111) 지방자치인재개발원 고위정책과정"), [
+      { name: "김하나", phone: "010-1111-1111", address: "지방자치인재개발원 고위정책과정" },
+    ]);
+    assert.deepEqual(read("김둘 / 010-2222-2222 / 인재개발원 / 고급리더과정"), [
+      { name: "김둘", phone: "010-2222-2222", address: "인재개발원 / 고급리더과정" },
+    ]);
+    assert.deepEqual(read("김셋, 010-3333-3333, 전북 완주군 이서면 반교로 150"), [
+      { name: "김셋", phone: "010-3333-3333", address: "전북 완주군 이서면 반교로 150" },
+    ]);
+    assert.deepEqual(read("지방자치인재개발원 김넷 010-4444-4444"), [
+      { name: "김넷", phone: "010-4444-4444", address: "지방자치인재개발원" },
+    ]);
+    assert.deepEqual(read("지방자치인재개발원"), [{ name: "", phone: "", address: "지방자치인재개발원" }]);
+  });
+  it("여러 명이면 상품마다 한 분씩", () => {
+    const recipients = read("김하나 / 010-1111-1111 / 인재개발원 이두리 / 010-2222-2222 / 인재개발원");
+    assert.deepEqual(recipients.map((r) => [r.name, r.address]), [["김하나", "인재개발원"], ["이두리", "인재개발원"]]);
+    const built = buildNaverReservationRequest({ ...parseNaverBooking(basketText), recipients }, "x");
+    assert.ok(built.ok);
+    assert.deepEqual(built.request.deliveries.map((d) => d.recipientName), ["김하나", "이두리"]);
   });
 });

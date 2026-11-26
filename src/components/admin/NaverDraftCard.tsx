@@ -178,23 +178,55 @@ export default function NaverDraftCard({
           </label>
         ))}
       </div>
-      <div className="mt-3 grid gap-3 sm:grid-cols-2">
-        <Field label="받는 분 성함">
-          <input className={inputClass} value={draft.recipientName} onChange={(e) => update({ recipientName: e.target.value })} />
-        </Field>
-        <Field label="받는 분 연락처">
-          <input className={inputClass} value={draft.recipientPhone} onChange={(e) => update({ recipientPhone: e.target.value })} />
-        </Field>
-        {draft.receiveMethod === "delivery" && (
-          <Field label="배송지" wide>
-            <input
-              className={`${inputClass} ${draft.recipientAddress ? "" : "border-danger"}`}
-              value={draft.recipientAddress}
-              onChange={(e) => update({ recipientAddress: e.target.value })}
-            />
-          </Field>
-        )}
-      </div>
+      {draft.recipients.length > 1 && (
+        <p className="mt-2 text-[12px] text-sub">
+          받는 분 {draft.recipients.length}명 — 상품 순서대로 한 분씩 들어가요 (상품이 더 많으면 마지막 분을 따라가요)
+        </p>
+      )}
+      {draft.recipients.map((recipient, at) => {
+        const change = (patch: Partial<typeof recipient>) =>
+          update({ recipients: draft.recipients.map((item, i) => (i === at ? { ...item, ...patch } : item)) });
+        return (
+          <div key={at} className="mt-3 rounded-lg border border-field p-2.5">
+            <div className="flex items-center justify-between">
+              <p className="text-[12.5px] font-bold text-strong">받는 분 {draft.recipients.length > 1 ? at + 1 : ""}</p>
+              {draft.recipients.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => update({ recipients: draft.recipients.filter((_, i) => i !== at) })}
+                  className="text-[12px] text-sub hover:text-danger"
+                >
+                  빼기
+                </button>
+              )}
+            </div>
+            <div className="mt-1.5 grid gap-3 sm:grid-cols-2">
+              <Field label="성함">
+                <input className={inputClass} value={recipient.name} onChange={(e) => change({ name: e.target.value })} />
+              </Field>
+              <Field label="연락처">
+                <input className={inputClass} value={recipient.phone} onChange={(e) => change({ phone: e.target.value })} />
+              </Field>
+              {draft.receiveMethod === "delivery" && (
+                <Field label={at === 0 ? "배송지" : "배송지 (비우면 앞 분과 같음)"} wide>
+                  <input
+                    className={`${inputClass} ${recipient.address || at > 0 ? "" : "border-danger"}`}
+                    value={recipient.address}
+                    onChange={(e) => change({ address: e.target.value })}
+                  />
+                </Field>
+              )}
+            </div>
+          </div>
+        );
+      })}
+      <button
+        type="button"
+        onClick={() => update({ recipients: [...draft.recipients, { name: "", phone: "", address: "" }] })}
+        className="mt-2 rounded-lg border border-field px-3 py-1.5 text-[13px] font-semibold text-brand-dark hover:border-brand"
+      >
+        + 받는 분 추가
+      </button>
 
       {topperEvent && (
         <div className="mt-4 rounded-lg bg-brand-tint p-2.5">
