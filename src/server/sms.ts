@@ -12,8 +12,8 @@ const API = "https://api.sms-gate.app/3rdparty/v1/messages";
 /** 폰이 꺼져 있을 때 기다리는 시간(초) — 한참 뒤 엉뚱한 때 문자가 나가지 않게 */
 const TTL_SECONDS = 60 * 60;
 
-/** 보낸 뒤 결과를 기다리는 시간 */
-const WAIT_MS = 12_000;
+/** 보낸 뒤 결과를 기다리는 시간 — 폰이 꺼내 보내기까지 30초쯤 걸릴 때가 있어 40초 (2026-11-26, 12초면 "대기 중"이 자주 떴음) */
+const WAIT_MS = 40_000;
 const POLL_MS = 2_000;
 
 export type SmsResult =

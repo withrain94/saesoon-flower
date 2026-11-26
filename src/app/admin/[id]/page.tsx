@@ -7,6 +7,9 @@ import { listCompletionPhotos, MAX_COMPLETION_PHOTOS } from "@/server/completion
 import { getSmsGateEnv } from "@/server/env";
 import { getReservation } from "@/server/reservations";
 
+/** [지금 문자 보내기]가 폰 발송 결과를 40초까지 기다리므로 넉넉히 */
+export const maxDuration = 60;
+
 export default async function AdminReservationPage({ params }: PageProps<"/admin/[id]">) {
   const email = await requireAdmin();
   const { id } = await params;
