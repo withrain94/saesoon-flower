@@ -236,6 +236,17 @@ export async function getReservation(id: string): Promise<StoredReservation | nu
   return data ? fromRow(data as ReservationRow) : null;
 }
 
+/** 같은 네이버 예약번호로 이미 넣은 예약 id — 없으면 null. 호출 전에 requireAdmin() 필수 */
+export async function findReservationIdByNaverBookingNumber(bookingNumber: string): Promise<string | null> {
+  const { data, error } = await createDatabaseClient()
+    .from(TABLE)
+    .select("id")
+    .eq("request->naver->>bookingNumber", bookingNumber)
+    .limit(1);
+  if (error) throw error;
+  return (data as { id: string }[])[0]?.id ?? null;
+}
+
 /** 관리자 상태·메모 수정. 호출 전에 requireAdmin() 필수 */
 export async function updateReservation(
   id: string,

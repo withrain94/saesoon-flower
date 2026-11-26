@@ -200,7 +200,7 @@ export default function ReservationDetail({
               <CashReceiptIssuedCheckbox id={id} issuedAt={reservation.cashReceiptIssuedAt} />
             </Row>
           )}
-          {request.paymentMethod === "card" && !request.tossPayment && (
+          {request.paymentMethod === "card" && !request.tossPayment && !request.naver && (
             <Row label="결제하실 분">
               {request.cardPayer === "other" ? request.cardPayerContact : ko.complete.cardPayerSame}
             </Row>

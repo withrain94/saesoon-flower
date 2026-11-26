@@ -148,6 +148,8 @@ export function planAutoSms(reservation: AutoSmsReservation): Planned[] {
   const at = kst(request.date, getSlotHour(request.time));
   const prevDay = addDaysToKey(request.date, -1);
   const plans: Planned[] = [];
+  // 네이버 예약에서 옮겨 온 예약은 자동 문자를 보내지 않음 (네이버도 손님에게 알림을 보냄, 2026-11-26 사용자 결정)
+  if (request.naver) return plans;
 
   if (reservation.status === "canceled") {
     const canceledAt = new Date(reservation.updatedAt);

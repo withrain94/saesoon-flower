@@ -40,7 +40,11 @@ export default function ReservationListItem({ reservation }: { reservation: Stor
       <p className="mt-1 text-[14px] text-body">{summarizeItems(request)}</p>
       <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[12px] text-sub">
         <span className="font-semibold text-strong">{ko.format.price(request.totalPrice)}</span>
-        <span>{ko.payment.methods[request.paymentMethod].label}</span>
+        {request.naver ? (
+          <span className="rounded bg-soft px-1.5 py-0.5 font-semibold text-strong">네이버 예약</span>
+        ) : (
+          <span>{ko.payment.methods[request.paymentMethod].label}</span>
+        )}
         <span>접수 {formatAdminDateTime(reservation.createdAt)}</span>
         {reminderPending && (
           <span

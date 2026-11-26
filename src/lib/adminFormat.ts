@@ -125,6 +125,14 @@ export function describeDeliveryRecipient(request: ReservationRequest, delivery:
  * 결제 방법 한 줄 — "계좌이체 · 현금영수증 소득공제 010-…" / "카드 결제 · 결제하실 분 …" / "PayPal 66,000원 · 이메일"
  */
 export function describePayment(request: ReservationRequest) {
+  // 네이버 예약에서 옮겨 온 예약 — 결제는 네이버에서 끝남
+  if (request.naver) {
+    const { naver } = request;
+    const paid = [naver.paymentLabel, naver.paidAmount ? ko.format.price(naver.paidAmount) : "", "결제완료"]
+      .filter(Boolean)
+      .join(" ");
+    return `네이버 예약 · ${paid} · 예약번호 ${naver.bookingNumber}`;
+  }
   const { payment } = ko;
   const label = payment.methods[request.paymentMethod].label;
   switch (request.paymentMethod) {

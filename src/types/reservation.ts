@@ -195,6 +195,23 @@ export type ReservationRequest = {
   privacyAgreed: boolean;
   /** 고객이 신청서를 본 화면 언어 (주문 내용은 한국어·옵션 코드로 저장) */
   locale: Locale;
+  /**
+   * 네이버 예약에서 옮겨 온 예약 (관리자 "네이버 예약 넣기", 2026-11-26 사용자 요청) — 사이트 신청이면 없음.
+   * 결제는 네이버에서 끝났고 자동 문자는 보내지 않음(사용자 결정)
+   */
+  naver?: NaverBookingInfo;
+};
+
+/** 네이버 예약에서 옮겨 온 정보 */
+export type NaverBookingInfo = {
+  /** 네이버 예약번호 — 같은 예약을 두 번 넣지 않게 확인 */
+  bookingNumber: string;
+  /** 손님이 네이버에서 실제로 낸 금액 (쿠폰 뺀 금액) */
+  paidAmount: number;
+  /** 네이버 결제수단 — "네이버페이 머니" 등 */
+  paymentLabel: string;
+  /** 네이버 요청사항 원문 */
+  requestNote: string;
 };
 
 /** 토스페이먼츠 결제 상태 (Payment 객체 status 그대로) */
