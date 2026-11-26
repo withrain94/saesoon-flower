@@ -5,6 +5,7 @@ import {
   autoSmsKindLabel,
   CANCEL_NOTICE_HOURS,
   PAYMENT_NOTICE_HOURS,
+  toKoreanMobile,
   getDueAutoSms,
   type AutoSms,
   type AutoSmsReservation,
@@ -69,6 +70,23 @@ async function writeLog(reservationId: string, sms: AutoSms, state: LogState, er
       error: errorText,
       updated_at: new Date().toISOString(),
     });
+}
+
+/**
+ * 이 예약의 입금 확인 문자는 보내지 않음 — "보냄"으로 미리 적어 둠 (매장 예약 넣기에서 문자 끔을 골랐을 때).
+ * 호출 전에 requireAdmin() 필수
+ */
+export async function skipPaymentConfirmedSms(reservationId: string, ordererPhone: string) {
+  const phone = toKoreanMobile(ordererPhone);
+  if (!phone) return;
+  await createDatabaseClient().from(LOG_TABLE).upsert({
+    reservation_id: reservationId,
+    kind: "paymentConfirmed",
+    phone,
+    state: "sent",
+    error: "관리자가 문자 안 보냄을 고름",
+    updated_at: new Date().toISOString(),
+  });
 }
 
 function describeReservation(reservation: AutoSmsReservation) {

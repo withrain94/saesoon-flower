@@ -94,6 +94,13 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
           📗 네이버 예약 넣기 (상세 글 붙여넣기)
           <span className="text-sub">›</span>
         </Link>
+        <Link
+          href="/admin/store"
+          className="mt-2 flex items-center justify-between gap-2 rounded-xl bg-white px-3 py-2.5 text-[13.5px] font-semibold text-ink transition hover:text-brand-dark"
+        >
+          📞 매장 예약 넣기 (전화·문자·카톡 주문 붙여넣기)
+          <span className="text-sub">›</span>
+        </Link>
 
         {!result ? (
           <p className="mt-6 rounded-xl bg-white px-4 py-5 text-[14px] text-danger">

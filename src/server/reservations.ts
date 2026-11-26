@@ -264,6 +264,22 @@ export async function findReservationIdByNaverBookingNumber(bookingNumber: strin
   return (data as { id: string }[])[0]?.id ?? null;
 }
 
+/** 같은 받는 날·같은 예약자 연락처(숫자만 비교)의 취소 안 된 예약 — 매장 예약 넣기 중복 확인용. 호출 전에 requireAdmin() 필수 */
+export async function findActiveReservationIdByOrdererPhone(dateKey: string, phone: string): Promise<string | null> {
+  const { data, error } = await createDatabaseClient()
+    .from(TABLE)
+    .select("id, request")
+    .eq("reservation_date", dateKey)
+    .neq("status", "canceled")
+    .limit(500);
+  if (error) throw error;
+  const want = phone.replace(/\D/g, "");
+  const found = (data as { id: string; request: { ordererPhone?: string } }[]).find(
+    (row) => (row.request.ordererPhone ?? "").replace(/\D/g, "") === want,
+  );
+  return found?.id ?? null;
+}
+
 /** 관리자 상태·메모 수정. 호출 전에 requireAdmin() 필수 */
 export async function updateReservation(
   id: string,
