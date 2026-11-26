@@ -5,7 +5,9 @@ import path from "node:path";
 import { Font, renderToBuffer } from "@react-pdf/renderer";
 import { businessInfo } from "@/data/shop";
 import type { BusinessDocument } from "@/lib/documents";
+import type { PrintList } from "@/lib/reservationPrint";
 import { buildDocumentsPdf, PDF_FONT_FAMILY, type SealImage } from "./BusinessDocumentPdf";
+import { buildReservationListPdf } from "./ReservationListPdf";
 
 /**
  * 서류 PDF 만들기 (서버에서만). 한글 글꼴(나눔고딕, OFL 무료 글꼴)과 직인 PNG는 파일에서 읽는다.
@@ -33,6 +35,12 @@ function readSealImage(): SealImage | null {
   if (!businessInfo.sealImage) return null;
   const file = path.join(process.cwd(), "public", ...businessInfo.sealImage.split("/").filter(Boolean));
   return existsSync(file) ? { data: readFileSync(file), format: "png" } : null;
+}
+
+/** 관리자 예약 목록 인쇄 → PDF 파일 내용 */
+export async function renderReservationListPdf(list: PrintList, printedAt: string): Promise<Buffer> {
+  registerFonts();
+  return renderToBuffer(buildReservationListPdf(list, printedAt));
 }
 
 /** 서류 한 장 → PDF 파일 내용 */

@@ -73,6 +73,31 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
             ⬇ 예약 전체 내려받기
           </a>
         </div>
+        {/* 예약 목록 인쇄 (2026-11-26 사용자 요청 — 노션 캡처 대신) — 날짜를 고르면 새 창에 PDF */}
+        <form
+          action="/admin/print"
+          method="get"
+          target="_blank"
+          className="mt-2 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white px-3 py-2.5"
+        >
+          <p className="text-[13.5px] font-semibold text-ink">🖨 예약 목록 인쇄 (PDF · 체크 칸)</p>
+          <div className="flex items-center gap-2">
+            <input
+              type="date"
+              name="date"
+              defaultValue={tomorrow}
+              required
+              aria-label="인쇄할 날짜"
+              className="rounded-lg border border-field bg-white px-2 py-1.5 text-[13px] text-ink"
+            />
+            <button
+              type="submit"
+              className="shrink-0 rounded-lg border border-field bg-white px-3 py-1.5 text-[13px] font-semibold text-brand-dark transition hover:border-brand"
+            >
+              PDF 열기
+            </button>
+          </div>
+        </form>
         <Link
           href="/admin/cash-receipts"
           className="mt-2 flex items-center justify-between gap-2 rounded-xl bg-white px-3 py-2.5 text-[13.5px] font-semibold text-ink transition hover:text-brand-dark"

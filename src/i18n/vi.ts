@@ -101,7 +101,7 @@ export const vi: Messages = {
     xmastree: {
       name: "Cây Giáng sinh",
       tagline: "Đến 28/12 · quà cây xanh mùa lễ",
-      popularNote: "Cây Araucaria mini · Túi trắc bách diệp chanh · Trạng nguyên",
+      popularNote: "Cây Araucaria mini · Túi trắc bách diệp vàng · Trạng nguyên",
       notice: {
         summary: [
           "Chỉ nhận đơn có ngày nhận đến 28/12. (Từ 29/12 mục này sẽ không còn)",
@@ -348,8 +348,8 @@ export const vi: Messages = {
       ],
     },
     "xmastree-cypress": {
-      title: "Túi trắc bách diệp chanh",
-      name: "Túi trắc bách diệp chanh",
+      title: "Túi trắc bách diệp vàng",
+      name: "Túi trắc bách diệp vàng",
       points: [
         "Lá xanh non tươi mát và hương chanh dịu nhẹ!",
         "Món quà cây Giáng sinh gói ruy băng thắt lưng ông già Noel đáng yêu.",

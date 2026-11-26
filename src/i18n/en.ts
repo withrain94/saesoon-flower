@@ -109,7 +109,7 @@ export const en: Messages = {
     xmastree: {
       name: "Christmas plants",
       tagline: "Until Dec 28 · festive plant gifts",
-      popularNote: "Araucaria mini tree · Lemon cypress pouch · Poinsettia",
+      popularNote: "Araucaria mini tree · Gold cypress pouch · Poinsettia",
       notice: {
         summary: [
           "Only for pickup/delivery dates up to Dec 28. (This menu disappears from Dec 29.)",
@@ -356,8 +356,8 @@ export const en: Messages = {
       ],
     },
     "xmastree-cypress": {
-      title: "Lemon cypress pouch",
-      name: "Lemon cypress pouch",
+      title: "Gold cypress pouch",
+      name: "Gold cypress pouch",
       points: [
         "Fresh lime-green leaves with a gentle lemon scent!",
         "A Christmas plant gift cutely wrapped with a Santa-belt ribbon.",

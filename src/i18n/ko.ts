@@ -68,7 +68,7 @@ const categories: Record<ProductCategoryId, CategoryCopy> = {
   xmastree: {
     name: "크리스마스 식물트리",
     tagline: "12월 28일까지 · 연말 분위기 식물 선물",
-    popularNote: "아라우카리아 미니트리 · 레몬사이프러스 파우치 · 포인세티아",
+    popularNote: "아라우카리아 미니트리 · 골드사이프러스 파우치 · 포인세티아",
     notice: {
       summary: [
         "12월 28일까지 받는 예약만 가능해요. (12월 29일부터는 이 메뉴가 사라져요)",
@@ -312,8 +312,8 @@ const products: Record<ProductId, ProductCopy> = {
     ],
   },
   "xmastree-cypress": {
-    title: "레몬사이프러스 파우치",
-    name: "레몬사이프러스 파우치",
+    title: "골드사이프러스 파우치",
+    name: "골드사이프러스 파우치",
     points: [
       "싱그러운 연둣빛 잎과 은은한 레몬향!",
       "산타벨트 리본으로 귀엽게 포장한 크리스마스 식물 선물이에요.",

@@ -103,7 +103,7 @@ export const zh: Messages = {
     xmastree: {
       name: "圣诞植物树",
       tagline: "12月28日前 · 节日植物礼物",
-      popularNote: "南洋杉迷你圣诞树 · 柠檬柏布袋 · 一品红",
+      popularNote: "南洋杉迷你圣诞树 · 金叶柏布袋 · 一品红",
       notice: {
         summary: [
           "仅限12月28日前取花/送达的预约。（12月29日起此菜单将消失）",
@@ -311,8 +311,8 @@ export const zh: Messages = {
       ],
     },
     "xmastree-cypress": {
-      title: "柠檬柏布袋",
-      name: "柠檬柏布袋",
+      title: "金叶柏布袋",
+      name: "金叶柏布袋",
       points: [
         "清新的嫩绿叶子和淡淡的柠檬香！",
         "用圣诞老人腰带缎带可爱包装的圣诞植物礼物。",
