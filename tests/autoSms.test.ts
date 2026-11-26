@@ -87,14 +87,16 @@ function reservation({
 }
 
 const at = (iso: string) => new Date(iso);
-const kinds = (r: AutoSmsReservation, iso: string) => getDueAutoSms(r, at(iso)).map((sms) => `${sms.kind}:${sms.phoneNumber}`);
+/** 입금 확인 문자는 기능을 켠 뒤 확인된 예약 모두에 계획되므로(보냄 기록으로 한 번만) 다른 문자 검사에서는 뺌 */
+const dueOf = (r: AutoSmsReservation, now: Date) => getDueAutoSms(r, now).filter((sms) => sms.kind !== "paymentConfirmed");
+const kinds = (r: AutoSmsReservation, iso: string) => dueOf(r, at(iso)).map((sms) => `${sms.kind}:${sms.phoneNumber}`);
 
 describe("자동 문자 (lib/autoSms)", () => {
   it("픽업 오후 3시 — 2시간 전(13시)부터 예약 시간 전까지, 사진 문자", () => {
     const r = reservation();
     assert.deepEqual(kinds(r, "2026-11-20T12:50+09:00"), []);
     assert.deepEqual(kinds(r, "2026-11-20T13:00+09:00"), [`pickupPhoto:${ORDERER}`]);
-    assert.equal(getDueAutoSms(r, at("2026-11-20T13:00+09:00"))[0].withPhoto, true);
+    assert.equal(dueOf(r, at("2026-11-20T13:00+09:00"))[0].withPhoto, true);
     assert.deepEqual(kinds(r, "2026-11-20T15:00+09:00"), []);
   });
 
@@ -117,23 +119,23 @@ describe("자동 문자 (lib/autoSms)", () => {
     assert.deepEqual(kinds(r, "2026-12-03T19:00+09:00"), [`instituteRecipientEve:${RECIPIENT}`]);
     assert.deepEqual(kinds(r, "2026-12-03T20:00+09:00"), [`instituteOrdererPhoto:${ORDERER}`, `instituteRecipientEve:${RECIPIENT}`]);
     assert.deepEqual(kinds(r, "2026-12-04T08:00+09:00"), [`instituteRecipientDay:${RECIPIENT}`]);
-    const done = getDueAutoSms(r, at("2026-12-04T10:00+09:00"));
+    const done = dueOf(r, at("2026-12-04T10:00+09:00"));
     assert.deepEqual(done.map((sms) => sms.kind), ["instituteOrdererDone"]);
     assert.match(done[0].text, /즐거운 주말/);
-    const eve = getDueAutoSms(r, at("2026-12-03T19:00+09:00"))[0].text;
+    const eve = dueOf(r, at("2026-12-03T19:00+09:00"))[0].text;
     assert.match(eve, /승진을 축하드립니다\. 내일 아침 8시 인재개발원 수료식장 앞으로/);
   });
 
   it("장기과정 수료식은 '수료를 축하드립니다', 행사 꽃 아니면 일반 픽업 규칙", () => {
     const r = reservation({ date: "2026-11-27", time: "08:00", forEvent: true });
-    assert.match(getDueAutoSms(r, at("2026-11-26T19:00+09:00"))[0].text, /수료를 축하드립니다/);
+    assert.match(dueOf(r, at("2026-11-26T19:00+09:00"))[0].text, /수료를 축하드립니다/);
     const normal = reservation({ date: "2026-11-27", time: "08:00", forEvent: false });
     assert.deepEqual(kinds(normal, "2026-11-26T19:00+09:00"), [`pickupPhoto:${ORDERER}`]);
   });
 
   it("받는 분(예약자 본인 아님) 연락처가 없으면 예약자에게 매장 번호로 남겨 달라고", () => {
     const r = reservation({ date: "2026-12-04", time: "08:00", forEvent: true, recipientPhone: "" });
-    const due = getDueAutoSms(r, at("2026-11-18T10:10+09:00"));
+    const due = dueOf(r, at("2026-11-18T10:10+09:00"));
     assert.deepEqual(due.map((sms) => `${sms.kind}:${sms.phoneNumber}`), [`recipientPhoneMissing:${ORDERER}`]);
     assert.match(due[0].text, /김받음님.*010-5954-3963/);
     // 받는 분이 예약자 본인이면 안 보냄
@@ -144,7 +146,7 @@ describe("자동 문자 (lib/autoSms)", () => {
   it("일반 배송 — 받는 시간 1시간 전 받는 분에게 (예약자 이름), 받는 분 = 예약자 번호면 안 보냄", () => {
     const r = reservation({ receiveMethod: "delivery" });
     assert.deepEqual(kinds(r, "2026-11-20T13:50+09:00"), []);
-    const due = getDueAutoSms(r, at("2026-11-20T14:00+09:00"));
+    const due = dueOf(r, at("2026-11-20T14:00+09:00"));
     assert.deepEqual(due.map((sms) => `${sms.kind}:${sms.phoneNumber}`), [`deliveryRecipient:${RECIPIENT}`]);
     assert.match(due[0].text, /홍길동님 앞으로 꽃배달/);
     const same = reservation({ receiveMethod: "delivery", recipientPhone: "010-1111-2222" });
@@ -154,10 +156,21 @@ describe("자동 문자 (lib/autoSms)", () => {
   it("취소 — 예약자에게 취소 안내 (밤이면 아침에), 기능 전 예약은 안 보냄", () => {
     const r = reservation({ status: "canceled", updatedAt: "2026-11-19T22:30+09:00" });
     assert.deepEqual(kinds(r, "2026-11-19T22:40+09:00"), []);
-    const due = getDueAutoSms(r, at("2026-11-20T07:00+09:00"));
+    const due = dueOf(r, at("2026-11-20T07:00+09:00"));
     assert.deepEqual(due.map((sms) => sms.kind), ["canceled"]);
     assert.match(due[0].text, /11\/20 오후 3시 예약\(접수번호 5D7BBC7E\)이 취소되었습니다/);
     const old = reservation({ status: "canceled", createdAt: "2026-11-10T10:00+09:00", updatedAt: "2026-11-19T10:00+09:00" });
     assert.deepEqual(kinds(old, "2026-11-19T10:10+09:00"), []);
+  });
+
+  it("입금 확인 — 입금·결제 확인 뒤 예약자에게 (조회 링크), 접수·밤·받는 시간 지나면 안 보냄", () => {
+    const r = reservation({ date: "2026-12-04", time: "08:00", createdAt: "2026-11-26T15:00+09:00" });
+    const due = getDueAutoSms(r, at("2026-11-26T15:10+09:00"));
+    assert.deepEqual(due.map((sms) => `${sms.kind}:${sms.phoneNumber}`), [`paymentConfirmed:${ORDERER}`]);
+    assert.match(due[0].text, /홍길동님 12\/4 아침 8시 예약 입금 확인되었습니다\. \(접수번호 5D7BBC7E\)/);
+    assert.match(due[0].text, /예약 조회: https:\/\/.+\/check/);
+    assert.deepEqual(kinds(reservation({ date: "2026-12-04", status: "received", createdAt: "2026-11-26T15:00+09:00" }), "2026-11-26T15:10+09:00"), []);
+    assert.deepEqual(kinds(r, "2026-11-26T22:00+09:00"), []);
+    assert.deepEqual(kinds(r, "2026-12-04T09:00+09:00"), []);
   });
 });

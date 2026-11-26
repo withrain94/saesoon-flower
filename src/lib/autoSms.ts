@@ -1,5 +1,6 @@
 import { getEventOn } from "@/data/events";
 import { businessInfo } from "@/data/shop";
+import { BOOKING_SITE_URL } from "@/data/siteAddress";
 import { addDaysToKey } from "@/lib/date";
 import { toSmsPhoneNumber } from "@/lib/ordererSms";
 import { getSlotHour, toNowInTimeZone } from "@/lib/time";
@@ -27,7 +28,9 @@ export type AutoSmsKind =
   /** 배송인데 받는 분(예약자 본인 아님) 연락처가 없을 때 — 예약자에게 매장 번호로 남겨 달라고 */
   | "recipientPhoneMissing"
   /** 예약 취소 — 예약자에게 */
-  | "canceled";
+  | "canceled"
+  /** 입금·결제 확인 — 예약자에게 (2026-11-26 사용자 요청, 예약 조회 링크 포함) */
+  | "paymentConfirmed";
 
 export type AutoSms = {
   kind: AutoSmsKind;
@@ -47,6 +50,13 @@ export const QUIET_END_HOUR = 7;
 
 /** 이 시각 전에 접수된 예약은 취소 문자를 보내지 않음 (기능이 생기기 전 예약) */
 export const AUTO_SMS_START = "2026-11-18T00:00:00+09:00";
+
+/**
+ * 입금 확인 문자를 보내기 시작한 때 — 이 기능 전에 확인된 예약은 auto_sms_log에 "보냄"으로 미리 적어 막음(2026-11-26, 장미경 님 예약만 보냄 — 사용자 선택).
+ * 서버는 최근 PAYMENT_NOTICE_HOURS 안에 바뀐 입금 확인 예약만 살펴봄
+ */
+export const PAYMENT_SMS_START = "2026-11-26T14:00:00+09:00";
+export const PAYMENT_NOTICE_HOURS = 24;
 
 /** 취소 문자는 취소된 지 이 시간 안에만 (밤이면 아침에 보냄) */
 export const CANCEL_NOTICE_HOURS = 24;
@@ -122,6 +132,13 @@ export const autoSmsText = {
     `안녕하세요. 새순꽃집 꽃배달입니다. ${ordererName}님 앞으로 꽃배달이 예정되어있습니다. 감사합니다.`,
   recipientPhoneMissing: (recipientName: string) =>
     `안녕하세요 새순입니다. 받는 분${recipientName ? `(${recipientName}님)` : ""} 연락처가 입력되지 않았어요. 배송 안내를 위해 ${businessInfo.phone}으로 받는 분 연락처를 문자로 남겨 주세요.`,
+  /** 계좌이체 = "입금 확인", 카드·PayPal = "결제 확인" (토스 가상계좌 입금·카드 결제도 같은 문자) */
+  paymentConfirmed: (ordererName: string, dateKey: string, time: string, receipt: string, bank: boolean) => {
+    const [, month, day] = dateKey.split("-").map(Number);
+    return `안녕하세요 새순입니다. ${ordererName}님 ${month}/${day} ${hourLabel(time)} 예약 ${bank ? "입금" : "결제"} 확인되었습니다. (접수번호 ${receipt})
+예약 조회: ${BOOKING_SITE_URL}/check
+감사합니다.`;
+  },
   canceled: (ordererName: string, dateKey: string, time: string, receipt: string) => {
     const [, month, day] = dateKey.split("-").map(Number);
     return `안녕하세요 새순입니다. ${ordererName}님의 ${month}/${day} ${hourLabel(time)} 예약(접수번호 ${receipt})이 취소되었습니다. 문의: ${businessInfo.phone}`;
@@ -165,6 +182,25 @@ export function planAutoSms(reservation: AutoSmsReservation): Planned[] {
     return plans;
   }
   if (!PAID_STATUSES.includes(reservation.status)) return plans;
+
+  // 입금·결제 확인 안내 — 확인된 뒤 받는 시간 전까지 한 번 (같은 예약·번호는 auto_sms_log로 한 번만)
+  if (orderer) {
+    const created = new Date(reservation.createdAt);
+    const start = new Date(PAYMENT_SMS_START);
+    plans.push({
+      kind: "paymentConfirmed",
+      phoneNumber: orderer,
+      text: autoSmsText.paymentConfirmed(
+        request.ordererName,
+        request.date,
+        request.time,
+        reservation.id.slice(0, 8).toUpperCase(),
+        request.paymentMethod === "bank",
+      ),
+      withPhoto: false,
+      window: { from: created > start ? created : start, until: at },
+    });
+  }
 
   const institute = getInstituteEvent(request);
   const delivery = request.receiveMethod === "delivery";
@@ -274,4 +310,5 @@ export const autoSmsKindLabel: Record<AutoSmsKind, string> = {
   deliveryRecipient: "배송 안내(받는 분)",
   recipientPhoneMissing: "받는 분 연락처 요청(예약자)",
   canceled: "취소 안내(예약자)",
+  paymentConfirmed: "입금·결제 확인 안내(예약자)",
 };

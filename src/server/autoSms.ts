@@ -4,6 +4,7 @@ import {
   autoSmsDates,
   autoSmsKindLabel,
   CANCEL_NOTICE_HOURS,
+  PAYMENT_NOTICE_HOURS,
   getDueAutoSms,
   type AutoSms,
   type AutoSmsReservation,
@@ -85,7 +86,8 @@ export async function sendDueAutoSms(now: Date = new Date()) {
   if (!getSmsGateEnv()) return { configured: false, sent: 0 };
 
   const canceledSince = new Date(now.getTime() - CANCEL_NOTICE_HOURS * 60 * 60 * 1000);
-  const reservations = await listAutoSmsReservations(autoSmsDates(now), canceledSince);
+  const paidSince = new Date(now.getTime() - PAYMENT_NOTICE_HOURS * 60 * 60 * 1000);
+  const reservations = await listAutoSmsReservations(autoSmsDates(now), canceledSince, paidSince);
   const dueList = reservations
     .map((reservation) => ({ reservation, due: getDueAutoSms(reservation, now) }))
     .filter((item) => item.due.length > 0);

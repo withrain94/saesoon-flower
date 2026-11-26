@@ -160,24 +160,41 @@ export async function listCashReceiptReservations(): Promise<StoredReservation[]
 }
 
 /**
- * 자동 문자(server/autoSms)가 살펴볼 예약 — 받는 날짜가 dateKeys인 예약(취소 제외) + canceledSince 뒤에 취소된 예약.
+ * 자동 문자(server/autoSms)가 살펴볼 예약 — 받는 날짜가 dateKeys인 예약(취소 제외) + canceledSince 뒤에 취소된 예약
+ * + paidSince 뒤에 바뀐 입금 확인 예약(받는 날이 오늘 이후 — 입금 확인 문자용).
  * 호출하는 쪽(app/cron)이 CRON_SECRET을 먼저 확인
  */
 export async function listAutoSmsReservations(
   dateKeys: string[],
   canceledSince: Date,
+  paidSince: Date,
 ): Promise<(StoredReservation & { updatedAt: string })[]> {
   const client = createDatabaseClient();
-  const [upcoming, canceled] = await Promise.all([
+  const [upcoming, canceled, paid] = await Promise.all([
     client.from(TABLE).select(COLUMNS).in("reservation_date", dateKeys).neq("status", "canceled").limit(1000),
     client.from(TABLE).select(COLUMNS).eq("status", "canceled").gte("updated_at", canceledSince.toISOString()).limit(200),
+    client
+      .from(TABLE)
+      .select(COLUMNS)
+      .in("status", ["confirmed", "made", "delivered"])
+      .gte("reservation_date", dateKeys[0])
+      .gte("updated_at", paidSince.toISOString())
+      .limit(500),
   ]);
   if (upcoming.error) throw upcoming.error;
   if (canceled.error) throw canceled.error;
-  return [...(upcoming.data as ReservationRow[]), ...(canceled.data as ReservationRow[])].map((row) => ({
-    ...fromRow(row),
-    updatedAt: row.updated_at ?? row.created_at,
-  }));
+  if (paid.error) throw paid.error;
+  const seen = new Set<string>();
+  return [...(upcoming.data as ReservationRow[]), ...(canceled.data as ReservationRow[]), ...(paid.data as ReservationRow[])]
+    .filter((row) => {
+      if (seen.has(row.id)) return false;
+      seen.add(row.id);
+      return true;
+    })
+    .map((row) => ({
+      ...fromRow(row),
+      updatedAt: row.updated_at ?? row.created_at,
+    }));
 }
 
 /**
