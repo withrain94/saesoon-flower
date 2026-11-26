@@ -169,6 +169,12 @@ describe("자동 문자 (lib/autoSms)", () => {
     assert.deepEqual(due.map((sms) => `${sms.kind}:${sms.phoneNumber}`), [`paymentConfirmed:${ORDERER}`]);
     assert.match(due[0].text, /홍길동님 12\/4 아침 8시 예약 입금 확인되었습니다\. \(접수번호 5D7BBC7E\)/);
     assert.match(due[0].text, /예약 조회: https:\/\/.+\/check/);
+    // 픽업이면 매장 주소·지도, 배송이면 없음
+    assert.match(due[0].text, /픽업 장소: .+기지로 77.+\n\(롯데프레시 옆, 상가주차장 입구쪽, 호반6차 정문앞\)\n지도: https:\/\/naver\.me\//);
+    const delivery = reservation({ date: "2026-12-04", time: "08:00", receiveMethod: "delivery", createdAt: "2026-11-26T15:00+09:00" });
+    const deliveryText = getDueAutoSms(delivery, at("2026-11-26T15:10+09:00")).find((sms) => sms.kind === "paymentConfirmed")!.text;
+    assert.doesNotMatch(deliveryText, /픽업 장소/);
+    assert.match(dueOf(reservation(), at("2026-11-20T13:00+09:00"))[0].text, /무인픽업 장소.+\n픽업 장소: .+D108~109호/);
     assert.deepEqual(kinds(reservation({ date: "2026-12-04", status: "received", createdAt: "2026-11-26T15:00+09:00" }), "2026-11-26T15:10+09:00"), []);
     assert.deepEqual(kinds(r, "2026-11-26T22:00+09:00"), []);
     assert.deepEqual(kinds(r, "2026-12-04T09:00+09:00"), []);

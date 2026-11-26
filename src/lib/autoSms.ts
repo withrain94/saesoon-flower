@@ -1,5 +1,5 @@
 import { getEventOn } from "@/data/events";
-import { businessInfo } from "@/data/shop";
+import { businessInfo, storeContact } from "@/data/shop";
 import { BOOKING_SITE_URL } from "@/data/siteAddress";
 import { addDaysToKey } from "@/lib/date";
 import { toSmsPhoneNumber } from "@/lib/ordererSms";
@@ -121,8 +121,12 @@ function recipientsOf(reservation: AutoSmsReservation): Recipient[] {
   return list;
 }
 
+/** 픽업 예약 문자에 붙이는 매장 주소·지도 (2026-11-26 사용자 요청) */
+const pickupPlace = `픽업 장소: ${businessInfo.address}\n(롯데프레시 옆, 상가주차장 입구쪽, 호반6차 정문앞)\n지도: ${storeContact.naverMapUrl}`;
+
 export const autoSmsText = {
-  pickupPhoto: () => "안녕하세요 새순입니다. 사진 보내드립니다. 무인픽업 장소에서 시간 구애없이 편하게 찾아가세요.",
+  pickupPhoto: () =>
+    `안녕하세요 새순입니다. 사진 보내드립니다. 무인픽업 장소에서 시간 구애없이 편하게 찾아가세요.\n${pickupPlace}`,
   instituteOrdererPhoto: () => "안녕하세요 새순입니다. 사진 보내드립니다. 내일 잘 배송하겠습니다.",
   instituteRecipient: (congrats: string, day: "내일" | "오늘", time: string) =>
     `안녕하세요. 새순 꽃집입니다. ${congrats} 축하드립니다. ${day} ${hourLabel(time)} 인재개발원 수료식장 앞으로 꽃배달 예정입니다. 오전 9시까지 수령해가시면 감사하겠습니다.`,
@@ -133,9 +137,9 @@ export const autoSmsText = {
   recipientPhoneMissing: (recipientName: string) =>
     `안녕하세요 새순입니다. 받는 분${recipientName ? `(${recipientName}님)` : ""} 연락처가 입력되지 않았어요. 배송 안내를 위해 ${businessInfo.phone}으로 받는 분 연락처를 문자로 남겨 주세요.`,
   /** 계좌이체 = "입금 확인", 카드·PayPal = "결제 확인" (토스 가상계좌 입금·카드 결제도 같은 문자) */
-  paymentConfirmed: (ordererName: string, dateKey: string, time: string, receipt: string, bank: boolean) => {
+  paymentConfirmed: (ordererName: string, dateKey: string, time: string, receipt: string, bank: boolean, pickup: boolean) => {
     const [, month, day] = dateKey.split("-").map(Number);
-    return `안녕하세요 새순입니다. ${ordererName}님 ${month}/${day} ${hourLabel(time)} 예약 ${bank ? "입금" : "결제"} 확인되었습니다. (접수번호 ${receipt})
+    return `안녕하세요 새순입니다. ${ordererName}님 ${month}/${day} ${hourLabel(time)} 예약 ${bank ? "입금" : "결제"} 확인되었습니다. (접수번호 ${receipt})${pickup ? `\n${pickupPlace}` : ""}
 예약 조회: ${BOOKING_SITE_URL}/check
 감사합니다.`;
   },
@@ -196,6 +200,7 @@ export function planAutoSms(reservation: AutoSmsReservation): Planned[] {
         request.time,
         reservation.id.slice(0, 8).toUpperCase(),
         request.paymentMethod === "bank",
+        request.receiveMethod === "pickup",
       ),
       withPhoto: false,
       window: { from: created > start ? created : start, until: at },
