@@ -160,6 +160,22 @@ function parseRecipient(text: string, ordererPhone: string, requestNote: string)
   return { name, phone, address };
 }
 
+/**
+ * 여러 건을 한 번에 붙여넣은 글 → 예약마다 칸 (2026-11-26 사용자 요청).
+ * "예약자 ○○○" 줄(예약자입력정보 아님)이 나올 때마다 새 예약으로 나눔. 예약자 줄이 없으면 글 전체를 1건으로
+ */
+export function parseNaverBookings(text: string): NaverDraft[] {
+  const chunks: string[][] = [];
+  for (const line of text.split(/\r?\n/)) {
+    if (/^\s*예약자[\t ]+\S/.test(line) || chunks.length === 0) chunks.push([]);
+    chunks[chunks.length - 1].push(line);
+  }
+  return chunks
+    .map((lines) => lines.join("\n"))
+    .filter((chunk) => /예약번호|이용일시|옵션/.test(chunk))
+    .map(parseNaverBooking);
+}
+
 /** 네이버 예약 상세 화면 글 → 고칠 수 있는 칸 (못 읽은 칸은 빈 값) */
 export function parseNaverBooking(text: string): NaverDraft {
   const lines = text

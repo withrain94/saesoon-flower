@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { describePayment } from "@/lib/adminFormat";
 import { planAutoSms } from "@/lib/autoSms";
-import { buildNaverReservationRequest, parseNaverBooking } from "@/lib/naverBooking";
+import { buildNaverReservationRequest, parseNaverBooking, parseNaverBookings as parseNaverBookingsForTest } from "@/lib/naverBooking";
 
 // 네이버 예약 상세 화면을 복사한 글 모양 (이름·번호는 가짜)
 const basketText = `예약자\t홍길동
@@ -108,5 +108,20 @@ describe("네이버 예약 저장 모양", () => {
     assert.equal(noProduct.ok, false);
     const noAddress = buildNaverReservationRequest({ ...draft, recipientAddress: "" }, "x");
     assert.equal(noAddress.ok, false);
+  });
+});
+
+describe("여러 건 한 번에", () => {
+  it("예약자 줄마다 나눔 (구분선·예약자입력정보는 나누지 않음)", () => {
+    const drafts = parseNaverBookingsForTest(`${basketText}\n------------\n\n${bouquetText}`);
+    assert.deepEqual(
+      drafts.map((draft) => draft.bookingNumber),
+      ["1400000001", "1400000002"],
+    );
+    assert.equal(drafts[0].sender, "총무과 일동");
+    assert.equal(drafts[1].shoppingBags, 1);
+  });
+  it("1건만 붙여넣어도 1건", () => {
+    assert.equal(parseNaverBookingsForTest(basketText).length, 1);
   });
 });
