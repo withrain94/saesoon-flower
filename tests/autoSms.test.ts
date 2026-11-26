@@ -158,7 +158,17 @@ describe("자동 문자 (lib/autoSms)", () => {
     assert.deepEqual(kinds(r, "2026-11-19T22:40+09:00"), []);
     const due = dueOf(r, at("2026-11-20T07:00+09:00"));
     assert.deepEqual(due.map((sms) => sms.kind), ["canceled"]);
-    assert.match(due[0].text, /11\/20 오후 3시 예약\(접수번호 5D7BBC7E\)이 취소되었습니다/);
+    assert.match(due[0].text, /11\/20 오후 3시 예약\(접수번호 5D7BBC7E\) 취소가 완료되었습니다\./);
+    assert.doesNotMatch(due[0].text, /환불/);
+    // 입금된 뒤 취소(= 매장이 환불하고 취소로 바꿈) → 환불 완료 문구
+    const paidCancel = [
+      { paymentSmsSent: true },
+      { cancelRequest: { requestedAt: "", paid: true, refundBank: "", refundAccount: "", refundHolder: "" } },
+    ];
+    for (const paid of paidCancel) {
+      const text = dueOf({ ...r, ...paid }, at("2026-11-20T07:00+09:00"))[0].text;
+      assert.match(text, /취소가 완료되었습니다\. 환불도 완료되었습니다\./);
+    }
     const old = reservation({ status: "canceled", createdAt: "2026-11-10T10:00+09:00", updatedAt: "2026-11-19T10:00+09:00" });
     assert.deepEqual(kinds(old, "2026-11-19T10:10+09:00"), []);
   });

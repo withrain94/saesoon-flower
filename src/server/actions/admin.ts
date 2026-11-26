@@ -58,13 +58,13 @@ export async function changeReservationStatus(id: string, status: string): Promi
     return { error: "상태를 저장하지 못했어요. 잠시 후 다시 시도해 주세요." };
   }
   const notice = await syncNotion(id, "status");
-  // 입금·결제 확인을 누르면 입금 확인 문자를 10분 자동 실행을 기다리지 않고 바로 (2026-11-26 사용자 요청) — 같은 문자는 auto_sms_log로 한 번만
-  if (status === "confirmed") {
+  // 입금 확인·취소(환불) 문자를 10분 자동 실행을 기다리지 않고 바로 보냄 (2026-11-26 사용자 요청, 같은 문자는 auto_sms_log로 한 번만)
+  if (status === "confirmed" || status === "canceled") {
     after(async () => {
       try {
         await sendDueAutoSms();
       } catch {
-        console.error("[auto-sms] 입금 확인 뒤 바로 보내기 실패 — 10분 자동 실행이 다시 보냄");
+        console.error("[auto-sms] 상태 변경 뒤 바로 보내기 실패 — 10분 자동 실행이 다시 보냄");
       }
     });
   }

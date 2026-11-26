@@ -61,10 +61,18 @@ export const PAYMENT_NOTICE_HOURS = 24;
 /** 취소 문자는 취소된 지 이 시간 안에만 (밤이면 아침에 보냄) */
 export const CANCEL_NOTICE_HOURS = 24;
 
-export type AutoSmsReservation = Pick<StoredReservation, "id" | "createdAt" | "status" | "request" | "reminderSentAt"> & {
-  /** 마지막으로 바뀐 시각 — 취소 문자용 */
-  updatedAt: string;
-};
+export type AutoSmsReservation = Pick<StoredReservation, "id" | "createdAt" | "status" | "request" | "reminderSentAt"> &
+  Partial<Pick<StoredReservation, "cancelRequest" | "payment">> & {
+    /** 마지막으로 바뀐 시각 — 취소 문자용 */
+    updatedAt: string;
+    /** 취소 전에 입금 확인 문자가 나갔는지 (서버가 auto_sms_log로 채움) — 입금된 예약 = 환불한 예약 */
+    paymentSmsSent?: boolean;
+  };
+
+/** 취소된 예약이 입금(결제)된 뒤 취소된 것인지 — 그렇다면 매장이 환불하고 취소로 바꾼 것 (2026-11-26 사용자 요청: 취소·환불 완료 문자) */
+export function wasPaidBeforeCancel(reservation: AutoSmsReservation) {
+  return Boolean(reservation.paymentSmsSent || reservation.cancelRequest?.paid || reservation.payment?.approvedAt);
+}
 
 /** 한국 시각 "YYYY-MM-DD" + 시·분 → Date */
 function kst(dateKey: string, hour: number, minute = 0) {
@@ -143,9 +151,10 @@ export const autoSmsText = {
 예약 조회: ${BOOKING_SITE_URL}/check
 감사합니다.`;
   },
-  canceled: (ordererName: string, dateKey: string, time: string, receipt: string) => {
+  canceled: (ordererName: string, dateKey: string, time: string, receipt: string, refunded: boolean) => {
     const [, month, day] = dateKey.split("-").map(Number);
-    return `안녕하세요 새순입니다. ${ordererName}님의 ${month}/${day} ${hourLabel(time)} 예약(접수번호 ${receipt})이 취소되었습니다. 문의: ${businessInfo.phone}`;
+    const done = refunded ? "취소가 완료되었습니다. 환불도 완료되었습니다." : "취소가 완료되었습니다.";
+    return `안녕하세요 새순입니다. ${ordererName}님의 ${month}/${day} ${hourLabel(time)} 예약(접수번호 ${receipt}) ${done}${refunded ? " 환불 금액이 들어오기까지 카드사·은행에 따라 며칠 걸릴 수 있습니다." : ""} 문의: ${businessInfo.phone}`;
   },
 };
 
@@ -178,7 +187,13 @@ export function planAutoSms(reservation: AutoSmsReservation): Planned[] {
       plans.push({
         kind: "canceled",
         phoneNumber: orderer,
-        text: autoSmsText.canceled(request.ordererName, request.date, request.time, reservation.id.slice(0, 8).toUpperCase()),
+        text: autoSmsText.canceled(
+          request.ordererName,
+          request.date,
+          request.time,
+          reservation.id.slice(0, 8).toUpperCase(),
+          wasPaidBeforeCancel(reservation),
+        ),
         withPhoto: false,
         window: { from: canceledAt, until: new Date(canceledAt.getTime() + CANCEL_NOTICE_HOURS * HOUR) },
       });
@@ -314,6 +329,6 @@ export const autoSmsKindLabel: Record<AutoSmsKind, string> = {
   instituteOrdererDone: "인재개발원 배송 완료(예약자)",
   deliveryRecipient: "배송 안내(받는 분)",
   recipientPhoneMissing: "받는 분 연락처 요청(예약자)",
-  canceled: "취소 안내(예약자)",
+  canceled: "취소·환불 완료 안내(예약자)",
   paymentConfirmed: "입금·결제 확인 안내(예약자)",
 };

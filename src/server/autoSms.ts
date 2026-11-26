@@ -89,6 +89,21 @@ export async function skipPaymentConfirmedSms(reservationId: string, ordererPhon
   });
 }
 
+/** 취소된 예약 중 입금 확인 문자가 나갔던 것 표시 — 취소 문자에 "환불도 완료" 문구를 넣으려고 */
+async function markPaidCanceled<T extends AutoSmsReservation>(reservations: T[]): Promise<T[]> {
+  const canceledIds = reservations.filter((r) => r.status === "canceled").map((r) => r.id);
+  if (canceledIds.length === 0) return reservations;
+  const { data, error } = await createDatabaseClient()
+    .from(LOG_TABLE)
+    .select("reservation_id")
+    .in("reservation_id", canceledIds)
+    .eq("kind", "paymentConfirmed")
+    .eq("state", "sent");
+  if (error) throw error;
+  const paid = new Set((data as { reservation_id: string }[]).map((row) => row.reservation_id));
+  return reservations.map((r) => (paid.has(r.id) ? { ...r, paymentSmsSent: true } : r));
+}
+
 function describeReservation(reservation: AutoSmsReservation) {
   const { request } = reservation;
   const origin = getSiteOrigin();
@@ -105,7 +120,8 @@ export async function sendDueAutoSms(now: Date = new Date()) {
 
   const canceledSince = new Date(now.getTime() - CANCEL_NOTICE_HOURS * 60 * 60 * 1000);
   const paidSince = new Date(now.getTime() - PAYMENT_NOTICE_HOURS * 60 * 60 * 1000);
-  const reservations = await listAutoSmsReservations(autoSmsDates(now), canceledSince, paidSince);
+  const listed = await listAutoSmsReservations(autoSmsDates(now), canceledSince, paidSince);
+  const reservations = await markPaidCanceled(listed);
   const dueList = reservations
     .map((reservation) => ({ reservation, due: getDueAutoSms(reservation, now) }))
     .filter((item) => item.due.length > 0);
