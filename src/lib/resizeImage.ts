@@ -23,3 +23,18 @@ export async function resizeToJpeg(file: File, maxSide = 1200, quality = 0.82): 
     bitmap.close();
   }
 }
+
+/**
+ * 용량 제한 안에서 가장 선명하게 — 화질을 조금씩 낮추고, 그래도 크면 크기를 줄임 (사진 문자용, 2026-11-26 사용자 요청: 화질 개선)
+ */
+export async function resizeToJpegUnder(file: File, maxSide: number, quality: number, maxBytes: number): Promise<Blob> {
+  let side = maxSide;
+  let q = quality;
+  for (let attempt = 0; attempt < 8; attempt++) {
+    const blob = await resizeToJpeg(file, side, q);
+    if (blob.size <= maxBytes) return blob;
+    if (q > 0.7) q = Math.round((q - 0.05) * 100) / 100;
+    else side = Math.round(side * 0.85);
+  }
+  return resizeToJpeg(file, 800, 0.7);
+}

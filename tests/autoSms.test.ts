@@ -197,4 +197,10 @@ describe("자동 문자 (lib/autoSms)", () => {
     assert.deepEqual(kinds(naver, "2026-12-03T19:00+09:00"), kinds(base, "2026-12-03T19:00+09:00"));
     assert.ok(kinds(naver, "2026-12-03T19:00+09:00").length > 0);
   });
+
+  it("사진 문자에 선명한 사진 보기 링크 (2026-11-26 사용자 요청)", () => {
+    const r = reservation({ date: "2026-12-04", time: "08:00", receiveMethod: "delivery", forEvent: true });
+    const photo = dueOf(r, at("2026-12-03T20:00+09:00")).find((sms) => sms.kind === "instituteOrdererPhoto")!;
+    assert.match(photo.text, /사진 크게 보기: https:\/\/.+\/photo\//);
+  });
 });

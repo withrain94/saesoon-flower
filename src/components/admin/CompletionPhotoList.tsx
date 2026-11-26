@@ -2,7 +2,7 @@
 
 import { useRef, useState, useTransition, type ChangeEvent } from "react";
 import ErrorText from "@/components/ui/ErrorText";
-import { resizeToJpeg } from "@/lib/resizeImage";
+import { resizeToJpeg, resizeToJpegUnder } from "@/lib/resizeImage";
 import { addCompletionPhoto, removeCompletionPhoto, type CompletionPhotoResult } from "@/server/actions/completion";
 import type { CompletionPhoto } from "@/server/completionPhotos";
 
@@ -35,9 +35,9 @@ export default function CompletionPhotoList({
         setProgress(files.length > 1 ? `올리는 중… (${index + 1}/${files.length})` : "올리는 중…");
         const formData = new FormData();
         try {
-          // 화면용(긴 변 1200px) + 사진 문자용(작게 — 통신사 사진 문자 용량 제한 때문)
-          formData.set("full", new File([await resizeToJpeg(file)], "full.jpg", { type: "image/jpeg" }));
-          formData.set("mms", new File([await resizeToJpeg(file, 800, 0.7)], "mms.jpg", { type: "image/jpeg" }));
+          // 화면용(긴 변 1600px) + 사진 문자용(긴 변 1280px·화질 85%, 통신사 사진 문자 용량 제한 때문에 300KB 이하로(실제 발송 확인한 크기) — 2026-11-26 화질 개선)
+          formData.set("full", new File([await resizeToJpeg(file, 1600, 0.85)], "full.jpg", { type: "image/jpeg" }));
+          formData.set("mms", new File([await resizeToJpegUnder(file, 1280, 0.85, 300_000)], "mms.jpg", { type: "image/jpeg" }));
         } catch {
           setError(`"${file.name}" 사진을 읽지 못했어요. JPG·PNG 사진으로 올려 주세요.`);
           break;
