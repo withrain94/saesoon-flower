@@ -44,8 +44,10 @@ export type AutoSms = {
 /** 입금·결제가 확인된 예약만 미리 안내 문자를 보냄 */
 const PAID_STATUSES: ReservationStatus[] = ["confirmed", "made", "delivered"];
 
-/** 밤에는 자동 문자를 보내지 않음 (한국 시각 21시 ~ 다음날 7시) */
-export const QUIET_START_HOUR = 21;
+/** 밤에는 자동 문자를 보내지 않음 (한국 시각 0시 ~ 7시 — 2026-11-26 사용자 요청으로 21시에서 0시로 늦춤, 저녁에 사진을 늦게 올려도 보내지게) */
+export const QUIET_START_HOUR = 24;
+/** 인재개발원 받는 분 전날 안내는 예전처럼 21시까지만 (예약자가 아닌 분께 늦은 밤 문자를 보내지 않게) */
+const RECIPIENT_EVE_UNTIL_HOUR = 21;
 export const QUIET_END_HOUR = 7;
 
 /** 이 시각 전에 접수된 예약은 취소 문자를 보내지 않음 (기능이 생기기 전 예약) */
@@ -246,7 +248,7 @@ export function planAutoSms(reservation: AutoSmsReservation): Planned[] {
           phoneNumber: recipient.phone,
           text: autoSmsText.instituteRecipient(congrats, "내일", request.time),
           withPhoto: false,
-          window: { from: kst(prevDay, 19), until: kst(prevDay, QUIET_START_HOUR) },
+          window: { from: kst(prevDay, 19), until: kst(prevDay, RECIPIENT_EVE_UNTIL_HOUR) },
         },
         {
           kind: "instituteRecipientDay",

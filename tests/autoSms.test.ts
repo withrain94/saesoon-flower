@@ -100,11 +100,12 @@ describe("자동 문자 (lib/autoSms)", () => {
     assert.deepEqual(kinds(r, "2026-11-20T15:00+09:00"), []);
   });
 
-  it("픽업 오전 10시 — 전날 오후 5시, 밤(21~7시)엔 안 보내고 아침에 다시", () => {
+  it("픽업 오전 10시 — 전날 오후 5시, 밤(0~7시)엔 안 보내고 아침에 다시, 밤 11시까지는 보냄", () => {
     const r = reservation({ time: "10:00" });
     assert.deepEqual(kinds(r, "2026-11-19T16:50+09:00"), []);
     assert.deepEqual(kinds(r, "2026-11-19T17:00+09:00"), [`pickupPhoto:${ORDERER}`]);
-    assert.deepEqual(kinds(r, "2026-11-19T22:00+09:00"), []);
+    assert.deepEqual(kinds(r, "2026-11-19T23:30+09:00"), [`pickupPhoto:${ORDERER}`]);
+    assert.deepEqual(kinds(r, "2026-11-20T00:30+09:00"), []);
     assert.deepEqual(kinds(r, "2026-11-20T08:00+09:00"), [`pickupPhoto:${ORDERER}`]);
   });
 
@@ -154,8 +155,8 @@ describe("자동 문자 (lib/autoSms)", () => {
   });
 
   it("취소 — 예약자에게 취소 안내 (밤이면 아침에), 기능 전 예약은 안 보냄", () => {
-    const r = reservation({ status: "canceled", updatedAt: "2026-11-19T22:30+09:00" });
-    assert.deepEqual(kinds(r, "2026-11-19T22:40+09:00"), []);
+    const r = reservation({ status: "canceled", updatedAt: "2026-11-20T00:30+09:00" });
+    assert.deepEqual(kinds(r, "2026-11-20T00:40+09:00"), []);
     const due = dueOf(r, at("2026-11-20T07:00+09:00"));
     assert.deepEqual(due.map((sms) => sms.kind), ["canceled"]);
     assert.match(due[0].text, /11\/20 오후 3시 예약\(접수번호 5D7BBC7E\) 취소가 완료되었습니다\./);
