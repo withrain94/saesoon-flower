@@ -144,14 +144,20 @@ describe("자동 문자 (lib/autoSms)", () => {
     assert.deepEqual(kinds(self, "2026-11-18T10:10+09:00"), []);
   });
 
-  it("일반 배송 — 받는 시간 1시간 전 받는 분에게 (예약자 이름), 받는 분 = 예약자 번호면 안 보냄", () => {
+  it("일반 배송 — 2시간 전 예약자 사진 문자, 1시간 전 받는 분에게 (예약자 이름), 받는 분 = 예약자 번호면 받는 분 문자 안 보냄", () => {
     const r = reservation({ receiveMethod: "delivery" });
-    assert.deepEqual(kinds(r, "2026-11-20T13:50+09:00"), []);
-    const due = dueOf(r, at("2026-11-20T14:00+09:00"));
+    assert.deepEqual(kinds(r, "2026-11-20T12:50+09:00"), []);
+    assert.deepEqual(kinds(r, "2026-11-20T13:00+09:00"), [`deliveryPhoto:${ORDERER}`]);
+    const photo = dueOf(r, at("2026-11-20T13:00+09:00"))[0];
+    assert.equal(photo.withPhoto, true);
+    assert.match(photo.text, /사진 보내드립니다\. 잘 배송하겠습니다\.\n사진 크게 보기: /);
+    const due = dueOf(r, at("2026-11-20T14:00+09:00")).filter((sms) => sms.kind !== "deliveryPhoto");
     assert.deepEqual(due.map((sms) => `${sms.kind}:${sms.phoneNumber}`), [`deliveryRecipient:${RECIPIENT}`]);
     assert.match(due[0].text, /홍길동님 앞으로 꽃배달/);
     const same = reservation({ receiveMethod: "delivery", recipientPhone: "010-1111-2222" });
-    assert.deepEqual(kinds(same, "2026-11-20T14:00+09:00"), []);
+    assert.deepEqual(kinds(same, "2026-11-20T14:00+09:00"), [`deliveryPhoto:${ORDERER}`]);
+    // 오전 10시 배송은 전날 오후 5시부터
+    assert.deepEqual(kinds(reservation({ receiveMethod: "delivery", time: "10:00" }), "2026-11-19T17:00+09:00"), [`deliveryPhoto:${ORDERER}`]);
   });
 
   it("취소 — 예약자에게 취소 안내 (밤이면 아침에), 기능 전 예약은 안 보냄", () => {

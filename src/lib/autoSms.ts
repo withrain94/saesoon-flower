@@ -15,6 +15,8 @@ import type { ReservationStatus, StoredReservation } from "@/types/reservation";
 export type AutoSmsKind =
   /** 1. 픽업 — 완성 사진과 함께 예약 2시간 전(오전 11시 전 예약은 전날 오후 5시), 예약자에게 */
   | "pickupPhoto"
+  /** 일반 배송 — 예약자에게 완성 사진 (2026-11-27 사용자 요청) */
+  | "deliveryPhoto"
   /** 2-1. 인재개발원 — 전날 오후 8시, 완성 사진과 함께 예약자에게 */
   | "instituteOrdererPhoto"
   /** 2-2. 인재개발원 — 전날 오후 7시, 받는 분에게 */
@@ -140,6 +142,9 @@ export const autoSmsText = {
     `안녕하세요 새순입니다. 사진 보내드립니다. 무인픽업 장소에서 시간 구애없이 편하게 찾아가세요.\n${pickupPlace}\n사진 크게 보기: ${completionPhotoPageUrl(reservationId)}`,
   instituteOrdererPhoto: (reservationId: string) =>
     `안녕하세요 새순입니다. 사진 보내드립니다. 내일 잘 배송하겠습니다.\n사진 크게 보기: ${completionPhotoPageUrl(reservationId)}`,
+  deliveryPhoto: (reservationId: string) =>
+    `안녕하세요 새순입니다. 사진 보내드립니다. 잘 배송하겠습니다.
+사진 크게 보기: ${completionPhotoPageUrl(reservationId)}`,
   instituteRecipient: (congrats: string, day: "내일" | "오늘", time: string) =>
     `안녕하세요. 새순 꽃집입니다. ${congrats} 축하드립니다. ${day} ${hourLabel(time)} 인재개발원 수료식장 앞으로 꽃배달 예정입니다. 오전 9시까지 수령해가시면 감사하겠습니다.`,
   instituteOrdererDone: (dateKey: string) =>
@@ -229,6 +234,8 @@ export function planAutoSms(reservation: AutoSmsReservation): Planned[] {
   const delivery = request.receiveMethod === "delivery";
   // 수동으로 [지금 문자 보내기]를 눌렀으면(안내 문자 보냄 표시) 사진 문자는 자동으로 다시 안 보냄
   const manualSent = reservation.reminderSentAt !== null;
+  // 픽업·일반 배송 사진 문자 시작 — 받는 시간 2시간 전, 오전 11시 전 예약은 전날 17시
+  const photoFrom = getSlotHour(request.time) < 11 ? kst(prevDay, 17) : new Date(at.getTime() - 2 * HOUR);
 
   if (institute) {
     const congrats = institute.kind === "instituteLongCourse" ? "수료를" : "승진을";
@@ -270,6 +277,16 @@ export function planAutoSms(reservation: AutoSmsReservation): Planned[] {
       });
     }
   } else if (delivery) {
+    // 일반 배송도 예약자에게 완성 사진 — 픽업과 같은 때(받는 시간 2시간 전, 오전 11시 전 예약은 전날 17시) (2026-11-27 사용자 요청)
+    if (orderer && !manualSent) {
+      plans.push({
+        kind: "deliveryPhoto",
+        phoneNumber: orderer,
+        text: autoSmsText.deliveryPhoto(reservation.id),
+        withPhoto: true,
+        window: { from: photoFrom, until: at },
+      });
+    }
     for (const recipient of recipientsOf(reservation)) {
       if (!recipient.phone || recipient.phone === orderer) continue;
       plans.push({
@@ -281,13 +298,12 @@ export function planAutoSms(reservation: AutoSmsReservation): Planned[] {
       });
     }
   } else if (orderer && !manualSent) {
-    const from = getSlotHour(request.time) < 11 ? kst(prevDay, 17) : new Date(at.getTime() - 2 * HOUR);
     plans.push({
       kind: "pickupPhoto",
       phoneNumber: orderer,
       text: autoSmsText.pickupPhoto(reservation.id),
       withPhoto: true,
-      window: { from, until: at },
+      window: { from: photoFrom, until: at },
     });
   }
 
@@ -326,6 +342,7 @@ export function autoSmsDates(now: Date) {
 /** 매장 텔레그램에 쓰는 이름 */
 export const autoSmsKindLabel: Record<AutoSmsKind, string> = {
   pickupPhoto: "픽업 사진 문자",
+  deliveryPhoto: "배송 사진 문자(예약자)",
   instituteOrdererPhoto: "인재개발원 사진 문자(예약자)",
   instituteRecipientEve: "인재개발원 전날 안내(받는 분)",
   instituteRecipientDay: "인재개발원 당일 안내(받는 분)",
