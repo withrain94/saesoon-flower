@@ -71,7 +71,7 @@ describe("네이버 예약 글 읽기", () => {
 });
 
 describe("네이버 예약 저장 모양", () => {
-  it("상품 1개마다 받는 분·토퍼·요청사항, 결제는 네이버로 표시, 자동 문자 없음", () => {
+  it("상품 1개마다 받는 분·토퍼·요청사항, 결제는 네이버로 표시, 자동 문자도 보냄(2026-11-26 사용자 요청으로 바꿈)", () => {
     const built = buildNaverReservationRequest(parseNaverBooking(basketText), "2026-11-26T00:00:00.000Z");
     assert.ok(built.ok);
     const { request } = built;
@@ -90,7 +90,7 @@ describe("네이버 예약 저장 모양", () => {
       request,
       reminderSentAt: null,
     };
-    assert.deepEqual(planAutoSms(reservation), []);
+    assert.ok(planAutoSms(reservation).length > 0);
   });
   it("토퍼 없는 날은 보내는 분을 메시지 앞에, 쇼핑백은 합계에", () => {
     const draft = { ...parseNaverBooking(bouquetText), sender: "친구들" };

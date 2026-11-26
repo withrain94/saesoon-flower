@@ -190,4 +190,11 @@ describe("자동 문자 (lib/autoSms)", () => {
     assert.deepEqual(kinds(r, "2026-11-26T22:00+09:00"), []);
     assert.deepEqual(kinds(r, "2026-12-04T09:00+09:00"), []);
   });
+
+  it("네이버 예약도 똑같이 자동 문자 (2026-11-26 사용자 요청)", () => {
+    const base = reservation({ date: "2026-12-04", time: "08:00", receiveMethod: "delivery", forEvent: true });
+    const naver = { ...base, request: { ...base.request, naver: { bookingNumber: "1234567890", paidAmount: 80000, paymentLabel: "네이버페이", requestNote: "" } } } as AutoSmsReservation;
+    assert.deepEqual(kinds(naver, "2026-12-03T19:00+09:00"), kinds(base, "2026-12-03T19:00+09:00"));
+    assert.ok(kinds(naver, "2026-12-03T19:00+09:00").length > 0);
+  });
 });
