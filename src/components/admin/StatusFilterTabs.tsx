@@ -6,9 +6,12 @@ import type { ReservationStatus } from "@/types/reservation";
 export default function StatusFilterTabs({
   activeId,
   counts,
+  hiddenActiveCount = 0,
 }: {
   activeId: string;
   counts: Record<ReservationStatus, number> | null;
+  /** "진행 중"에서 숨긴 지난 예약 수 — 진행 중 숫자에서 뺌 */
+  hiddenActiveCount?: number;
 }) {
   return (
     <nav aria-label="예약 상태" className="-mx-4 overflow-x-auto px-4">
@@ -20,7 +23,7 @@ export default function StatusFilterTabs({
             (filter.statuses ?? (Object.keys(counts) as ReservationStatus[])).reduce(
               (sum, status) => sum + counts[status],
               0,
-            );
+            ) - (filter.id === "active" ? hiddenActiveCount : 0);
           return (
             <li key={filter.id}>
               <Link
