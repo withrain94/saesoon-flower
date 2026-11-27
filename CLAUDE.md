@@ -117,6 +117,7 @@
 환경변수 (값은 `.env.local`·Vercel Production에만, 이름은 `.env.example` 참고):
 `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`(Config) · `SUPABASE_SECRET_KEY`(Secret) · `ADMIN_EMAILS`(Config) · `TELEGRAM_BOT_TOKEN`(Secret) · `TELEGRAM_CHAT_ID`(Config) · `NOTION_TOKEN`(Secret) · `NOTION_PARENT_PAGE_ID`(Config) · `NEXT_PUBLIC_KAKAO_JS_KEY`(Config, 카카오 버튼용 공개 키) · `CRON_SECRET`(Secret, 내일 예약 목록 자동 실행 확인용 — `.env.local`에 Claude가 무작위 32자 생성 — 2026-09-23 **영문·숫자만 32자로 새로 만들어 교체**, 특수문자가 섞인 첫 값은 Vercel과 달라 계속 401이었음). `.env.local`에는 10개 모두 있음. Vercel도 10개 모두 있음(노션 2개는 직접 못 봄, CRON_SECRET은 2026-09-23 실제 사이트 실행 200으로 확인).
 카카오 개발자 앱 "새순": JavaScript SDK 도메인(배포 주소·localhost:3000) + [제품 링크 관리]>[웹 도메인](배포 주소) 등록됨. **사이트 주소가 바뀌면 두 곳 모두 추가.**
+Vercel 서버 지역: **서울(icn1)** — `vercel.json` `regions`. Supabase가 서울(ap-northeast-2)이라 맞춤(2026-11-27, 그전엔 미국 동부 iad1이라 관리자 화면이 느렸음). 관리자 화면 여는 동안 `app/admin/loading.tsx` "불러오는 중…".
 Vercel: 기록 파일만 바꾼 커밋(deb2fa3)은 배포가 안 만들어진 적 있음(원인 모름) → 반영 안 되면 대시보드 Deployments > 맨 위 ⋯ > Redeploy(Build Cache 끔).
 
 ## 6. 남은 일·확인 대기

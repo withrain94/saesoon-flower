@@ -16,9 +16,13 @@ export default async function AdminReservationPage({ params }: PageProps<"/admin
   if (!isReservationId(id)) notFound();
 
   // undefined = 불러오기 실패 / null = 없는 예약
-  const reservation = await getReservation(id).catch(() => undefined);
+  // 예약·완성 사진을 동시에 불러옴 (빠르게)
+  const [reservation, photos] = await Promise.all([
+    getReservation(id).catch(() => undefined),
+    listCompletionPhotos(id).catch(() => []),
+  ]);
   if (reservation === null) notFound();
-  const completionPhotos = reservation ? await listCompletionPhotos(id).catch(() => []) : [];
+  const completionPhotos = reservation ? photos : [];
 
   return (
     <>

@@ -1,6 +1,7 @@
 "use server";
 
 import { refresh } from "next/cache";
+import { after } from "next/server";
 import { statusAfterCompletionPhoto } from "@/lib/autoStatus";
 import { MAX_SMS_TEXT, toSmsPhoneNumber } from "@/lib/ordererSms";
 import { isReservationId, requireAdmin } from "../auth";
@@ -50,9 +51,8 @@ export async function addCompletionPhoto(id: string, formData: FormData): Promis
   let nextStatus: ReturnType<typeof statusAfterCompletionPhoto> = null;
   let photos: CompletionPhoto[];
   try {
-    const reservation = await getReservation(id);
+    const [reservation, current] = await Promise.all([getReservation(id), listCompletionPhotos(id)]);
     if (!reservation) return { error: "예약을 찾지 못했어요." };
-    const current = await listCompletionPhotos(id);
     if (current.length >= MAX_COMPLETION_PHOTOS) {
       return { error: `완성 사진은 ${MAX_COMPLETION_PHOTOS}장까지 올릴 수 있어요. 먼저 한 장을 지워 주세요.` };
     }
@@ -67,7 +67,8 @@ export async function addCompletionPhoto(id: string, formData: FormData): Promis
     // 사진은 이미 저장됨 — 상태 저장이 실패해도 사진 올리기는 성공으로 둠 (관리자가 상태 버튼으로 직접 바꿀 수 있음)
     try {
       await updateReservation(id, { status: nextStatus });
-      await syncReservationToNotionById(id);
+      // 노션 표 맞추기는 화면에 결과를 돌려준 뒤에 (사진 올리기가 노션을 기다리지 않게)
+      after(() => syncReservationToNotionById(id).catch(() => console.error("[completion] 노션 맞추기 실패")));
       refresh();
     } catch {
       console.error("[completion] 제작 완료 자동 변경 실패");
