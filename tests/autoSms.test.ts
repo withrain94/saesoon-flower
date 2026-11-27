@@ -200,6 +200,9 @@ describe("자동 문자 (lib/autoSms)", () => {
     assert.deepEqual(due.map((sms) => `${sms.kind}:${sms.phoneNumber}`), [`paymentConfirmed:${ORDERER}`]);
     assert.match(due[0].text, /홍길동님 12\/4 아침 8시 예약 입금 확인되었습니다\. \(접수번호 5D7BBC7E\)/);
     assert.match(due[0].text, /예약 조회: https:\/\/.+\/check/);
+    // 네이버 예약은 "예약 완료되었습니다"
+    const naver = { ...r, request: { ...r.request, naver: { bookingNumber: "1", paidAmount: 0, paymentLabel: "", requestNote: "" } } } as AutoSmsReservation;
+    assert.match(getDueAutoSms(naver, at("2026-11-26T15:10+09:00"))[0].text, /홍길동님 12\/4 아침 8시 예약 완료되었습니다\. \(접수번호 5D7BBC7E\)/);
     // 픽업이면 매장 주소·지도, 배송이면 없음
     assert.match(due[0].text, /픽업 장소: .+기지로 77.+\n\(롯데프레시 옆, 상가주차장 입구쪽, 호반6차 정문앞\)\n지도: https:\/\/naver\.me\//);
     const delivery = reservation({ date: "2026-12-04", time: "08:00", receiveMethod: "delivery", createdAt: "2026-11-26T15:00+09:00" });

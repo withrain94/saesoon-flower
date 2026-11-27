@@ -157,9 +157,11 @@ export const autoSmsText = {
   recipientPhoneMissing: (recipientName: string) =>
     `안녕하세요 새순입니다. 받는 분${recipientName ? `(${recipientName}님)` : ""} 연락처가 입력되지 않았어요. 배송 안내를 위해 ${businessInfo.phone}으로 받는 분 연락처를 문자로 남겨 주세요.`,
   /** 계좌이체 = "입금 확인", 카드·PayPal = "결제 확인" (토스 가상계좌 입금·카드 결제도 같은 문자) */
-  paymentConfirmed: (ordererName: string, dateKey: string, time: string, receipt: string, bank: boolean, pickup: boolean) => {
+  /** 네이버 예약은 네이버에서 결제가 끝났으니 "예약 완료" (2026-11-27 사용자 요청) */
+  paymentConfirmed: (ordererName: string, dateKey: string, time: string, receipt: string, bank: boolean, pickup: boolean, naver = false) => {
     const [, month, day] = dateKey.split("-").map(Number);
-    return `안녕하세요 새순입니다. ${ordererName}님 ${month}/${day} ${hourLabel(time)} 예약 ${bank ? "입금" : "결제"} 확인되었습니다. (접수번호 ${receipt})${pickup ? `\n${pickupPlace}` : ""}
+    const done = naver ? "완료되었습니다" : `${bank ? "입금" : "결제"} 확인되었습니다`;
+    return `안녕하세요 새순입니다. ${ordererName}님 ${month}/${day} ${hourLabel(time)} 예약 ${done}. (접수번호 ${receipt})${pickup ? `\n${pickupPlace}` : ""}
 예약 조회: ${BOOKING_SITE_URL}/check
 감사합니다.`;
   },
@@ -227,6 +229,7 @@ export function planAutoSms(reservation: AutoSmsReservation): Planned[] {
         reservation.id.slice(0, 8).toUpperCase(),
         request.paymentMethod === "bank",
         request.receiveMethod === "pickup",
+        Boolean(request.naver),
       ),
       withPhoto: false,
       window: { from: created > start ? created : start, until: at },
