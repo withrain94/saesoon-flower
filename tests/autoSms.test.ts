@@ -127,6 +127,15 @@ describe("자동 문자 (lib/autoSms)", () => {
     assert.match(eve, /승진을 축하드립니다\. 내일 아침 8시 인재개발원 수료식장 앞으로/);
   });
 
+  it("인재개발원 당일 받는 분 안내는 예약 시간이 7시·9시여도 아침 8시에", () => {
+    for (const time of ["07:00", "09:00"]) {
+      const r = reservation({ date: "2026-12-04", time, forEvent: true });
+      assert.deepEqual(kinds(r, "2026-12-04T07:00+09:00").filter((k) => k.startsWith("instituteRecipientDay")), []);
+      assert.deepEqual(kinds(r, "2026-12-04T08:00+09:00").filter((k) => k.startsWith("instituteRecipientDay")), [`instituteRecipientDay:${RECIPIENT}`]);
+      assert.deepEqual(kinds(r, "2026-12-04T09:00+09:00").filter((k) => k.startsWith("instituteRecipientDay")), []);
+    }
+  });
+
   it("장기과정 수료식은 '수료를 축하드립니다', 행사 꽃 아니면 일반 픽업 규칙", () => {
     const r = reservation({ date: "2026-11-27", time: "08:00", forEvent: true });
     assert.match(dueOf(r, at("2026-11-26T19:00+09:00"))[0].text, /수료를 축하드립니다/);

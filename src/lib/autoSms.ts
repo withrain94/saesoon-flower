@@ -263,7 +263,8 @@ export function planAutoSms(reservation: AutoSmsReservation): Planned[] {
           phoneNumber: recipient.phone,
           text: autoSmsText.instituteRecipient(congrats, "오늘", request.time),
           withPhoto: false,
-          window: { from: at, until: new Date(at.getTime() + HOUR) },
+          // 예약 시간(네이버 7·9시 등)과 상관없이 당일 아침 8시에 한꺼번에 (2026-11-27 사용자 요청)
+          window: { from: kst(request.date, 8), until: kst(request.date, 9) },
         },
       );
     }
