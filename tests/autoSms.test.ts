@@ -133,6 +133,11 @@ describe("자동 문자 (lib/autoSms)", () => {
       assert.deepEqual(kinds(r, "2026-12-04T07:00+09:00").filter((k) => k.startsWith("instituteRecipientDay")), []);
       assert.deepEqual(kinds(r, "2026-12-04T08:00+09:00").filter((k) => k.startsWith("instituteRecipientDay")), [`instituteRecipientDay:${RECIPIENT}`]);
       assert.deepEqual(kinds(r, "2026-12-04T09:00+09:00").filter((k) => k.startsWith("instituteRecipientDay")), []);
+      // 문자 속 시각도 아침 8시
+      const eve = dueOf(r, at("2026-12-03T19:00+09:00")).find((sms) => sms.kind === "instituteRecipientEve")!;
+      assert.match(eve.text, /내일 아침 8시 인재개발원/);
+      const day = dueOf(r, at("2026-12-04T08:00+09:00")).find((sms) => sms.kind === "instituteRecipientDay")!;
+      assert.match(day.text, /오늘 아침 8시 인재개발원/);
     }
   });
 

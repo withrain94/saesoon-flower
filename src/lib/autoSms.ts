@@ -65,6 +65,9 @@ export const PAYMENT_NOTICE_HOURS = 24;
 /** 취소 문자는 취소된 지 이 시간 안에만 (밤이면 아침에 보냄) */
 export const CANCEL_NOTICE_HOURS = 24;
 
+/** 인재개발원 꽃 배달 시각 — 받는 분 안내 문자에 적힘 (예약 시간이 7·9시여도) */
+const INSTITUTE_DELIVERY_TIME = "08:00";
+
 export type AutoSmsReservation = Pick<StoredReservation, "id" | "createdAt" | "status" | "request" | "reminderSentAt"> &
   Partial<Pick<StoredReservation, "cancelRequest" | "payment">> & {
     /** 마지막으로 바뀐 시각 — 취소 문자용 */
@@ -254,14 +257,15 @@ export function planAutoSms(reservation: AutoSmsReservation): Planned[] {
         {
           kind: "instituteRecipientEve",
           phoneNumber: recipient.phone,
-          text: autoSmsText.instituteRecipient(congrats, "내일", request.time),
+          // 문자 속 시각도 예약 시간(네이버 7·9시 등)과 상관없이 아침 8시 (2026-11-27 사용자 요청)
+          text: autoSmsText.instituteRecipient(congrats, "내일", INSTITUTE_DELIVERY_TIME),
           withPhoto: false,
           window: { from: kst(prevDay, 19), until: kst(prevDay, RECIPIENT_EVE_UNTIL_HOUR) },
         },
         {
           kind: "instituteRecipientDay",
           phoneNumber: recipient.phone,
-          text: autoSmsText.instituteRecipient(congrats, "오늘", request.time),
+          text: autoSmsText.instituteRecipient(congrats, "오늘", INSTITUTE_DELIVERY_TIME),
           withPhoto: false,
           // 예약 시간(네이버 7·9시 등)과 상관없이 당일 아침 8시에 한꺼번에 (2026-11-27 사용자 요청)
           window: { from: kst(request.date, 8), until: kst(request.date, 9) },
