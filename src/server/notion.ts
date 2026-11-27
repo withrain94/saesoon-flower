@@ -349,5 +349,7 @@ async function syncRows(
       children: rows.slice(existing.length).map(tableRow),
     });
   }
+  // 줄이 줄었으면 남는 줄은 지움 (예: 예전엔 초콜릿·쇼핑백이 따로 한 줄이었음)
+  for (const block of existing.slice(rows.length)) await notionFetch(token, `/blocks/${block.id}`, "DELETE");
   return { kind: "updated", pageId: dayPage.id };
 }

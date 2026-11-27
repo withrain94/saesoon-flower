@@ -37,7 +37,7 @@ const plain = (text: string) =>
 
 const joinLines = (...parts: string[]) => parts.map(plain).filter(Boolean).join("\n");
 
-/** 하루치 예약(취소 제외, 시간 순) → 인쇄 표. 상품·초콜릿 1개당 한 줄 */
+/** 하루치 예약(취소 제외, 시간 순) → 인쇄 표. 상품 1개당 한 줄 (초콜릿·쇼핑백은 첫 줄 색감 칸) */
 export function buildPrintList(dateKey: string, reservations: StoredReservation[]): PrintList {
   const rows: PrintRow[] = [];
   let flowerCount = 0;

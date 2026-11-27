@@ -67,20 +67,21 @@ const reservation: StoredReservation = {
 };
 
 describe("예약 목록 인쇄 (lib/reservationPrint)", () => {
-  it("상품·쇼핑백 1개당 한 줄, 예약 첫 줄 표시, 그림글자 빼기, 제목·건수", () => {
+  it("상품 1개당 한 줄(쇼핑백은 색감 칸에), 예약 첫 줄 표시, 그림글자 빼기, 제목·건수", () => {
     const withBag: StoredReservation = {
       ...reservation,
       adminMemo: "📞 매장 예약",
       request: { ...reservation.request, chocolates: [{ chocolateId: "shoppingbag", price: 2000, quantity: 1 }] },
     };
     const list = buildPrintList("2026-11-12", [withBag, { ...reservation, id: "aaaaaaaa-0000" }]);
-    assert.equal(list.rows.length, 3);
-    assert.deepEqual(list.rows.map((row) => row.firstOfReservation), [true, false, true]);
+    assert.equal(list.rows.length, 2);
+    assert.deepEqual(list.rows.map((row) => row.firstOfReservation), [true, true]);
     const at = (header: (typeof PRINT_COLUMNS)[number], row = 0) => list.rows[row].cells[PRINT_COLUMNS.indexOf(header)];
     assert.equal(at("시간"), "오후 3:00");
     assert.equal(at("받는분"), "김영희\n010-3333-4444");
     assert.equal(at("접수번호·메모"), "5D7BBC7E\n매장 예약");
-    assert.ok(!/[\u{10000}-\u{10FFFF}]/u.test(at("상품", 1)));
+    assert.match(at("색감"), /추가: 꽃다발 쇼핑백 ×1$/);
+    assert.ok(!/[\u{10000}-\u{10FFFF}]/u.test(at("색감")));
     assert.ok(list.title.includes("11월 12일"));
     assert.equal(list.summary, "예약 2건 · 꽃 2개 (취소 제외)");
   });

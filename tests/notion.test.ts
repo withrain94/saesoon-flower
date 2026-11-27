@@ -82,6 +82,28 @@ describe("노션 표 줄 (lib/notionReservation)", () => {
     assert.equal(cell("canceled", "예약종류").startsWith("[취소] "), true);
   });
 
+  it("쇼핑백·초콜릿은 따로 줄 없이 첫 줄 색감 칸에, 총액은 첫 줄 금액 칸에 한 번", () => {
+    const price = (value: number) => `${value.toLocaleString("ko-KR")}원`;
+    const total = bouquet.price * 2 + 4000;
+    const rows = buildNotionRows({
+      ...reservation,
+      request: {
+        ...reservation.request,
+        deliveries: [reservation.request.deliveries[0], { ...reservation.request.deliveries[0], unitNo: 2 }],
+        chocolates: [{ chocolateId: "shoppingbag", price: 2000, quantity: 2 }],
+        totalPrice: total,
+      },
+    });
+    const at = (row: number, header: (typeof NOTION_TABLE_HEADERS)[number]) => rows[row][NOTION_TABLE_HEADERS.indexOf(header)];
+    assert.equal(rows.length, 2);
+    assert.match(at(0, "원하시는 색감"), /추가: 🛍️ 꽃다발 쇼핑백 ×2$/);
+    assert.doesNotMatch(at(1, "원하시는 색감"), /쇼핑백/);
+    assert.equal(at(0, "금액"), `${price(bouquet.price)} (총 ${price(total)})`);
+    assert.equal(at(1, "금액"), price(bouquet.price));
+    // 한 줄·옵션 없음이면 총액 생략
+    assert.equal(cell("confirmed", "금액"), price(bouquet.price));
+  });
+
   it("표 칸 수는 그대로 (이미 만든 날짜 표에 올릴 수 있게)", () => {
     assert.equal(buildNotionRows(reservation)[0].length, 15);
   });

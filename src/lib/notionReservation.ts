@@ -228,10 +228,24 @@ export function buildNotionRows({ id, status, adminMemo, request }: StoredReserv
   // 입금 여부 — 표 칸 수를 바꾸면 이미 만든 날짜 표에 못 올리므로 결제 방법 칸 앞에 붙임 (취소는 예약종류에 [취소])
   const paidMark = status === "received" ? "[입금 전] " : status === "canceled" ? "" : "[입금 확인] ";
 
-  const rows = request.deliveries.map((delivery) => {
+  // 함께 담은 옵션(초콜릿·인형·쇼핑백)은 따로 줄을 만들지 않고 첫 줄 색감 칸에 함께 (2026-11-27 사용자 요청) — 옵션 금액은 안 적고 총액만
+  const addOns = (request.chocolates ?? [])
+    .map((chocolate) => {
+      const name = ko.chocolate.items[chocolate.chocolateId as ChocolateId]?.name ?? chocolate.chocolateId;
+      return `${getAddOnIcon(chocolate.chocolateId)} ${name} ×${chocolate.quantity}`;
+    })
+    .join(", ");
+  // 총액은 첫 줄 금액 칸에 한 번만 — 줄이 하나뿐이고 옵션도 없으면 상품 금액과 같아 생략
+  const showTotal = request.deliveries.length > 1 || addOns !== "";
+
+  const rows = request.deliveries.map((delivery, index) => {
+    const ownColor = delivery.category === "orchid" ? "" : color;
     const row: Record<(typeof NOTION_TABLE_HEADERS)[number], string> = {
-      "원하시는 색감": delivery.category === "orchid" ? "" : color,
-      금액: ko.format.price(delivery.price),
+      "원하시는 색감": index === 0 && addOns ? [ownColor, `추가: ${addOns}`].filter(Boolean).join(" · ") : ownColor,
+      금액:
+        index === 0 && showTotal
+          ? `${ko.format.price(delivery.price)} (총 ${ko.format.price(request.totalPrice)})`
+          : ko.format.price(delivery.price),
       "날짜/시간대": schedule,
       "보내는분 성함": request.ordererName,
       "보내는분 연락처": request.ordererPhone,
@@ -252,28 +266,5 @@ export function buildNotionRows({ id, status, adminMemo, request }: StoredReserv
     return NOTION_TABLE_HEADERS.map((header) => row[header]);
   });
 
-  // 함께 담은 초콜릿 — 종류마다 한 줄 (예약종류 칸에 이름·수량, 받는 분 칸은 비움)
-  const chocolateRows = (request.chocolates ?? []).map((chocolate) => {
-    const name = ko.chocolate.items[chocolate.chocolateId as ChocolateId]?.name ?? chocolate.chocolateId;
-    const row: Record<(typeof NOTION_TABLE_HEADERS)[number], string> = {
-      "원하시는 색감": "",
-      금액: ko.format.price(chocolate.price * chocolate.quantity),
-      "날짜/시간대": schedule,
-      "보내는분 성함": request.ordererName,
-      "보내는분 연락처": request.ordererPhone,
-      "받는분 성함": "",
-      "받는분 연락처": "",
-      메시지: "",
-      예약종류: `${canceled}${getAddOnIcon(chocolate.chocolateId)} ${name} ×${chocolate.quantity}`,
-      "받는 방법": receiveMethod,
-      배송지: "",
-      토퍼: "",
-      "결제 방법": `${paidMark}${payment}`,
-      접수번호: receipt,
-      "매장 메모": adminMemo,
-    };
-    return NOTION_TABLE_HEADERS.map((header) => row[header]);
-  });
-
-  return [...rows, ...chocolateRows];
+  return rows;
 }
