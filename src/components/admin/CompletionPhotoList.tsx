@@ -2,7 +2,7 @@
 
 import { useRef, useState, useTransition, type ChangeEvent } from "react";
 import ErrorText from "@/components/ui/ErrorText";
-import { resizeToJpeg, resizeToJpegUnder } from "@/lib/resizeImage";
+import { makeCompletionPhotoFiles } from "@/lib/resizeImage";
 import { addCompletionPhoto, removeCompletionPhoto, type CompletionPhotoResult } from "@/server/actions/completion";
 import type { CompletionPhoto } from "@/server/completionPhotos";
 
@@ -30,17 +30,26 @@ export default function CompletionPhotoList({
     event.target.value = "";
     if (files.length === 0) return;
     setError(null);
+    // 화면용(긴 변 1600px) + 사진 문자용(긴 변 1280px·화질 85%, 통신사 사진 문자 용량 제한 때문에 300KB 이하로(실제 발송 확인한 크기) — 2026-11-26 화질 개선)
+    const prepare = (file: File) =>
+      makeCompletionPhotoFiles(file, { fullSide: 1600, fullQuality: 0.85, mmsSide: 1280, mmsQuality: 0.85, mmsMaxBytes: 300_000 });
     startTransition(async () => {
+      // 한 장을 올리는 동안 다음 사진을 미리 줄여 둠 (2026-11-28 사용자 요청: 속도)
+      let next = prepare(files[0]);
       for (const [index, file] of files.entries()) {
         setProgress(files.length > 1 ? `올리는 중… (${index + 1}/${files.length})` : "올리는 중…");
         const formData = new FormData();
         try {
-          // 화면용(긴 변 1600px) + 사진 문자용(긴 변 1280px·화질 85%, 통신사 사진 문자 용량 제한 때문에 300KB 이하로(실제 발송 확인한 크기) — 2026-11-26 화질 개선)
-          formData.set("full", new File([await resizeToJpeg(file, 1600, 0.85)], "full.jpg", { type: "image/jpeg" }));
-          formData.set("mms", new File([await resizeToJpegUnder(file, 1280, 0.85, 300_000)], "mms.jpg", { type: "image/jpeg" }));
+          const { full, mms } = await next;
+          formData.set("full", new File([full], "full.jpg", { type: "image/jpeg" }));
+          formData.set("mms", new File([mms], "mms.jpg", { type: "image/jpeg" }));
         } catch {
           setError(`"${file.name}" 사진을 읽지 못했어요. JPG·PNG 사진으로 올려 주세요.`);
           break;
+        }
+        if (index + 1 < files.length) {
+          next = prepare(files[index + 1]);
+          next.catch(() => {}); // 실패는 다음 차례에 await할 때 알림
         }
         const result: CompletionPhotoResult = await addCompletionPhoto(id, formData).catch(() => ({
           error: "저장하지 못했어요. 잠시 후 다시 시도해 주세요.",

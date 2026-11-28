@@ -81,10 +81,15 @@ export async function uploadCompletionPhoto(reservationId: string, full: ArrayBu
   const storage = createDatabaseClient().storage.from(BUCKET);
   const name = newPhotoName();
   const options = { contentType: "image/jpeg", upsert: false };
-  const first = await storage.upload(`${reservationId}/full/${name}`, full, options);
-  if (first.error) throw new Error(first.error.message);
-  const second = await storage.upload(`${reservationId}/mms/${name}`, mms, options);
-  if (second.error) throw new Error(second.error.message);
+  // 두 크기를 동시에 저장 (2026-11-28 사용자 요청: 속도) — 하나라도 실패하면 둘 다 지움
+  const [first, second] = await Promise.all([
+    storage.upload(`${reservationId}/full/${name}`, full, options),
+    storage.upload(`${reservationId}/mms/${name}`, mms, options),
+  ]);
+  if (first.error || second.error) {
+    await storage.remove([`${reservationId}/full/${name}`, `${reservationId}/mms/${name}`]).catch(() => {});
+    throw new Error((first.error ?? second.error)!.message);
+  }
   return name;
 }
 
