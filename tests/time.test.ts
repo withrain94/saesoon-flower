@@ -42,6 +42,13 @@ describe("예약 가능한 시간 (lib/time)", () => {
     assert.equal(isSlotBookable("08:00", "2026-11-28", at("2026-11-27T16:59")), true);
   });
 
+  it("하루 전체 마감하는 날(12/5)은 전날 오후 5시부터 모든 시간 불가", () => {
+    assert.equal(isSlotBookable("18:00", "2026-12-05", at("2026-12-04T16:59")), true);
+    assert.equal(isSlotBookable("18:00", "2026-12-05", at("2026-12-04T17:00")), false);
+    assert.equal(isSlotBookable("19:00", "2026-12-05", at("2026-12-05T09:00")), false);
+    assert.equal(isSlotBookable("13:00", "2026-12-06", at("2026-12-04T17:00")), true);
+  });
+
   it("오후 5시 전에는 다음날 이른 시간도 가능", () => {
     const afternoon = at("2026-11-10T16:30");
     assert.equal(isSlotBookable("08:00", "2026-11-11", afternoon), true);

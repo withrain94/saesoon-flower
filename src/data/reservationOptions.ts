@@ -161,6 +161,12 @@ export const ORDER_OPEN_HOUR = 9;
 export const WEEKEND_ORDER_OPEN_HOUR = 12;
 
 /**
+ * 하루 전체 마감하는 날 — 전날 ORDER_CLOSE_HOUR시(오후 5시)가 되면 그날은 시간대 전부 예약 불가.
+ * 2026-12-05: 12/4 승진식 다음날이라 (2026-11-28 사용자 요청). 지난 날짜는 지워도 됨
+ */
+export const fullCloseDates: string[] = ["2026-12-05"];
+
+/**
  * 바쁜 시기 최소 금액 — 받는 날짜가 기간 안이면 이 금액보다 싼 꽃 상품은 예약 불가 (초콜릿·쇼핑백은 상관없음).
  * 졸업시즌: 2026-11-17 사용자 요청 (지금은 꽃다발 5만원만 해당). 이름은 언어 파일 `minPrice.names`.
  * 새 기간은 한 줄 추가 (start·end 모두 포함되는 날).

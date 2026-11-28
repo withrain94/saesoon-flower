@@ -6,6 +6,7 @@ import {
   ORDER_OPEN_HOUR,
   SAME_DAY_LEAD_HOURS,
   WEEKEND_ORDER_OPEN_HOUR,
+  fullCloseDates,
 } from "@/data/reservationOptions";
 import { ko, type Messages } from "@/i18n/ko";
 import { addDaysToKey, parseDateKey, toDateKey } from "@/lib/date";
@@ -106,6 +107,12 @@ export function isSlotBookable(slot: string, dateKey: string, now: Now) {
   const slotMoment: Moment = { dateKey, minutes: getSlotHour(slot) * 60 };
   if (dateKey === now.dateKey && slotMoment.minutes < now.minutes + SAME_DAY_LEAD_HOURS * 60) {
     return false;
+  }
+
+  // 하루 전체 마감하는 날(fullCloseDates)은 전날 오후 5시부터 전부 불가
+  if (fullCloseDates.includes(dateKey)) {
+    const closeAt: Moment = { dateKey: addDaysToKey(dateKey, -1), minutes: ORDER_CLOSE_HOUR * 60 };
+    if (!isAfter(closeAt, { dateKey: now.dateKey, minutes: now.minutes })) return false;
   }
 
   const blockedUntil = getBlockedUntil(now);
