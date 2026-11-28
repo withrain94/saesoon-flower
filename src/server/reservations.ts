@@ -198,7 +198,7 @@ export async function listAutoSmsReservations(
 }
 
 /**
- * 받는 날짜가 cutoffKey 이전·같은 "입금·결제 확인"·"제작 완료" 예약 — 7일 지나 자동 전달 완료(server/autoStatus)용.
+ * 받는 날짜가 cutoffKey 이전·같은 "입금·결제 확인"·"제작 완료" 예약 — 2일 지나 자동 전달 완료(server/autoStatus)용.
  * 호출하는 쪽(app/cron)이 CRON_SECRET을 먼저 확인
  */
 export async function listPaidReservationsUntil(cutoffKey: string): Promise<StoredReservation[]> {

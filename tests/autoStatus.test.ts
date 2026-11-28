@@ -18,15 +18,15 @@ describe("완성 사진 올리면 제작 완료", () => {
   });
 });
 
-describe("받는 날 7일 지나면 전달 완료", () => {
-  it("11/20 받는 예약은 11/27부터 (11/26엔 아직)", () => {
-    assert.equal(shouldAutoDeliver(reservation("made", "2026-11-20"), "2026-11-26"), false);
-    assert.equal(shouldAutoDeliver(reservation("made", "2026-11-20"), "2026-11-27"), true);
+describe("받는 날 2일 지나면 전달 완료", () => {
+  it("11/20 받는 예약은 11/22부터 (11/21엔 아직)", () => {
+    assert.equal(shouldAutoDeliver(reservation("made", "2026-11-20"), "2026-11-21"), false);
+    assert.equal(shouldAutoDeliver(reservation("made", "2026-11-20"), "2026-11-22"), true);
     assert.equal(shouldAutoDeliver(reservation("confirmed", "2026-11-20"), "2026-12-05"), true);
   });
-  it("달이 바뀌어도 7일로 셈 (11/28 → 12/5)", () => {
-    assert.equal(shouldAutoDeliver(reservation("made", "2026-11-28"), "2026-12-04"), false);
-    assert.equal(shouldAutoDeliver(reservation("made", "2026-11-28"), "2026-12-05"), true);
+  it("달이 바뀌어도 2일로 셈 (11/30 → 12/2)", () => {
+    assert.equal(shouldAutoDeliver(reservation("made", "2026-11-30"), "2026-12-01"), false);
+    assert.equal(shouldAutoDeliver(reservation("made", "2026-11-30"), "2026-12-02"), true);
   });
   it("접수(입금 전)·전달 완료·취소는 바꾸지 않음", () => {
     for (const status of ["received", "delivered", "canceled"] as const) {

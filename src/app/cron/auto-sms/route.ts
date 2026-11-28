@@ -20,7 +20,7 @@ function isAuthorized(request: Request) {
 export async function GET(request: Request) {
   if (!isAuthorized(request)) return new Response("Unauthorized", { status: 401 });
 
-  // 받는 날 7일 지난 예약 → 전달 완료 (문자와 따로 — 실패해도 문자는 보냄)
+  // 받는 날 2일 지난 예약 → 전달 완료 (문자와 따로 — 실패해도 문자는 보냄)
   await autoDeliverOldReservations().catch((error) => {
     console.error("[cron] 자동 전달 완료 실패", error instanceof Error ? error.message : "unknown");
   });

@@ -49,7 +49,7 @@ export default async function AdminPage({ searchParams }: PageProps<"/admin">) {
   const today = toNowInTimeZone(new Date()).dateKey;
   const tomorrow = addDaysToKey(today, 1);
 
-  // "진행 중"에서는 받는 날로부터 7일이 지난 예약을 숨김 (2026-11-26 사용자 요청 — 입금 전이라 자동 전달 완료가 안 된 예약)
+  // "진행 중"에서는 받는 날로부터 AUTO_DELIVERED_AFTER_DAYS(2)일이 지난 예약을 숨김 (2026-11-26 사용자 요청 — 입금 전이라 자동 전달 완료가 안 된 예약)
   // 상태는 그대로라 "접수"·"전체" 탭에서는 보임
   const cutoff = autoDeliveredCutoffKey(today);
   const allListed = result?.[0] ?? [];
