@@ -88,7 +88,7 @@ export const storeInfoZh: StoreInfoMessages = {
       },
       {
         q: "需要提前多久预约?",
-        a: `建议提前3天预约。当天预约需在取花时间${SAME_DAY_LEAD_HOURS}小时前完成。${h12(ORDER_CLOSE_HOUR)}以后,无法预约次日${h12(ORDER_OPEN_HOUR)}之前的时间。`,
+        a: `建议提前3天预约。当天预约需在取花时间${SAME_DAY_LEAD_HOURS}小时前完成。${h12(ORDER_CLOSE_HOUR)}以后,无法预约次日${h12(ORDER_OPEN_HOUR)}之前的时间（周六、周日至中午12点）。`,
       },
       {
         q: "怎么查询或取消预约?",

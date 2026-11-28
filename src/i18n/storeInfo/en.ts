@@ -88,7 +88,7 @@ export const storeInfoEn: StoreInfoMessages = {
       },
       {
         q: "How far ahead should I book?",
-        a: `We recommend booking 3 days ahead. Same-day orders are possible up to ${SAME_DAY_LEAD_HOURS} hours before pickup/delivery. After ${h12(ORDER_CLOSE_HOUR)}, times until ${h12(ORDER_OPEN_HOUR)} the next day can't be booked.`,
+        a: `We recommend booking 3 days ahead. Same-day orders are possible up to ${SAME_DAY_LEAD_HOURS} hours before pickup/delivery. After ${h12(ORDER_CLOSE_HOUR)}, times until ${h12(ORDER_OPEN_HOUR)} the next day can't be booked (Sat·Sun: up to 12 PM).`,
       },
       {
         q: "How do I check or cancel my booking?",

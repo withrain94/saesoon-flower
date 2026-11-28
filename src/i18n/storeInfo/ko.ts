@@ -91,7 +91,7 @@ export const storeInfoKo = {
       },
       {
         q: "언제까지 예약하면 되나요?",
-        a: `받으실 날 3일 전 예약을 권해요. 당일 예약은 받으실 시간 ${SAME_DAY_LEAD_HOURS}시간 전까지 가능하고, 오후 ${pm(ORDER_CLOSE_HOUR)}시가 지나면 다음날 오전 ${ORDER_OPEN_HOUR}시까지는 예약할 수 없어요.`,
+        a: `받으실 날 3일 전 예약을 권해요. 당일 예약은 받으실 시간 ${SAME_DAY_LEAD_HOURS}시간 전까지 가능하고, 오후 ${pm(ORDER_CLOSE_HOUR)}시가 지나면 다음날 오전 ${ORDER_OPEN_HOUR}시까지는 예약할 수 없어요 (토·일은 낮 12시까지).`,
       },
       {
         q: "예약 확인·취소는 어떻게 하나요?",

@@ -469,7 +469,7 @@ export const zh: Messages = {
     headingDate: "日期",
     headingTime: "请选择时间",
     sameDayRule: `当天预约需在取花时间前${SAME_DAY_LEAD_HOURS}小时完成。`,
-    closeRule: `下午${ORDER_CLOSE_HOUR - 12}点以后，无法预约次日上午${ORDER_OPEN_HOUR}点（含）之前的时间。`,
+    closeRule: `下午${ORDER_CLOSE_HOUR - 12}点以后，无法预约次日上午${ORDER_OPEN_HOUR}点（含）之前的时间（周六、周日至中午12点）。`,
     errorDate: "请选择取花日期。",
     errorTime: "请选择取花时间。",
     eventQuick: "快速选择特别日子",

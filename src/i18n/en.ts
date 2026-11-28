@@ -515,7 +515,7 @@ export const en: Messages = {
     headingDate: "Date",
     headingTime: "Choose a time",
     sameDayRule: `Same-day orders must be placed at least ${SAME_DAY_LEAD_HOURS} hours before pickup.`,
-    closeRule: `After ${ORDER_CLOSE_HOUR - 12} PM, times up to ${ORDER_OPEN_HOUR} AM the next day can't be booked.`,
+    closeRule: `After ${ORDER_CLOSE_HOUR - 12} PM, times up to ${ORDER_OPEN_HOUR} AM the next day can't be booked (Sat·Sun: up to 12 PM).`,
     errorDate: "Please choose a date.",
     errorTime: "Please choose a time.",
     eventQuick: "Special days",

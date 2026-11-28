@@ -5,9 +5,10 @@ import {
   ORDER_CLOSE_HOUR,
   ORDER_OPEN_HOUR,
   SAME_DAY_LEAD_HOURS,
+  WEEKEND_ORDER_OPEN_HOUR,
 } from "@/data/reservationOptions";
 import { ko, type Messages } from "@/i18n/ko";
-import { addDaysToKey, toDateKey } from "@/lib/date";
+import { addDaysToKey, parseDateKey, toDateKey } from "@/lib/date";
 
 /** 현재 시각 정보 (브라우저 기준) */
 export type Now = {
@@ -61,13 +62,22 @@ function isAfter(a: Moment, b: Moment) {
   return a.dateKey > b.dateKey || (a.dateKey === b.dateKey && a.minutes > b.minutes);
 }
 
+/** 그 날짜의 예약 마감이 풀리는 시각(시) — 평일 ORDER_OPEN_HOUR(9시), 토·일 WEEKEND_ORDER_OPEN_HOUR(12시) */
+export function getOrderOpenHour(dateKey: string) {
+  const day = parseDateKey(dateKey).getDay();
+  return day === 0 || day === 6 ? WEEKEND_ORDER_OPEN_HOUR : ORDER_OPEN_HOUR;
+}
+
 /**
- * 예약 마감 중(오후 ORDER_CLOSE_HOUR시 ~ 다음날 오전 ORDER_OPEN_HOUR시)이면 막히는 마지막 시각.
+ * 예약 마감 중(오후 ORDER_CLOSE_HOUR시 ~ 다음날 오전 ORDER_OPEN_HOUR시, 토·일은 낮 12시)이면 막히는 마지막 시각.
  * 이 시각까지(포함)의 시간대는 고를 수 없음. 마감 중이 아니면 null.
  */
 export function getBlockedUntil(now: Now): Moment | null {
-  const open = ORDER_OPEN_HOUR * 60;
-  if (now.minutes >= ORDER_CLOSE_HOUR * 60) return { dateKey: addDaysToKey(now.dateKey, 1), minutes: open };
+  if (now.minutes >= ORDER_CLOSE_HOUR * 60) {
+    const tomorrow = addDaysToKey(now.dateKey, 1);
+    return { dateKey: tomorrow, minutes: getOrderOpenHour(tomorrow) * 60 };
+  }
+  const open = getOrderOpenHour(now.dateKey) * 60;
   if (now.minutes < open) return { dateKey: now.dateKey, minutes: open };
   return null;
 }

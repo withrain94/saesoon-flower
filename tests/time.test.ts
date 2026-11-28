@@ -28,6 +28,20 @@ describe("예약 가능한 시간 (lib/time)", () => {
     assert.equal(isSlotBookable("10:00", "2026-11-11", evening), true);
   });
 
+  it("토·일 예약은 전날 오후 5시가 되면 낮 12시까지(포함) 막히고 오후 1시부터 가능", () => {
+    // 2026-11-27 금 17시 → 11/28 토
+    const friday = at("2026-11-27T17:00");
+    assert.equal(isSlotBookable("12:00", "2026-11-28", friday), false);
+    assert.equal(isSlotBookable("13:00", "2026-11-28", friday), true);
+    // 토 17시 → 일요일도 같음, 토 오전 11시에 보면 같은 날 12시까지 막힘
+    assert.equal(isSlotBookable("10:00", "2026-11-29", at("2026-11-28T17:30")), false);
+    assert.equal(isSlotBookable("13:00", "2026-11-29", at("2026-11-28T17:30")), true);
+    // 일 17시 → 월요일은 평일 규칙(9시까지)
+    assert.equal(isSlotBookable("10:00", "2026-11-30", at("2026-11-29T17:30")), true);
+    // 금 오후 5시 전이면 토 오전도 가능
+    assert.equal(isSlotBookable("08:00", "2026-11-28", at("2026-11-27T16:59")), true);
+  });
+
   it("오후 5시 전에는 다음날 이른 시간도 가능", () => {
     const afternoon = at("2026-11-10T16:30");
     assert.equal(isSlotBookable("08:00", "2026-11-11", afternoon), true);

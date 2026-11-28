@@ -507,7 +507,7 @@ export const vi: Messages = {
     headingDate: "Ngày",
     headingTime: "Chọn giờ",
     sameDayRule: `Đặt trong ngày cần đặt trước giờ nhận ít nhất ${SAME_DAY_LEAD_HOURS} tiếng.`,
-    closeRule: `Sau ${ORDER_CLOSE_HOUR}:00, không thể đặt các khung giờ đến ${ORDER_OPEN_HOUR}:00 sáng hôm sau.`,
+    closeRule: `Sau ${ORDER_CLOSE_HOUR}:00, không thể đặt các khung giờ đến ${ORDER_OPEN_HOUR}:00 sáng hôm sau (Thứ Bảy·Chủ Nhật: đến 12:00 trưa).`,
     errorDate: "Vui lòng chọn ngày nhận.",
     errorTime: "Vui lòng chọn giờ nhận.",
     eventQuick: "Chọn nhanh ngày đặc biệt",

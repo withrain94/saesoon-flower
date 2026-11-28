@@ -88,7 +88,7 @@ export const storeInfoJa: StoreInfoMessages = {
       },
       {
         q: "いつまでに予約すればいいですか?",
-        a: `3日前までのご予約をおすすめします。当日予約は受け取り時間の${SAME_DAY_LEAD_HOURS}時間前まで可能です。${h12(ORDER_CLOSE_HOUR)}を過ぎると翌日${h12(ORDER_OPEN_HOUR)}までの時間は予約できません。`,
+        a: `3日前までのご予約をおすすめします。当日予約は受け取り時間の${SAME_DAY_LEAD_HOURS}時間前まで可能です。${h12(ORDER_CLOSE_HOUR)}を過ぎると翌日${h12(ORDER_OPEN_HOUR)}までの時間は予約できません（土・日は正午12時まで）。`,
       },
       {
         q: "予約の確認・キャンセルはどうすればいいですか?",

@@ -157,6 +157,8 @@ export const SAME_DAY_LEAD_HOURS = 2;
  */
 export const ORDER_CLOSE_HOUR = 17;
 export const ORDER_OPEN_HOUR = 9;
+/** 토·일은 낮 12시까지(포함) 막힘 — 금·토 오후 5시가 되면 다음날 12시 이전 예약 마감 (2026-11-28 사용자 요청) */
+export const WEEKEND_ORDER_OPEN_HOUR = 12;
 
 /**
  * 바쁜 시기 최소 금액 — 받는 날짜가 기간 안이면 이 금액보다 싼 꽃 상품은 예약 불가 (초콜릿·쇼핑백은 상관없음).

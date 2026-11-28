@@ -531,7 +531,7 @@ export const ko = {
     headingDate: "날짜",
     headingTime: "시간을 선택해 주세요",
     sameDayRule: `당일 예약은 받으실 시간 ${SAME_DAY_LEAD_HOURS}시간 전까지 가능해요.`,
-    closeRule: `오후 ${ORDER_CLOSE_HOUR - 12}시가 되면 다음날 오전 ${ORDER_OPEN_HOUR}시까지는 예약할 수 없어요.`,
+    closeRule: `오후 ${ORDER_CLOSE_HOUR - 12}시가 되면 다음날 오전 ${ORDER_OPEN_HOUR}시까지는 예약할 수 없어요 (토·일은 낮 12시까지).`,
     errorDate: "받으실 날짜를 선택해 주세요.",
     errorTime: "받으실 시간을 선택해 주세요.",
     eventQuick: "특별한 날 바로 선택",

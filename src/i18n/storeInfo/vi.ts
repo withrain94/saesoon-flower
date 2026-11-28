@@ -88,7 +88,7 @@ export const storeInfoVi: StoreInfoMessages = {
       },
       {
         q: "Nên đặt trước bao lâu?",
-        a: `Nên đặt trước 3 ngày. Đặt trong ngày được nhận đến ${SAME_DAY_LEAD_HOURS} tiếng trước giờ nhận. Sau ${h12(ORDER_CLOSE_HOUR)}, không thể đặt các giờ đến ${h12(ORDER_OPEN_HOUR)} hôm sau.`,
+        a: `Nên đặt trước 3 ngày. Đặt trong ngày được nhận đến ${SAME_DAY_LEAD_HOURS} tiếng trước giờ nhận. Sau ${h12(ORDER_CLOSE_HOUR)}, không thể đặt các giờ đến ${h12(ORDER_OPEN_HOUR)} hôm sau (Thứ Bảy·Chủ Nhật: đến 12:00 trưa).`,
       },
       {
         q: "Làm sao để kiểm tra hoặc hủy đặt hoa?",

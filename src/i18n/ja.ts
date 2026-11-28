@@ -509,7 +509,7 @@ export const ja: Messages = {
     headingDate: "日付",
     headingTime: "時間をお選びください",
     sameDayRule: `当日のご予約は、受け取り時間の${SAME_DAY_LEAD_HOURS}時間前まで可能です。`,
-    closeRule: `午後${ORDER_CLOSE_HOUR - 12}時を過ぎると、翌日午前${ORDER_OPEN_HOUR}時までの時間は予約できません。`,
+    closeRule: `午後${ORDER_CLOSE_HOUR - 12}時を過ぎると、翌日午前${ORDER_OPEN_HOUR}時までの時間は予約できません（土・日は正午12時まで）。`,
     errorDate: "受け取り日をお選びください。",
     errorTime: "受け取り時間をお選びください。",
     eventQuick: "特別な日をすぐ選ぶ",
